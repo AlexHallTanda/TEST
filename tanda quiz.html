@@ -204,6 +204,31 @@
             animation: fadeIn 0.5s ease;
         }
 
+        .quiz-title {
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(3, 42, 86, 0.2);
+        }
+
+        .quiz-title .difficulty-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-right: 10px;
+        }
+
+        .quiz-title .topic-name {
+            font-size: 1.1em;
+        }
+
         .quiz-header {
             display: flex;
             justify-content: space-between;
@@ -1286,6 +1311,7 @@
         </div>
 
         <div id="quizContainer" class="quiz-container" role="main">
+            <div id="quizTitle" class="quiz-title"></div>
             <div class="quiz-header">
                 <div class="question-counter" id="questionCounter" aria-live="polite">Question 0 of 0</div>
                 <div class="timer-display hidden" id="timerDisplay" aria-live="polite" role="timer">
@@ -3912,6 +3938,27 @@
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
 
+            // Set quiz title showing difficulty and topic
+            const difficultyIcons = {
+                beginner: '🌱',
+                intermediate: '📚',
+                advanced: '🎓',
+                expert: '🏆'
+            };
+            const difficultyLabels = {
+                beginner: 'Beginner',
+                intermediate: 'Intermediate',
+                advanced: 'Advanced',
+                expert: 'Expert'
+            };
+            const subcatInfo = subcategories[difficulty]?.[subcategory];
+            const topicName = subcatInfo ? subcatInfo.name : subcategory;
+
+            document.getElementById('quizTitle').innerHTML = `
+                <span class="difficulty-badge">${difficultyIcons[difficulty]} ${difficultyLabels[difficulty]}</span>
+                <span class="topic-name">${topicName}</span>
+            `;
+
             displayQuestions();
             updateProgressBar();
             updateQuestionCounter();
@@ -4207,6 +4254,27 @@
             document.getElementById('submitQuestionSection').classList.add('hidden');
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
+
+            // Set quiz title showing difficulty and topic
+            const difficultyIcons = {
+                beginner: '🌱',
+                intermediate: '📚',
+                advanced: '🎓',
+                expert: '🏆'
+            };
+            const difficultyLabels = {
+                beginner: 'Beginner',
+                intermediate: 'Intermediate',
+                advanced: 'Advanced',
+                expert: 'Expert'
+            };
+            const subcatInfo = subcategories[currentDifficulty]?.[currentSubcategory];
+            const topicName = subcatInfo ? subcatInfo.name : currentSubcategory;
+
+            document.getElementById('quizTitle').innerHTML = `
+                <span class="difficulty-badge">${difficultyIcons[currentDifficulty]} ${difficultyLabels[currentDifficulty]}</span>
+                <span class="topic-name">${topicName}</span>
+            `;
 
             displayQuestions();
             updateProgressBar();
