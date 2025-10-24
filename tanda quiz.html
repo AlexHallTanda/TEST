@@ -1439,10 +1439,6 @@
                     <span>🎓</span>
                     <span>Certificates</span>
                 </button>
-                <button class="stats-btn" onclick="showSubmissions()" aria-label="View submitted questions" style="background:linear-gradient(135deg,#f093fb,#f5576c)">
-                    <span>📝</span>
-                    <span>Submissions</span>
-                </button>
             </div>
         </div>
 
@@ -1535,6 +1531,14 @@
                 <strong>✅ Thank you!</strong> Your question has been saved locally. In a full implementation, this would be sent to a server for review.
             </div>
             </div><!-- End questionFormContent -->
+        </div>
+
+        <!-- View Submissions Section (Password Protected) -->
+        <div style="margin-top: 20px; text-align: center;">
+            <button class="stats-btn" onclick="showSubmissionsWithPassword()" aria-label="View submitted questions" style="background:linear-gradient(135deg,#f093fb,#f5576c); padding: 12px 24px; font-size: 1em;">
+                <span>📝</span>
+                <span>View Submissions</span>
+            </button>
         </div>
 
         <div id="quizContainer" class="quiz-container" role="main">
@@ -5715,6 +5719,17 @@
         });
 
         // Submissions Functions
+        // Password protection for submissions
+        function showSubmissionsWithPassword() {
+            const password = prompt('Enter password to view submissions:');
+            if (password === 'abc123') {
+                showSubmissions();
+            } else if (password !== null) {
+                // User didn't cancel, but password was wrong
+                alert('Incorrect password. Access denied.');
+            }
+        }
+
         function showSubmissions() {
             const submissions = JSON.parse(localStorage.getItem('tandaSubmittedQuestions') || '[]');
             const container = document.getElementById('submissionsContainer');
