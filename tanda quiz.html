@@ -147,22 +147,6 @@
             background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
         }
 
-        .difficulty-header.beginner {
-            border-left-color: #28a745;
-        }
-
-        .difficulty-header.intermediate {
-            border-left-color: #17a2b8;
-        }
-
-        .difficulty-header.advanced {
-            border-left-color: #fd7e14;
-        }
-
-        .difficulty-header.expert {
-            border-left-color: #dc3545;
-        }
-
         .difficulty-header-left {
             display: flex;
             align-items: center;
@@ -1636,32 +1620,32 @@
         // Subcategory metadata
         const subcategories = {
             beginner: {
-                'general': { name: '🎯 General Quiz', icon: '🎯', description: '20 mixed questions' },
-                'time-attendance': { name: '🕐 Time & Attendance Basics', icon: '🕐' },
-                'rostering': { name: '📅 Rostering Fundamentals', icon: '📅' },
-                'leave': { name: '🏖️ Leave Management', icon: '🏖️' },
-                'self-service': { name: '👤 Employee Self-Service', icon: '👤' }
+                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'time-attendance': { name: 'Time & Attendance Basics', icon: '' },
+                'rostering': { name: 'Rostering Fundamentals', icon: '' },
+                'leave': { name: 'Leave Management', icon: '' },
+                'self-service': { name: 'Employee Self-Service', icon: '' }
             },
             intermediate: {
-                'general': { name: '🎯 General Quiz', icon: '🎯', description: '20 mixed questions' },
-                'advanced-rostering': { name: '📊 Advanced Rostering', icon: '📊' },
-                'timesheets': { name: '⏱️ Timesheet Management', icon: '⏱️' },
-                'awards': { name: '💰 Awards & Pay Rules', icon: '💰' },
-                'reporting': { name: '📈 Reporting & Analytics', icon: '📈' }
+                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'advanced-rostering': { name: 'Advanced Rostering', icon: '' },
+                'timesheets': { name: 'Timesheet Management', icon: '' },
+                'awards': { name: 'Awards & Pay Rules', icon: '' },
+                'reporting': { name: 'Reporting & Analytics', icon: '' }
             },
             advanced: {
-                'general': { name: '🎯 General Quiz', icon: '🎯', description: '20 mixed questions' },
-                'compliance': { name: '⚖️ Compliance & Awards', icon: '⚖️' },
-                'cost-management': { name: '💵 Cost Management', icon: '💵' },
-                'integrations': { name: '🔗 Integrations', icon: '🔗' },
-                'advanced-features': { name: '🎯 Advanced Features', icon: '🎯' }
+                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'compliance': { name: 'Compliance & Awards', icon: '' },
+                'cost-management': { name: 'Cost Management', icon: '' },
+                'integrations': { name: 'Integrations', icon: '' },
+                'advanced-features': { name: 'Advanced Features', icon: '' }
             },
             expert: {
-                'general': { name: '🎯 General Quiz', icon: '🎯', description: '20 mixed questions' },
-                'api': { name: '🔌 API & Automation', icon: '🔌' },
-                'enterprise': { name: '🏢 Enterprise Configuration', icon: '🏢' },
-                'workflows': { name: '⚙️ Custom Workflows', icon: '⚙️' },
-                'architecture': { name: '🏗️ System Architecture', icon: '🏗️' }
+                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'api': { name: 'API & Automation', icon: '' },
+                'enterprise': { name: 'Enterprise Configuration', icon: '' },
+                'workflows': { name: 'Custom Workflows', icon: '' },
+                'architecture': { name: 'System Architecture', icon: '' }
             }
         };
 
@@ -3974,7 +3958,7 @@
         function renderAccordion() {
             const container = document.getElementById('difficultySelection');
             const difficulties = ['beginner', 'intermediate', 'advanced', 'expert'];
-            const icons = { beginner: '🌱', intermediate: '📚', advanced: '🎓', expert: '🏆' };
+            const icons = { beginner: '', intermediate: '', advanced: '', expert: '' };
             const names = { beginner: 'BEGINNER', intermediate: 'INTERMEDIATE', advanced: 'ADVANCED', expert: 'EXPERT' };
 
             container.innerHTML = '';
@@ -4391,12 +4375,6 @@
             document.getElementById('results').classList.remove('active');
 
             // Set quiz title showing difficulty and topic
-            const difficultyIcons = {
-                beginner: '🌱',
-                intermediate: '📚',
-                advanced: '🎓',
-                expert: '🏆'
-            };
             const difficultyLabels = {
                 beginner: 'Beginner',
                 intermediate: 'Intermediate',
@@ -4407,7 +4385,7 @@
             const topicName = subcatInfo ? subcatInfo.name : subcategory;
 
             document.getElementById('quizTitle').innerHTML = `
-                <span class="difficulty-badge">${difficultyIcons[difficulty]} ${difficultyLabels[difficulty]}</span>
+                <span class="difficulty-badge">${difficultyLabels[difficulty]}</span>
                 <span class="topic-name">${topicName}</span>
             `;
 
@@ -4708,12 +4686,6 @@
             document.getElementById('results').classList.remove('active');
 
             // Set quiz title showing difficulty and topic
-            const difficultyIcons = {
-                beginner: '🌱',
-                intermediate: '📚',
-                advanced: '🎓',
-                expert: '🏆'
-            };
             const difficultyLabels = {
                 beginner: 'Beginner',
                 intermediate: 'Intermediate',
@@ -4724,7 +4696,7 @@
             const topicName = subcatInfo ? subcatInfo.name : currentSubcategory;
 
             document.getElementById('quizTitle').innerHTML = `
-                <span class="difficulty-badge">${difficultyIcons[currentDifficulty]} ${difficultyLabels[currentDifficulty]}</span>
+                <span class="difficulty-badge">${difficultyLabels[currentDifficulty]}</span>
                 <span class="topic-name">${topicName}</span>
             `;
 
@@ -5772,7 +5744,6 @@
                 `;
 
                 submissions.reverse().forEach((sub, idx) => {
-                    const difficultyIcons = {beginner: '🌱', intermediate: '📚', advanced: '🎓', expert: '🏆'};
                     submissionsHTML += `
                         <div style="background:var(--question-bg);padding:20px;border-radius:12px;margin-bottom:15px;border-left:4px solid #032a56">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
@@ -5781,7 +5752,7 @@
                             </div>
                             <div style="margin-bottom:10px">
                                 <span style="display:inline-block;background:linear-gradient(135deg,#032a56,#0a4d8f);color:white;padding:4px 10px;border-radius:6px;font-size:0.85em;margin-right:8px">
-                                    ${difficultyIcons[sub.difficulty] || ''} ${sub.difficulty}
+                                    ${sub.difficulty}
                                 </span>
                                 <span style="display:inline-block;background:var(--border-color);padding:4px 10px;border-radius:6px;font-size:0.85em">
                                     ${subcategories[sub.difficulty]?.[sub.subcategory]?.name || sub.subcategory}
