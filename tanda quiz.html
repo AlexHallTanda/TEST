@@ -1160,6 +1160,10 @@
                     <span>🎓</span>
                     <span>Certificates</span>
                 </button>
+                <button class="stats-btn" onclick="showSubmissions()" aria-label="View submitted questions" style="background:linear-gradient(135deg,#f093fb,#f5576c)">
+                    <span>📝</span>
+                    <span>Submissions</span>
+                </button>
             </div>
         </div>
 
@@ -1332,6 +1336,17 @@
         <div id="certificatePrintContent"></div>
     </div>
 
+    <!-- Submissions Modal -->
+    <div id="submissionsModal" class="stats-modal" role="dialog" aria-labelledby="submissionsTitle" aria-modal="true">
+        <div class="stats-content" style="max-width: 1000px; max-height: 90vh; overflow-y: auto;">
+            <div class="stats-header">
+                <h2 id="submissionsTitle">📝 Submitted Questions</h2>
+                <button class="close-btn" onclick="closeSubmissions()" aria-label="Close submissions">&times;</button>
+            </div>
+            <div id="submissionsContainer"></div>
+        </div>
+    </div>
+
     <script>
         // Subcategory metadata
         const subcategories = {
@@ -1483,10 +1498,450 @@
                     explanation: "Tanda supports multiple notification channels including push notifications, email, and SMS to ensure employees are promptly informed of schedule changes."
                 }
                 ],
-                'time-attendance': [],
-                'rostering': [],
-                'leave': [],
-                'self-service': []
+                'time-attendance': [
+                {
+                    type: 'true-false',
+                    question: "Employees can clock in from their mobile phones using the Tanda app.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda's mobile app allows employees to clock in and out from their smartphones, providing flexibility for mobile workforce management.",
+                    helpLink: "https://help.tanda.co/en/articles/1395844-clocking-in-out-via-mobile-app"
+                },
+                {
+                    question: "What does 'punching the clock' mean in Tanda?",
+                    options: [
+                        "Damaging the time clock device",
+                        "Recording the start or end of a work period",
+                        "Scheduling a shift",
+                        "Requesting time off"
+                    ],
+                    correct: 1,
+                    explanation: "Punching the clock (or clocking in/out) refers to recording when an employee starts and finishes work, creating accurate timesheet records."
+                },
+                {
+                    type: 'multiple-select',
+                    question: "Which of the following are valid ways to clock in using Tanda? (Select all that apply)",
+                    options: [
+                        "Mobile app",
+                        "Web browser",
+                        "Physical time clock",
+                        "Sending a text message",
+                        "Kiosk mode on tablet"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Tanda supports multiple clocking methods: mobile app, web browser, physical time clocks, and kiosk mode on tablets. Text messages are not a supported method.",
+                    helpLink: "https://help.tanda.co/en/collections/1395843-timesheets-time-clocks"
+                },
+                {
+                    type: 'fill-blank',
+                    question: "What is the name of the Tanda feature that prevents employees from clocking in too early or too late?",
+                    options: {
+                        correct: ["Clock In Windows", "Clock in windows", "clock in window", "Clock-in windows", "clock in windows"]
+                    },
+                    explanation: "Clock In Windows restrict when employees can clock in relative to their scheduled shift time, helping prevent time theft and ensuring accurate attendance.",
+                    helpLink: "https://help.tanda.co/en/articles/3219753-clock-in-windows"
+                },
+                {
+                    question: "What happens if an employee forgets to clock out?",
+                    options: [
+                        "The timesheet is automatically deleted",
+                        "Managers can manually add the clock out time",
+                        "The employee is automatically terminated",
+                        "Nothing, the system doesn't track clock outs"
+                    ],
+                    correct: 1,
+                    explanation: "If an employee forgets to clock out, managers can edit the timesheet and manually add the clock out time, or the system can auto-clock out based on settings.",
+                    helpLink: "https://help.tanda.co/en/articles/1395859-editing-timesheets"
+                },
+                {
+                    type: 'true-false',
+                    question: "GPS location tracking can be enabled for mobile clock-ins to verify employee location.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda can capture GPS coordinates when employees clock in via mobile app, helping verify they're at the correct work location.",
+                    helpLink: "https://help.tanda.co/en/articles/2958168-gps-location-for-clock-ins"
+                },
+                {
+                    question: "What is a 'timesheet' in Tanda?",
+                    options: [
+                        "A schedule of future shifts",
+                        "A record of actual hours worked",
+                        "A type of payslip",
+                        "A leave request form"
+                    ],
+                    correct: 1,
+                    explanation: "A timesheet is the record of actual hours an employee has worked, created from clock in/out times or approved from roster shifts.",
+                    helpLink: "https://help.tanda.co/en/collections/1395843-timesheets-time-clocks"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "What information is typically captured when an employee clocks in? (Select all that apply)",
+                    options: [
+                        "Date and time",
+                        "Location (if GPS enabled)",
+                        "Device used",
+                        "Weather conditions",
+                        "Employee photo (if enabled)"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Tanda can capture date/time, GPS location, device information, and employee photos during clock-in. Weather conditions are not tracked.",
+                    helpLink: "https://help.tanda.co/en/articles/1395844-clocking-in-out-via-mobile-app"
+                },
+                {
+                    question: "What is 'kiosk mode' in Tanda?",
+                    options: [
+                        "A mode for selling products",
+                        "A shared device mode where multiple employees can clock in/out",
+                        "A manager-only feature",
+                        "A type of leave category"
+                    ],
+                    correct: 1,
+                    explanation: "Kiosk mode allows a shared tablet or computer to function as a time clock where multiple employees can clock in and out using their individual PIN or credentials.",
+                    helpLink: "https://help.tanda.co/en/articles/1395848-setting-up-kiosk-mode"
+                },
+                {
+                    type: 'true-false',
+                    question: "Employees need manager approval before they can clock in for their shift.",
+                    options: ["True", "False"],
+                    correct: 1,
+                    explanation: "Employees can clock in for their shifts without prior approval (subject to clock-in window restrictions). Managers review and approve timesheets after the work is completed.",
+                    helpLink: "https://help.tanda.co/en/articles/1395859-editing-timesheets"
+                }
+                ],
+                'rostering': [
+                {
+                    question: "What is a roster in Tanda?",
+                    options: [
+                        "A list of employees",
+                        "A schedule showing who is working when",
+                        "A timesheet report",
+                        "A leave balance summary"
+                    ],
+                    correct: 1,
+                    explanation: "A roster is a schedule that displays which employees are assigned to work specific shifts on particular dates, helping organize workforce coverage.",
+                    helpLink: "https://help.tanda.co/en/collections/1395835-rosters"
+                },
+                {
+                    type: 'true-false',
+                    question: "Managers can copy a previous week's roster to save time when creating schedules.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda allows managers to copy rosters from previous weeks, making it quick and easy to recreate similar schedules without starting from scratch.",
+                    helpLink: "https://help.tanda.co/en/articles/1395837-copying-rosters"
+                },
+                {
+                    type: 'fill-blank',
+                    question: "What is the term for a saved roster pattern that can be reused multiple times?",
+                    options: {
+                        correct: ["template", "roster template", "Template", "Roster Template"]
+                    },
+                    explanation: "Roster templates are saved patterns that can be reused to quickly create similar schedules, perfect for businesses with consistent weekly patterns.",
+                    helpLink: "https://help.tanda.co/en/articles/1395840-roster-templates"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "What information is included in a roster shift? (Select all that apply)",
+                    options: [
+                        "Employee name",
+                        "Start and end time",
+                        "Location/department",
+                        "Employee's home address",
+                        "Role or position"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Roster shifts include employee assignment, times, location/department, and role. Personal information like home addresses is not part of shift details.",
+                    helpLink: "https://help.tanda.co/en/articles/1395836-creating-shifts"
+                },
+                {
+                    question: "What does 'publishing' a roster do?",
+                    options: [
+                        "Deletes the roster permanently",
+                        "Makes the roster visible to employees and sends notifications",
+                        "Prints the roster on paper",
+                        "Archives the roster"
+                    ],
+                    correct: 1,
+                    explanation: "Publishing a roster makes it visible to employees in their app/portal and triggers notifications to inform them of their scheduled shifts.",
+                    helpLink: "https://help.tanda.co/en/articles/1395838-publishing-rosters"
+                },
+                {
+                    type: 'true-false',
+                    question: "Employees can see unpublished (draft) rosters in their Tanda app.",
+                    options: ["True", "False"],
+                    correct: 1,
+                    explanation: "Unpublished rosters remain in draft mode and are only visible to managers until they are published, giving managers time to finalize schedules.",
+                    helpLink: "https://help.tanda.co/en/articles/1395838-publishing-rosters"
+                },
+                {
+                    question: "What is an 'open shift' in Tanda?",
+                    options: [
+                        "A shift that's available during business hours",
+                        "A shift without an assigned employee that staff can claim",
+                        "A shift for new employees only",
+                        "A shift that has been completed"
+                    ],
+                    correct: 1,
+                    explanation: "Open shifts are unassigned shifts posted to the roster that employees can volunteer to pick up, helping managers fill gaps in coverage.",
+                    helpLink: "https://help.tanda.co/en/articles/2291788-open-shifts"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "Which of the following can help managers create efficient rosters? (Select all that apply)",
+                    options: [
+                        "Employee availability",
+                        "Labor budget limits",
+                        "Employee preferences",
+                        "Weather forecast",
+                        "Demand forecasting"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Effective rostering considers employee availability, budget constraints, preferences, and demand forecasts. Weather isn't typically a rostering factor.",
+                    helpLink: "https://help.tanda.co/en/collections/1395835-rosters"
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda can automatically suggest optimal rosters based on demand patterns and employee costs.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda's auto-rostering feature can generate optimized schedules based on historical demand, labor costs, employee availability, and other configurable rules.",
+                    helpLink: "https://help.tanda.co/en/articles/3134442-auto-rostering"
+                },
+                {
+                    question: "What happens when a manager edits a published roster?",
+                    options: [
+                        "Changes are hidden from employees",
+                        "The roster must be republished",
+                        "Affected employees are automatically notified of changes",
+                        "All shifts are deleted"
+                    ],
+                    correct: 2,
+                    explanation: "When published rosters are edited, Tanda automatically notifies affected employees of the changes so they're aware of their updated schedule.",
+                    helpLink: "https://help.tanda.co/en/articles/1395839-editing-published-rosters"
+                }
+                ],
+                'leave': [
+                {
+                    type: 'true-false',
+                    question: "Employees can request leave directly through the Tanda mobile app or web portal.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda's self-service features allow employees to submit leave requests from the mobile app or web portal, streamlining the approval process.",
+                    helpLink: "https://help.tanda.co/en/articles/1395847-requesting-leave-as-an-employee"
+                },
+                {
+                    question: "What happens after an employee submits a leave request?",
+                    options: [
+                        "It's automatically approved",
+                        "It goes to their manager for approval",
+                        "It's automatically rejected",
+                        "Nothing, requests are just for record keeping"
+                    ],
+                    correct: 1,
+                    explanation: "Leave requests enter an approval workflow where designated managers can review, approve, or deny the request based on business needs and policies.",
+                    helpLink: "https://help.tanda.co/en/articles/1395850-approving-leave-requests"
+                },
+                {
+                    type: 'fill-blank',
+                    question: "What term describes the total amount of paid time off an employee has available to use?",
+                    options: {
+                        correct: ["leave balance", "Leave Balance", "balance", "leave entitlement", "entitlement"]
+                    },
+                    explanation: "Leave balance (or entitlement) represents the total hours or days of paid leave an employee has accrued and available to use.",
+                    helpLink: "https://help.tanda.co/en/articles/1395849-viewing-leave-balances"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "Which types of leave can typically be tracked in Tanda? (Select all that apply)",
+                    options: [
+                        "Annual leave / vacation",
+                        "Sick leave",
+                        "Parental leave",
+                        "Lunch breaks",
+                        "Personal/carer's leave"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Tanda tracks various leave types including annual, sick, parental, and personal leave. Lunch breaks are tracked separately as unpaid break time, not leave.",
+                    helpLink: "https://help.tanda.co/en/collections/1395846-leave"
+                },
+                {
+                    question: "What is 'leave accrual'?",
+                    options: [
+                        "The process of using leave",
+                        "The process of earning/accumulating leave over time",
+                        "Denying a leave request",
+                        "Transferring leave to another employee"
+                    ],
+                    correct: 1,
+                    explanation: "Leave accrual is the process by which employees earn leave entitlements over time, typically calculated based on hours worked or time employed.",
+                    helpLink: "https://help.tanda.co/en/articles/1395851-leave-accruals"
+                },
+                {
+                    type: 'true-false',
+                    question: "Managers can view all team members' leave balances in Tanda.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Managers have access to view their team members' leave balances, helping them make informed decisions when approving leave requests and planning coverage.",
+                    helpLink: "https://help.tanda.co/en/articles/1395849-viewing-leave-balances"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "What can managers see when reviewing a leave request? (Select all that apply)",
+                    options: [
+                        "Requested dates and duration",
+                        "Employee's current leave balance",
+                        "Type of leave requested",
+                        "Employee's bank account details",
+                        "Roster coverage during those dates"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Managers can see request details, leave balances, leave type, and roster impact. Financial/banking information is not part of leave request review.",
+                    helpLink: "https://help.tanda.co/en/articles/1395850-approving-leave-requests"
+                },
+                {
+                    question: "What is a 'leave policy' in Tanda?",
+                    options: [
+                        "A legal document employees sign",
+                        "Rules that define how leave accrues and can be used",
+                        "A list of public holidays",
+                        "An employee handbook"
+                    ],
+                    correct: 1,
+                    explanation: "Leave policies define the rules for how leave is earned, tracked, and used - including accrual rates, approval requirements, and usage restrictions.",
+                    helpLink: "https://help.tanda.co/en/articles/1395852-setting-up-leave-policies"
+                },
+                {
+                    type: 'true-false',
+                    question: "Employees can see their leave balance history showing how it has changed over time.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda provides leave balance history showing accruals, usage, and adjustments over time, giving employees transparency into their entitlements.",
+                    helpLink: "https://help.tanda.co/en/articles/1395849-viewing-leave-balances"
+                },
+                {
+                    question: "What does it mean when leave is 'in lieu'?",
+                    options: [
+                        "It's been denied",
+                        "Time off given in exchange for extra hours worked",
+                        "It's been automatically approved",
+                        "It's a type of sick leave"
+                    ],
+                    correct: 1,
+                    explanation: "Leave in lieu (TOIL - Time Off In Lieu) is paid time off granted to compensate employees for overtime or extra hours worked beyond their normal schedule.",
+                    helpLink: "https://help.tanda.co/en/articles/2625147-time-off-in-lieu-toil"
+                }
+                ],
+                'self-service': [
+                {
+                    question: "What is 'self-service' in Tanda?",
+                    options: [
+                        "A cafeteria feature",
+                        "Features allowing employees to manage their own information and requests",
+                        "A manager-only setting",
+                        "An automated rostering tool"
+                    ],
+                    correct: 1,
+                    explanation: "Self-service refers to features that empower employees to manage their own schedules, time tracking, leave requests, and personal information without manager intervention.",
+                    helpLink: "https://help.tanda.co/en/collections/1395845-employee-self-service"
+                },
+                {
+                    type: 'true-false',
+                    question: "Employees can update their own availability preferences in Tanda.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "The self-service portal allows employees to set and update their availability, helping managers create rosters that accommodate employee preferences and commitments.",
+                    helpLink: "https://help.tanda.co/en/articles/1395853-setting-employee-availability"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "What can employees typically do through Tanda's self-service features? (Select all that apply)",
+                    options: [
+                        "View their schedule",
+                        "Request leave",
+                        "Clock in and out",
+                        "Fire other employees",
+                        "Update contact information",
+                        "Set availability"
+                    ],
+                    correct: [0, 1, 2, 4, 5],
+                    explanation: "Employees can view schedules, request leave, clock in/out, update contact info, and set availability through self-service. Employment decisions remain with management.",
+                    helpLink: "https://help.tanda.co/en/collections/1395845-employee-self-service"
+                },
+                {
+                    type: 'fill-blank',
+                    question: "What is the name of Tanda's mobile application for employees?",
+                    options: {
+                        correct: ["Staff App", "Tanda Staff App", "staff app", "tanda staff app", "Staff app"]
+                    },
+                    explanation: "The Tanda Staff App is the mobile application that provides employees with access to all self-service features on their smartphones.",
+                    helpLink: "https://help.tanda.co/en/articles/1395854-tanda-staff-app"
+                },
+                {
+                    question: "Can employees swap shifts with each other in Tanda?",
+                    options: [
+                        "No, only managers can reassign shifts",
+                        "Yes, with manager approval if required",
+                        "Yes, but only on weekends",
+                        "Shift swapping is not possible"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda allows employees to request shift swaps with colleagues, subject to manager approval settings, making it easy to accommodate personal needs.",
+                    helpLink: "https://help.tanda.co/en/articles/2291789-shift-swaps"
+                },
+                {
+                    type: 'true-false',
+                    question: "Employees receive notifications about their upcoming shifts through the Tanda app.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda sends push notifications, emails, and/or SMS to remind employees of upcoming shifts and notify them of schedule changes.",
+                    helpLink: "https://help.tanda.co/en/articles/1395855-notification-settings"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "What personal information can employees typically update themselves? (Select all that apply)",
+                    options: [
+                        "Phone number",
+                        "Email address",
+                        "Pay rate",
+                        "Home address",
+                        "Tax file number"
+                    ],
+                    correct: [0, 1, 3],
+                    explanation: "Employees can update contact information like phone, email, and address. Sensitive financial information like pay rates and tax details require manager/admin access.",
+                    helpLink: "https://help.tanda.co/en/articles/1395856-updating-personal-information"
+                },
+                {
+                    question: "What is the purpose of employee 'availability' in Tanda?",
+                    options: [
+                        "To show when employees are on break",
+                        "To indicate when employees are willing and able to work",
+                        "To track vacation days",
+                        "To record clock-in times"
+                    ],
+                    correct: 1,
+                    explanation: "Availability settings let employees communicate when they can work, helping managers create rosters that respect employee schedules and commitments.",
+                    helpLink: "https://help.tanda.co/en/articles/1395853-setting-employee-availability"
+                },
+                {
+                    type: 'true-false',
+                    question: "Employees can view their payslips through the Tanda platform.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "When integrated with payroll systems, Tanda can provide employees with secure access to view and download their payslips through the self-service portal.",
+                    helpLink: "https://help.tanda.co/en/articles/3219756-accessing-payslips"
+                },
+                {
+                    question: "What should an employee do if they notice an error in their timesheet?",
+                    options: [
+                        "Ignore it",
+                        "Contact their manager to request a correction",
+                        "Wait until the next pay period",
+                        "Employees cannot view their timesheets"
+                    ],
+                    correct: 1,
+                    explanation: "Employees should notify their manager if they spot timesheet errors. Managers can then review and make necessary corrections to ensure accurate pay.",
+                    helpLink: "https://help.tanda.co/en/articles/1395859-editing-timesheets"
+                }
+                ]
             },
             intermediate: {
                 'general': [
@@ -3325,6 +3780,151 @@
             }
         });
 
+        // Submissions Functions
+        function showSubmissions() {
+            const submissions = JSON.parse(localStorage.getItem('tandaSubmittedQuestions') || '[]');
+            const container = document.getElementById('submissionsContainer');
+
+            if (submissions.length === 0) {
+                container.innerHTML = `
+                    <p style="text-align:center;opacity:0.6;padding:40px">
+                        No questions have been submitted yet.
+                    </p>
+                `;
+            } else {
+                let submissionsHTML = `
+                    <div style="margin-bottom:20px;text-align:center">
+                        <button onclick="exportSubmissions('json')" style="padding:12px 25px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-right:10px">
+                            💾 Export as JSON
+                        </button>
+                        <button onclick="exportSubmissions('github')" style="padding:12px 25px;background:linear-gradient(135deg,#6dd5ed,#2193b0);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-right:10px">
+                            📦 Export for GitHub
+                        </button>
+                        <button onclick="clearSubmissions()" style="padding:12px 25px;background:linear-gradient(135deg,#dc3545,#c82333);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer">
+                            🗑️ Clear All
+                        </button>
+                    </div>
+                    <div style="font-size:0.9em;text-align:center;margin-bottom:20px;opacity:0.8">
+                        Total Submissions: ${submissions.length}
+                    </div>
+                `;
+
+                submissions.reverse().forEach((sub, idx) => {
+                    const difficultyIcons = {beginner: '🌱', intermediate: '📚', advanced: '🎓', expert: '🏆'};
+                    submissionsHTML += `
+                        <div style="background:var(--question-bg);padding:20px;border-radius:12px;margin-bottom:15px;border-left:4px solid #667eea">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                                <div style="font-weight:bold;font-size:1.1em">Submission #${submissions.length - idx}</div>
+                                <div style="font-size:0.85em;opacity:0.7">${new Date(sub.submittedAt).toLocaleString()}</div>
+                            </div>
+                            <div style="margin-bottom:10px">
+                                <span style="display:inline-block;background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:4px 10px;border-radius:6px;font-size:0.85em;margin-right:8px">
+                                    ${difficultyIcons[sub.difficulty] || ''} ${sub.difficulty}
+                                </span>
+                                <span style="display:inline-block;background:var(--border-color);padding:4px 10px;border-radius:6px;font-size:0.85em">
+                                    ${subcategories[sub.difficulty]?.[sub.subcategory]?.name || sub.subcategory}
+                                </span>
+                            </div>
+                            <div style="font-weight:600;margin-bottom:10px;font-size:1.05em">${sub.question}</div>
+                            <div style="margin-bottom:10px">
+                                ${sub.options.map((opt, i) => `
+                                    <div style="padding:8px;margin:5px 0;background:var(--card-bg);border-radius:6px;${i === sub.correct ? 'border-left:3px solid #28a745;font-weight:600' : ''}">
+                                        ${i + 1}. ${opt} ${i === sub.correct ? '✓' : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div style="background:var(--card-bg);padding:12px;border-radius:8px;margin-bottom:10px">
+                                <div style="font-weight:600;margin-bottom:5px">Explanation:</div>
+                                <div>${sub.explanation}</div>
+                            </div>
+                            ${sub.helpLink ? `
+                                <div style="margin-top:10px">
+                                    <a href="${sub.helpLink}" target="_blank" style="color:#667eea;text-decoration:none;font-weight:600">
+                                        📚 Help Guide →
+                                    </a>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = submissionsHTML;
+            }
+
+            document.getElementById('submissionsModal').classList.add('active');
+        }
+
+        function closeSubmissions() {
+            document.getElementById('submissionsModal').classList.remove('active');
+        }
+
+        function exportSubmissions(format) {
+            const submissions = JSON.parse(localStorage.getItem('tandaSubmittedQuestions') || '[]');
+
+            if (submissions.length === 0) {
+                alert('No submissions to export.');
+                return;
+            }
+
+            let content, filename, mimeType;
+
+            if (format === 'json') {
+                // Export as JSON
+                content = JSON.stringify(submissions, null, 2);
+                filename = `tanda-quiz-submissions-${new Date().toISOString().split('T')[0]}.json`;
+                mimeType = 'application/json';
+            } else if (format === 'github') {
+                // Export as JavaScript module for GitHub
+                content = `// Tanda Quiz Community Submissions
+// Generated: ${new Date().toISOString()}
+// Total Submissions: ${submissions.length}
+
+const communityQuestions = ${JSON.stringify(submissions, null, 4)};
+
+// Export for use in quiz application
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = communityQuestions;
+}
+
+// For direct inclusion in HTML
+if (typeof window !== 'undefined') {
+    window.tandaCommunityQuestions = communityQuestions;
+}
+`;
+                filename = `tanda-community-questions-${new Date().toISOString().split('T')[0]}.js`;
+                mimeType = 'application/javascript';
+            }
+
+            // Create downloadable file
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert(`Exported ${submissions.length} submission(s) as ${filename}`);
+        }
+
+        function clearSubmissions() {
+            const confirmClear = confirm('Are you sure you want to clear all submitted questions? This cannot be undone.');
+            if (!confirmClear) return;
+
+            localStorage.removeItem('tandaSubmittedQuestions');
+            closeSubmissions();
+            alert('All submissions cleared successfully!');
+        }
+
+        // Close submissions when clicking outside
+        document.getElementById('submissionsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSubmissions();
+            }
+        });
+
         // Toggle question submission form visibility
         function toggleQuestionForm() {
             const content = document.getElementById('questionFormContent');
@@ -3366,7 +3966,7 @@
         }
 
         // Handle question submission form
-        document.getElementById('submitQuestionForm').addEventListener('submit', function(e) {
+        document.getElementById('submitQuestionForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const submittedQuestion = {
@@ -3382,7 +3982,8 @@
                 helpLink: document.getElementById('helpGuideLink').value,
                 difficulty: document.getElementById('questionDifficulty').value,
                 subcategory: document.getElementById('questionSubcategory').value,
-                submittedAt: new Date().toISOString()
+                submittedAt: new Date().toISOString(),
+                submittedBy: 'Tanda Quiz User'
             };
 
             // Save to localStorage
@@ -3390,11 +3991,74 @@
             submittedQuestions.push(submittedQuestion);
             localStorage.setItem('tandaSubmittedQuestions', JSON.stringify(submittedQuestions));
 
+            // Send email notification to alex.hall@tanda.com.au
+            try {
+                const emailBody = `
+New Question Submission - Tanda Knowledge Quiz
+=============================================
+
+Question: ${submittedQuestion.question}
+
+Options:
+1. ${submittedQuestion.options[0]}
+2. ${submittedQuestion.options[1]}
+3. ${submittedQuestion.options[2]}
+4. ${submittedQuestion.options[3]}
+
+Correct Answer: Option ${submittedQuestion.correct + 1} - ${submittedQuestion.options[submittedQuestion.correct]}
+
+Explanation: ${submittedQuestion.explanation}
+
+Help Link: ${submittedQuestion.helpLink || 'Not provided'}
+
+Difficulty: ${submittedQuestion.difficulty}
+Subcategory: ${submittedQuestion.subcategory}
+
+Submitted At: ${new Date(submittedQuestion.submittedAt).toLocaleString()}
+
+---
+This question was submitted via the Tanda Knowledge Quiz platform.
+To export all submissions, use the "Export Submissions" feature in the admin panel.
+                `.trim();
+
+                // Use FormSubmit.co free service (no signup required)
+                const formData = new FormData();
+                formData.append('_subject', 'New Tanda Quiz Question Submission');
+                formData.append('_template', 'box');
+                formData.append('_captcha', 'false');
+                formData.append('Question', submittedQuestion.question);
+                formData.append('Options', submittedQuestion.options.join(' | '));
+                formData.append('Correct_Answer', `Option ${submittedQuestion.correct + 1}`);
+                formData.append('Explanation', submittedQuestion.explanation);
+                formData.append('Help_Link', submittedQuestion.helpLink || 'Not provided');
+                formData.append('Difficulty', submittedQuestion.difficulty);
+                formData.append('Subcategory', submittedQuestion.subcategory);
+                formData.append('Submitted_At', new Date(submittedQuestion.submittedAt).toLocaleString());
+                formData.append('Full_Details', emailBody);
+
+                // Send to FormSubmit (will send to alex.hall@tanda.com.au)
+                await fetch('https://formsubmit.co/alex.hall@tanda.com.au', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                console.log('Question submitted and email sent successfully');
+            } catch (error) {
+                console.error('Error sending email:', error);
+                // Continue even if email fails - question is still saved locally
+            }
+
             // Show success message
             document.getElementById('submissionSuccess').classList.remove('hidden');
 
             // Reset form
             this.reset();
+
+            // Hide subcategory select on reset
+            document.getElementById('subcategorySelectContainer').classList.add('hidden');
 
             // Hide success message after 5 seconds
             setTimeout(() => {
