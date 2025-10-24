@@ -798,30 +798,18 @@
         </div>
 
         <div id="difficultySelection" class="difficulty-selection" role="group" aria-label="Difficulty selection">
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <button class="difficulty-btn beginner" onclick="selectDifficulty('beginner')" aria-label="Select beginner level">
-                    <span>🌱 Beginner</span>
-                </button>
-                <button onclick="quickStart('beginner')" style="padding: 8px; background: linear-gradient(135deg, #6dd5ed, #2193b0); color: white; border: none; border-radius: 6px; font-size: 0.85em; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">⚡ Quick Start</button>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <button class="difficulty-btn intermediate" onclick="selectDifficulty('intermediate')" aria-label="Select intermediate level">
-                    <span>📚 Intermediate</span>
-                </button>
-                <button onclick="quickStart('intermediate')" style="padding: 8px; background: linear-gradient(135deg, #f093fb, #f5576c); color: white; border: none; border-radius: 6px; font-size: 0.85em; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">⚡ Quick Start</button>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <button class="difficulty-btn advanced" onclick="selectDifficulty('advanced')" aria-label="Select advanced level">
-                    <span>🎓 Advanced</span>
-                </button>
-                <button onclick="quickStart('advanced')" style="padding: 8px; background: linear-gradient(135deg, #fa709a, #fee140); color: white; border: none; border-radius: 6px; font-size: 0.85em; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">⚡ Quick Start</button>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <button class="difficulty-btn expert" onclick="selectDifficulty('expert')" aria-label="Select expert level">
-                    <span>🏆 Expert</span>
-                </button>
-                <button onclick="quickStart('expert')" style="padding: 8px; background: linear-gradient(135deg, #30cfd0, #330867); color: white; border: none; border-radius: 6px; font-size: 0.85em; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">⚡ Quick Start</button>
-            </div>
+            <button class="difficulty-btn beginner" onclick="selectDifficulty('beginner')" aria-label="Select beginner level">
+                <span>🌱 Beginner</span>
+            </button>
+            <button class="difficulty-btn intermediate" onclick="selectDifficulty('intermediate')" aria-label="Select intermediate level">
+                <span>📚 Intermediate</span>
+            </button>
+            <button class="difficulty-btn advanced" onclick="selectDifficulty('advanced')" aria-label="Select advanced level">
+                <span>🎓 Advanced</span>
+            </button>
+            <button class="difficulty-btn expert" onclick="selectDifficulty('expert')" aria-label="Select expert level">
+                <span>🏆 Expert</span>
+            </button>
         </div>
 
         <div id="subcategorySelection" class="difficulty-selection hidden" role="group" aria-label="Subcategory selection">
@@ -834,15 +822,19 @@
 
         <!-- Submit Question Section -->
         <div id="submitQuestionSection" style="margin-top: 30px; padding: 25px; background: var(--question-bg); border-radius: 12px; border-left: 5px solid #667eea;">
-            <h2 style="color: #667eea; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+            <h2 onclick="toggleQuestionForm()" style="color: #667eea; margin-bottom: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; transition: all 0.3s ease;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                <span id="questionFormToggleIcon">▶</span>
                 <span>💡</span>
                 <span>Contribute a Question</span>
+                <small style="margin-left: auto; font-size: 0.6em; opacity: 0.7; font-weight: normal;">Click to expand</small>
             </h2>
-            <p style="margin-bottom: 20px; color: var(--text-color); line-height: 1.6;">
-                Help improve this quiz! Submit your own Tanda knowledge question to help others learn.
-            </p>
 
-            <form id="submitQuestionForm" style="display: flex; flex-direction: column; gap: 15px;">
+            <div id="questionFormContent" class="hidden">
+                <p style="margin: 20px 0; color: var(--text-color); line-height: 1.6;">
+                    Help improve this quiz! Submit your own Tanda knowledge question to help others learn.
+                </p>
+
+                <form id="submitQuestionForm" style="display: flex; flex-direction: column; gap: 15px;">
                 <div>
                     <label for="questionText" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Question *</label>
                     <textarea id="questionText" required rows="3" placeholder="Enter your question about Tanda..." style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em; resize: vertical;"></textarea>
@@ -904,6 +896,7 @@
             <div id="submissionSuccess" class="hidden" style="margin-top: 20px; padding: 15px; background: #d4edda; border: 2px solid #28a745; border-radius: 8px; color: #155724;">
                 <strong>✅ Thank you!</strong> Your question has been saved locally. In a full implementation, this would be sent to a server for review.
             </div>
+            </div><!-- End questionFormContent -->
         </div>
 
         <div id="quizContainer" class="quiz-container" role="main">
@@ -1601,13 +1594,6 @@
             showResults();
         }
 
-        // Quick Start - bypass subcategory selection and go straight to general quiz
-        function quickStart(difficulty) {
-            currentDifficulty = difficulty;
-            currentSubcategory = 'general';
-            startQuiz(difficulty, 'general');
-        }
-
         // Difficulty and Subcategory Navigation
         function selectDifficulty(difficulty) {
             currentDifficulty = difficulty;
@@ -2151,6 +2137,20 @@
                 closeStats();
             }
         });
+
+        // Toggle question submission form visibility
+        function toggleQuestionForm() {
+            const content = document.getElementById('questionFormContent');
+            const icon = document.getElementById('questionFormToggleIcon');
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('hidden');
+                icon.textContent = '▶';
+            }
+        }
 
         // Show subcategory select when difficulty is chosen in question submission form
         function showSubcategorySelect() {
