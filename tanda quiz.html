@@ -112,11 +112,292 @@
         }
 
         .difficulty-selection {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
             margin-bottom: 30px;
             animation: fadeIn 0.8s ease;
+        }
+
+        /* Accordion Styles */
+        .difficulty-accordion {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow-light);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-accordion:hover {
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .difficulty-header {
+            padding: 20px 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            border-left: 5px solid #032a56;
+        }
+
+        .difficulty-header:hover {
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        }
+
+        .difficulty-header.beginner {
+            border-left-color: #28a745;
+        }
+
+        .difficulty-header.intermediate {
+            border-left-color: #17a2b8;
+        }
+
+        .difficulty-header.advanced {
+            border-left-color: #fd7e14;
+        }
+
+        .difficulty-header.expert {
+            border-left-color: #dc3545;
+        }
+
+        .difficulty-header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .difficulty-icon {
+            font-size: 1.8em;
+        }
+
+        .difficulty-info {
+            flex: 1;
+        }
+
+        .difficulty-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #032a56;
+            margin-bottom: 5px;
+        }
+
+        .difficulty-progress-summary {
+            font-size: 0.9em;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-stats-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            background: rgba(3, 42, 86, 0.1);
+            border-radius: 12px;
+            font-size: 0.85em;
+        }
+
+        .expand-arrow {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+            color: #032a56;
+        }
+
+        .expand-arrow.expanded {
+            transform: rotate(180deg);
+        }
+
+        .difficulty-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+
+        .difficulty-content.expanded {
+            max-height: 2000px;
+            padding: 20px 25px;
+        }
+
+        .topic-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .topic-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 18px;
+            background: var(--question-bg);
+            border-radius: 10px;
+            border-left: 4px solid #dee2e6;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .topic-item:hover {
+            background: var(--hover-bg);
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px var(--shadow-light);
+        }
+
+        .topic-item.completed {
+            border-left-color: #28a745;
+        }
+
+        .topic-item.in-progress {
+            border-left-color: #ffc107;
+        }
+
+        .topic-item.not-started {
+            border-left-color: #dee2e6;
+        }
+
+        .topic-item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .topic-status-icon {
+            font-size: 1.3em;
+        }
+
+        .topic-name {
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 1em;
+        }
+
+        .topic-item-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .topic-score {
+            font-size: 0.95em;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 8px;
+            background: rgba(3, 42, 86, 0.1);
+            color: #032a56;
+        }
+
+        .topic-score.excellent {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+        }
+
+        .topic-score.good {
+            background: rgba(23, 162, 184, 0.15);
+            color: #17a2b8;
+        }
+
+        .topic-score.needs-improvement {
+            background: rgba(255, 193, 7, 0.15);
+            color: #f59f00;
+        }
+
+        .topic-badge {
+            font-size: 1.2em;
+        }
+
+        .overall-stats-panel {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, #032a56 0%, #0a4d8f 100%);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .overall-stats-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .overall-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .progress-bar-container {
+            margin-bottom: 15px;
+        }
+
+        .progress-bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .mini-progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .mini-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #5cb85c);
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        .continue-learning-btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        .continue-learning-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
         }
 
         .difficulty-btn {
@@ -1182,18 +1463,7 @@
         </div>
 
         <div id="difficultySelection" class="difficulty-selection" role="group" aria-label="Difficulty selection">
-            <button class="difficulty-btn beginner" onclick="selectDifficulty('beginner')" aria-label="Select beginner level">
-                <span>🌱 Beginner</span>
-            </button>
-            <button class="difficulty-btn intermediate" onclick="selectDifficulty('intermediate')" aria-label="Select intermediate level">
-                <span>📚 Intermediate</span>
-            </button>
-            <button class="difficulty-btn advanced" onclick="selectDifficulty('advanced')" aria-label="Select advanced level">
-                <span>🎓 Advanced</span>
-            </button>
-            <button class="difficulty-btn expert" onclick="selectDifficulty('expert')" aria-label="Select expert level">
-                <span>🏆 Expert</span>
-            </button>
+            <!-- Accordion sections will be dynamically rendered here -->
         </div>
 
         <div id="subcategorySelection" class="difficulty-selection hidden" role="group" aria-label="Subcategory selection">
@@ -3700,10 +3970,250 @@
             expert: 360       // 6 minutes
         };
 
+        // Accordion rendering functions
+        function renderAccordion() {
+            const container = document.getElementById('difficultySelection');
+            const difficulties = ['beginner', 'intermediate', 'advanced', 'expert'];
+            const icons = { beginner: '🌱', intermediate: '📚', advanced: '🎓', expert: '🏆' };
+            const names = { beginner: 'BEGINNER', intermediate: 'INTERMEDIATE', advanced: 'ADVANCED', expert: 'EXPERT' };
+
+            container.innerHTML = '';
+
+            difficulties.forEach(difficulty => {
+                const diffStats = getDifficultyStats(difficulty);
+                const topics = Object.keys(subcategories[difficulty]);
+
+                const accordion = document.createElement('div');
+                accordion.className = 'difficulty-accordion';
+                accordion.innerHTML = `
+                    <div class="difficulty-header ${difficulty}" onclick="toggleDifficultySection('${difficulty}')">
+                        <div class="difficulty-header-left">
+                            <div class="difficulty-icon">${icons[difficulty]}</div>
+                            <div class="difficulty-info">
+                                <div class="difficulty-name">${names[difficulty]}</div>
+                                <div class="difficulty-progress-summary">
+                                    <span class="difficulty-stats-badge">
+                                        ${diffStats.completedTopics}/${topics.length} Completed
+                                    </span>
+                                    ${diffStats.avgScore > 0 ? `
+                                    <span class="difficulty-stats-badge">
+                                        Average: ${diffStats.avgScore}%
+                                    </span>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="expand-arrow" id="arrow-${difficulty}">▼</div>
+                    </div>
+                    <div class="difficulty-content" id="content-${difficulty}">
+                        <div class="topic-list">
+                            ${topics.map(topic => renderTopicItem(difficulty, topic)).join('')}
+                        </div>
+                        ${diffStats.totalCompleted > 0 ? renderOverallStats(difficulty, diffStats) : ''}
+                    </div>
+                `;
+
+                container.appendChild(accordion);
+            });
+        }
+
+        function renderTopicItem(difficulty, subcategory) {
+            const topicInfo = subcategories[difficulty][subcategory];
+            const stats = getTopicStats(difficulty, subcategory);
+            const statusInfo = getTopicStatus(stats);
+
+            return `
+                <div class="topic-item ${statusInfo.class}" onclick="selectSubcategory('${difficulty}', '${subcategory}')">
+                    <div class="topic-item-left">
+                        <span class="topic-status-icon">${statusInfo.icon}</span>
+                        <span class="topic-name">${topicInfo.name}</span>
+                    </div>
+                    <div class="topic-item-right">
+                        ${stats.bestScore !== null ? `
+                            <span class="topic-score ${statusInfo.scoreClass}">
+                                ${stats.bestScore}/${stats.totalQuestions} (${stats.bestPercentage}%)
+                            </span>
+                            ${stats.bestPercentage === 100 ? '<span class="topic-badge">🏆</span>' : ''}
+                        ` : '<span class="topic-score">Not Started</span>'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderOverallStats(difficulty, stats) {
+            const totalQuestions = Object.keys(subcategories[difficulty]).length * 20; // Assuming 20 questions per topic
+            const progress = (stats.totalCompleted / totalQuestions * 100).toFixed(0);
+
+            return `
+                <div class="overall-stats-panel">
+                    <div class="overall-stats-title">
+                        <span>📊</span>
+                        <span>${difficulty.toUpperCase()} OVERALL STATISTICS</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-label">
+                            <span>Total Progress</span>
+                            <span>${stats.totalCompleted}/${totalQuestions} questions (${progress}%)</span>
+                        </div>
+                        <div class="mini-progress-bar">
+                            <div class="mini-progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+                    <div class="overall-stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-label">Average Score</div>
+                            <div class="stat-value">${stats.avgScore}%</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-label">Completed Topics</div>
+                            <div class="stat-value">${stats.completedTopics}/${Object.keys(subcategories[difficulty]).length}</div>
+                        </div>
+                        ${stats.totalTime > 0 ? `
+                        <div class="stat-item">
+                            <div class="stat-label">Total Time</div>
+                            <div class="stat-value">${formatTime(stats.totalTime)}</div>
+                        </div>
+                        ` : ''}
+                        ${stats.perfectScores > 0 ? `
+                        <div class="stat-item">
+                            <div class="stat-label">Perfect Scores</div>
+                            <div class="stat-value">${stats.perfectScores} 🏆</div>
+                        </div>
+                        ` : ''}
+                    </div>
+                    ${stats.weakestTopic ? `
+                    <button class="continue-learning-btn" onclick="selectSubcategory('${difficulty}', '${stats.weakestTopic}')">
+                        📚 Improve Weakest Topic: ${subcategories[difficulty][stats.weakestTopic].name}
+                    </button>
+                    ` : stats.nextTopic ? `
+                    <button class="continue-learning-btn" onclick="selectSubcategory('${difficulty}', '${stats.nextTopic}')">
+                        ▶️ Continue Learning: ${subcategories[difficulty][stats.nextTopic].name}
+                    </button>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function toggleDifficultySection(difficulty) {
+            const content = document.getElementById(`content-${difficulty}`);
+            const arrow = document.getElementById(`arrow-${difficulty}`);
+
+            content.classList.toggle('expanded');
+            arrow.classList.toggle('expanded');
+        }
+
+        function getTopicStats(difficulty, subcategory) {
+            const stats = JSON.parse(localStorage.getItem('tandaQuizStats')) || { bySubcategory: {} };
+            const subKey = `${difficulty}_${subcategory}`;
+            const subStats = stats.bySubcategory[subKey];
+
+            if (!subStats || subStats.taken === 0) {
+                return {
+                    taken: 0,
+                    bestScore: null,
+                    avgScore: 0,
+                    bestPercentage: 0,
+                    totalQuestions: 20,
+                    lastAttempt: null,
+                    completed: false
+                };
+            }
+
+            return {
+                taken: subStats.taken || 0,
+                bestScore: subStats.bestScore || 0,
+                avgScore: subStats.avgScore || 0,
+                bestPercentage: subStats.bestPercentage || 0,
+                totalQuestions: 20,
+                lastAttempt: subStats.lastAttempt || null,
+                completed: subStats.completed || false
+            };
+        }
+
+        function getDifficultyStats(difficulty) {
+            const stats = JSON.parse(localStorage.getItem('tandaQuizStats')) || { bySubcategory: {} };
+            const topics = Object.keys(subcategories[difficulty]);
+
+            let totalCompleted = 0;
+            let completedTopics = 0;
+            let totalScore = 0;
+            let topicsWithScores = 0;
+            let totalTime = 0;
+            let perfectScores = 0;
+            let weakestTopic = null;
+            let weakestScore = 100;
+            let nextTopic = null;
+
+            topics.forEach(topic => {
+                const subKey = `${difficulty}_${topic}`;
+                const subStats = stats.bySubcategory[subKey];
+
+                if (subStats && subStats.taken > 0) {
+                    totalCompleted += subStats.bestScore || 0;
+                    totalScore += subStats.bestPercentage || 0;
+                    topicsWithScores++;
+                    totalTime += subStats.timeTaken || 0;
+
+                    if (subStats.completed) {
+                        completedTopics++;
+                    }
+
+                    if (subStats.bestPercentage === 100) {
+                        perfectScores++;
+                    }
+
+                    // Find weakest topic (completed but lowest score)
+                    if (subStats.bestPercentage < weakestScore && subStats.bestPercentage < 90) {
+                        weakestScore = subStats.bestPercentage;
+                        weakestTopic = topic;
+                    }
+                } else if (!nextTopic) {
+                    // Find first not started topic
+                    nextTopic = topic;
+                }
+            });
+
+            return {
+                totalCompleted,
+                completedTopics,
+                avgScore: topicsWithScores > 0 ? Math.round(totalScore / topicsWithScores) : 0,
+                totalTime,
+                perfectScores,
+                weakestTopic,
+                nextTopic
+            };
+        }
+
+        function getTopicStatus(stats) {
+            if (stats.taken === 0) {
+                return { icon: '📝', class: 'not-started', scoreClass: '' };
+            } else if (stats.bestPercentage >= 90) {
+                return { icon: '✅', class: 'completed', scoreClass: 'excellent' };
+            } else if (stats.bestPercentage >= 70) {
+                return { icon: '✓', class: 'completed', scoreClass: 'good' };
+            } else {
+                return { icon: '⚠️', class: 'in-progress', scoreClass: 'needs-improvement' };
+            }
+        }
+
+        function formatTime(seconds) {
+            if (!seconds) return '0 min';
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) {
+                return `${minutes} min`;
+            }
+            const hours = Math.floor(minutes / 60);
+            const remainingMinutes = minutes % 60;
+            return `${hours}h ${remainingMinutes}m`;
+        }
+
         // Initialize app
         function initializeApp() {
             loadTimerPreference();
             loadStats();
+
+            // Render accordion on page load
+            renderAccordion();
 
             // Keyboard shortcuts
             document.addEventListener('keydown', function(e) {
@@ -4436,6 +4946,9 @@
             document.getElementById('timerDisplay').classList.add('hidden');
             document.getElementById('timerDisplay').classList.remove('warning');
 
+            // Re-render accordion to show updated stats
+            renderAccordion();
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -4488,13 +5001,36 @@
             // Update subcategory stats
             const subKey = `${currentDifficulty}_${currentSubcategory}`;
             if (!stats.bySubcategory[subKey]) {
-                stats.bySubcategory[subKey] = { taken: 0, avgScore: 0, completed: false };
+                stats.bySubcategory[subKey] = {
+                    taken: 0,
+                    avgScore: 0,
+                    completed: false,
+                    bestScore: 0,
+                    bestPercentage: 0,
+                    timeTaken: 0,
+                    lastAttempt: null
+                };
             }
             const subStats = stats.bySubcategory[subKey];
             subStats.taken++;
             subStats.avgScore = Math.round(
                 ((subStats.avgScore * (subStats.taken - 1)) + percentage) / subStats.taken
             );
+
+            // Track best score
+            if (score > (subStats.bestScore || 0)) {
+                subStats.bestScore = score;
+                subStats.bestPercentage = percentage;
+            }
+
+            // Track time taken (update to most recent or best time)
+            if (!subStats.timeTaken || timeTaken < subStats.timeTaken) {
+                subStats.timeTaken = timeTaken;
+            }
+
+            // Track last attempt
+            subStats.lastAttempt = new Date().toISOString();
+
             if (percentage >= 80) subStats.completed = true;
 
             // Award XP
