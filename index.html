@@ -798,18 +798,30 @@
         </div>
 
         <div id="difficultySelection" class="difficulty-selection" role="group" aria-label="Difficulty selection">
-            <button class="difficulty-btn beginner" onclick="selectDifficulty('beginner')" aria-label="Select beginner level">
-                <span>🌱 Beginner</span>
-            </button>
-            <button class="difficulty-btn intermediate" onclick="selectDifficulty('intermediate')" aria-label="Select intermediate level">
-                <span>📚 Intermediate</span>
-            </button>
-            <button class="difficulty-btn advanced" onclick="selectDifficulty('advanced')" aria-label="Select advanced level">
-                <span>🎓 Advanced</span>
-            </button>
-            <button class="difficulty-btn expert" onclick="selectDifficulty('expert')" aria-label="Select expert level">
-                <span>🏆 Expert</span>
-            </button>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button class="difficulty-btn beginner" onclick="selectDifficulty('beginner')" aria-label="Select beginner level">
+                    <span>🌱 Beginner</span>
+                </button>
+                <button onclick="quickStart('beginner')" style="padding: 8px; background: linear-gradient(135deg, #6dd5ed, #2193b0); color: white; border: none; border-radius: 6px; font-size: 0.85em; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">⚡ Quick Start</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button class="difficulty-btn intermediate" onclick="selectDifficulty('intermediate')" aria-label="Select intermediate level">
+                    <span>📚 Intermediate</span>
+                </button>
+                <button onclick="quickStart('intermediate')" style="padding: 8px; background: linear-gradient(135deg, #f093fb, #f5576c); color: white; border: none; border-radius: 6px; font-size: 0.85em; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">⚡ Quick Start</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button class="difficulty-btn advanced" onclick="selectDifficulty('advanced')" aria-label="Select advanced level">
+                    <span>🎓 Advanced</span>
+                </button>
+                <button onclick="quickStart('advanced')" style="padding: 8px; background: linear-gradient(135deg, #fa709a, #fee140); color: white; border: none; border-radius: 6px; font-size: 0.85em; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">⚡ Quick Start</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <button class="difficulty-btn expert" onclick="selectDifficulty('expert')" aria-label="Select expert level">
+                    <span>🏆 Expert</span>
+                </button>
+                <button onclick="quickStart('expert')" style="padding: 8px; background: linear-gradient(135deg, #30cfd0, #330867); color: white; border: none; border-radius: 6px; font-size: 0.85em; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">⚡ Quick Start</button>
+            </div>
         </div>
 
         <div id="subcategorySelection" class="difficulty-selection hidden" role="group" aria-label="Subcategory selection">
@@ -867,13 +879,20 @@
                 </div>
 
                 <div>
-                    <label for="difficulty" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Difficulty Level *</label>
-                    <select id="difficulty" required style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
+                    <label for="questionDifficulty" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Difficulty Level *</label>
+                    <select id="questionDifficulty" required onchange="showSubcategorySelect()" style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
                         <option value="">-- Select difficulty --</option>
                         <option value="beginner">🌱 Beginner</option>
                         <option value="intermediate">📚 Intermediate</option>
                         <option value="advanced">🎓 Advanced</option>
                         <option value="expert">🏆 Expert</option>
+                    </select>
+                </div>
+
+                <div id="subcategorySelectContainer" class="hidden">
+                    <label for="questionSubcategory" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Topic/Subcategory *</label>
+                    <select id="questionSubcategory" required style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
+                        <option value="">-- Select topic --</option>
                     </select>
                 </div>
 
@@ -1582,6 +1601,13 @@
             showResults();
         }
 
+        // Quick Start - bypass subcategory selection and go straight to general quiz
+        function quickStart(difficulty) {
+            currentDifficulty = difficulty;
+            currentSubcategory = 'general';
+            startQuiz(difficulty, 'general');
+        }
+
         // Difficulty and Subcategory Navigation
         function selectDifficulty(difficulty) {
             currentDifficulty = difficulty;
@@ -2126,6 +2152,32 @@
             }
         });
 
+        // Show subcategory select when difficulty is chosen in question submission form
+        function showSubcategorySelect() {
+            const difficulty = document.getElementById('questionDifficulty').value;
+            const container = document.getElementById('subcategorySelectContainer');
+            const select = document.getElementById('questionSubcategory');
+
+            if (difficulty) {
+                // Clear previous options
+                select.innerHTML = '<option value="">-- Select topic --</option>';
+
+                // Add subcategories for selected difficulty
+                const subs = subcategories[difficulty];
+                Object.keys(subs).forEach(subKey => {
+                    const sub = subs[subKey];
+                    const option = document.createElement('option');
+                    option.value = subKey;
+                    option.textContent = sub.name;
+                    select.appendChild(option);
+                });
+
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
         // Handle question submission form
         document.getElementById('submitQuestionForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -2141,7 +2193,8 @@
                 correct: parseInt(document.getElementById('correctAnswer').value),
                 explanation: document.getElementById('explanation').value,
                 helpLink: document.getElementById('helpGuideLink').value,
-                difficulty: document.getElementById('difficulty').value,
+                difficulty: document.getElementById('questionDifficulty').value,
+                subcategory: document.getElementById('questionSubcategory').value,
                 submittedAt: new Date().toISOString()
             };
 
