@@ -4851,28 +4851,75 @@
                         </div>
                     `;
                 } else if (questionType === 'multiple-select') {
-                    // Show multiple-select answers
+                    // Show multiple-select answers with enhanced visual feedback
                     const correctIndices = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
                     const userIndices = Array.isArray(userAnswer) ? userAnswer : [];
 
+                    // Calculate partial credit for this question
+                    let correctSelections = 0;
+                    let incorrectSelections = 0;
+                    userIndices.forEach(idx => {
+                        if (correctIndices.includes(idx)) correctSelections++;
+                        else incorrectSelections++;
+                    });
+                    const missedSelections = correctIndices.filter(idx => !userIndices.includes(idx)).length;
+                    const pointsPerCorrect = 1.0 / correctIndices.length;
+                    const partialCredit = Math.max(0, (correctSelections - incorrectSelections) * pointsPerCorrect);
+                    const isFullyCorrect = correctSelections === correctIndices.length && incorrectSelections === 0;
+
+                    // Add header showing what user got
+                    if (isFullyCorrect) {
+                        optionsHTML += `
+                            <div style="padding: 12px; background: rgba(40, 167, 69, 0.1); border-left: 4px solid #28a745; border-radius: 8px; margin-bottom: 15px; font-weight: 600; color: #28a745;">
+                                ✓ Correct! You selected all ${correctIndices.length} correct answer${correctIndices.length > 1 ? 's' : ''}
+                            </div>
+                        `;
+                    } else {
+                        optionsHTML += `
+                            <div style="padding: 12px; background: rgba(220, 53, 69, 0.1); border-left: 4px solid #dc3545; border-radius: 8px; margin-bottom: 15px;">
+                                <div style="font-weight: 600; color: #dc3545; margin-bottom: 5px;">
+                                    Partial Credit: ${(partialCredit * 100).toFixed(0)}% (${partialCredit.toFixed(2)} points)
+                                </div>
+                                <div style="font-size: 0.9em; color: #666;">
+                                    ✓ ${correctSelections} correct • ✗ ${incorrectSelections} incorrect • ⊘ ${missedSelections} missed
+                                </div>
+                            </div>
+                        `;
+                    }
+
                     q.options.options.forEach((option, optIndex) => {
                         let optionClass = '';
+                        let statusIcon = '';
+                        let statusLabel = '';
                         const isUserSelected = userIndices.includes(optIndex);
                         const isCorrect = correctIndices.includes(optIndex);
 
                         if (isUserSelected && isCorrect) {
                             optionClass = 'correct';
+                            statusIcon = '✓';
+                            statusLabel = '<span style="color: #28a745; font-size: 0.85em; margin-left: 8px;">(You selected - Correct!)</span>';
                         } else if (isUserSelected && !isCorrect) {
                             optionClass = 'incorrect';
+                            statusIcon = '✗';
+                            statusLabel = '<span style="color: #dc3545; font-size: 0.85em; margin-left: 8px;">(You selected - Incorrect)</span>';
                         } else if (!isUserSelected && isCorrect) {
                             optionClass = 'correct-answer';
+                            statusIcon = '✓';
+                            statusLabel = '<span style="color: #28a745; font-size: 0.85em; margin-left: 8px;">(Correct answer - You missed this)</span>';
+                        } else {
+                            // Not selected and not correct
+                            statusLabel = '<span style="color: #999; font-size: 0.85em; margin-left: 8px;">(Not selected - Correct!)</span>';
                         }
 
                         const checkIcon = isUserSelected ? '☑' : '☐';
 
                         optionsHTML += `
                             <div class="option ${optionClass}">
-                                <label>${checkIcon} ${option}</label>
+                                <label>
+                                    <span style="font-size: 1.1em; margin-right: 8px;">${checkIcon}</span>
+                                    ${option}
+                                    ${statusLabel}
+                                </label>
                             </div>
                         `;
                     });
