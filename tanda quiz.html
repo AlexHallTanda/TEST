@@ -7,28 +7,31 @@
     <title>Tanda Quiz</title>
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --tanda-navy: #032a56;
+            --tanda-navy-dark: #022d5c;
+            --tanda-accent: #0a4d8f;
+            --primary-gradient: linear-gradient(135deg, #032a56 0%, #022d5c 100%);
+            --bg-gradient: linear-gradient(135deg, #032a56 0%, #022d5c 100%);
             --bg-color: #ffffff;
             --text-color: #333333;
             --card-bg: #ffffff;
             --question-bg: #f8f9fa;
             --border-color: #e0e0e0;
-            --hover-bg: #f0f4ff;
-            --shadow: rgba(0, 0, 0, 0.2);
-            --shadow-light: rgba(0, 0, 0, 0.1);
+            --hover-bg: #e8f1f8;
+            --shadow: rgba(3, 42, 86, 0.15);
+            --shadow-light: rgba(3, 42, 86, 0.08);
         }
 
         [data-theme="dark"] {
-            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            --bg-color: #1a1a2e;
+            --bg-gradient: linear-gradient(135deg, #000000 0%, #032a56 100%);
+            --bg-color: #000000;
             --text-color: #e0e0e0;
-            --card-bg: #16213e;
-            --question-bg: #0f1419;
-            --border-color: #2d3748;
-            --hover-bg: #1e2838;
-            --shadow: rgba(0, 0, 0, 0.5);
-            --shadow-light: rgba(0, 0, 0, 0.3);
+            --card-bg: #0a1929;
+            --question-bg: #021627;
+            --border-color: #032a56;
+            --hover-bg: #0d2844;
+            --shadow: rgba(0, 0, 0, 0.6);
+            --shadow-light: rgba(3, 42, 86, 0.3);
         }
 
         * {
@@ -63,13 +66,23 @@
 
         h1 {
             text-align: center;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 10px;
             font-size: 2.5em;
             animation: fadeInDown 0.6s ease;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-container img {
+            max-width: 200px;
+            height: auto;
         }
 
         .subtitle {
@@ -94,7 +107,7 @@
 
         .theme-toggle, .timer-toggle, .stats-btn {
             padding: 10px 20px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
             color: white;
             border: none;
             border-radius: 8px;
@@ -158,27 +171,27 @@
         }
 
         .difficulty-btn:focus {
-            outline: 3px solid #667eea;
+            outline: 3px solid #032a56;
             outline-offset: 3px;
         }
 
         .beginner {
-            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            background: linear-gradient(135deg, #0a4d8f, #1976d2);
             color: white;
         }
 
         .intermediate {
-            background: linear-gradient(135deg, #f093fb, #f5576c);
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
             color: white;
         }
 
         .advanced {
-            background: linear-gradient(135deg, #fa709a, #fee140);
+            background: linear-gradient(135deg, #022d5c, #032a56);
             color: white;
         }
 
         .expert {
-            background: linear-gradient(135deg, #30cfd0, #330867);
+            background: linear-gradient(135deg, #000000, #032a56);
             color: white;
         }
 
@@ -203,7 +216,7 @@
         .timer-display {
             font-size: 1.5em;
             font-weight: bold;
-            color: #667eea;
+            color: #032a56;
             padding: 10px 20px;
             background: var(--question-bg);
             border-radius: 8px;
@@ -234,7 +247,7 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #032a56, #0a4d8f);
             transition: width 0.4s ease;
             border-radius: 10px;
         }
@@ -244,7 +257,7 @@
             padding: 30px;
             border-radius: 12px;
             margin-bottom: 25px;
-            border-left: 5px solid #667eea;
+            border-left: 5px solid #032a56;
             transition: all 0.3s ease;
             animation: slideIn 0.4s ease;
         }
@@ -255,7 +268,7 @@
         }
 
         .question-number {
-            color: #667eea;
+            color: #032a56;
             font-weight: bold;
             font-size: 0.9em;
             margin-bottom: 15px;
@@ -291,13 +304,13 @@
         }
 
         .option:hover {
-            border-color: #667eea;
+            border-color: #032a56;
             background: var(--hover-bg);
             transform: translateX(5px);
         }
 
         .option:focus-within {
-            outline: 3px solid #667eea;
+            outline: 3px solid #032a56;
             outline-offset: 2px;
         }
 
@@ -306,7 +319,7 @@
             cursor: pointer;
             width: 20px;
             height: 20px;
-            accent-color: #667eea;
+            accent-color: #032a56;
         }
 
         .option label {
@@ -317,7 +330,7 @@
 
         .option.selected {
             background: linear-gradient(135deg, #e8f0fe, #d4e7fd) !important;
-            border-color: #667eea !important;
+            border-color: #032a56 !important;
             border-width: 3px !important;
             box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
             transform: translateX(5px);
@@ -325,7 +338,7 @@
 
         [data-theme="dark"] .option.selected {
             background: linear-gradient(135deg, #2a3f5f, #1e2f47) !important;
-            border-color: #667eea !important;
+            border-color: #032a56 !important;
         }
 
         .option.unselected {
@@ -341,7 +354,7 @@
             display: block;
             width: 100%;
             padding: 18px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
             color: white;
             border: none;
             border-radius: 12px;
@@ -388,7 +401,7 @@
         .score-display {
             text-align: center;
             padding: 40px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
             color: white;
             border-radius: 12px;
             margin-bottom: 30px;
@@ -520,7 +533,7 @@
         }
 
         .stats-header h2 {
-            color: #667eea;
+            color: #032a56;
             font-size: 2em;
         }
 
@@ -555,7 +568,7 @@
         .stat-value {
             font-size: 1.3em;
             font-weight: bold;
-            color: #667eea;
+            color: #032a56;
         }
 
         .clear-stats-btn {
@@ -738,7 +751,7 @@
         }
 
         .dashboard-card h3 {
-            color: #667eea;
+            color: #032a56;
             margin-bottom: 15px;
             font-size: 1.3em;
             display: flex;
@@ -765,7 +778,7 @@
 
         .chart-bar-fill {
             height: 25px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
             border-radius: 4px;
             transition: width 0.5s ease;
             position: relative;
@@ -801,13 +814,13 @@
             margin-bottom: 8px;
             background: var(--card-bg);
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #032a56;
         }
 
         .leaderboard-rank {
             font-size: 1.5em;
             font-weight: bold;
-            color: #667eea;
+            color: #032a56;
             min-width: 40px;
         }
 
@@ -819,7 +832,7 @@
         .leaderboard-score {
             font-size: 1.3em;
             font-weight: bold;
-            color: #667eea;
+            color: #032a56;
         }
 
         .achievement-grid {
@@ -868,7 +881,7 @@
         .stat-card {
             text-align: center;
             padding: 15px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
             color: white;
             border-radius: 10px;
         }
@@ -891,7 +904,7 @@
             margin: 20px auto;
             max-width: 800px;
             border: 15px solid;
-            border-image: linear-gradient(135deg, #667eea, #764ba2, #FFD700) 1;
+            border-image: linear-gradient(135deg, #032a56, #0a4d8f, #FFD700) 1;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             position: relative;
         }
@@ -903,7 +916,7 @@
             left: 20px;
             right: 20px;
             bottom: 20px;
-            border: 2px solid #667eea;
+            border: 2px solid #032a56;
             pointer-events: none;
         }
 
@@ -915,7 +928,7 @@
         .certificate-title {
             font-size: 3em;
             font-weight: bold;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -937,7 +950,7 @@
         .certificate-name {
             font-size: 2.5em;
             font-weight: bold;
-            color: #667eea;
+            color: #032a56;
             margin: 20px 0;
         }
 
@@ -951,7 +964,7 @@
         .certificate-achievement {
             font-size: 1.5em;
             font-weight: bold;
-            color: #764ba2;
+            color: #0a4d8f;
             margin: 25px 0;
         }
 
@@ -960,7 +973,7 @@
             justify-content: space-around;
             margin-top: 50px;
             padding-top: 30px;
-            border-top: 2px solid #667eea;
+            border-top: 2px solid #032a56;
         }
 
         .certificate-signature {
@@ -993,7 +1006,7 @@
         .certificate-badge:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-            border-color: #667eea;
+            border-color: #032a56;
         }
 
         .certificate-badge.earned {
@@ -1137,8 +1150,11 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎯 Tanda Quiz</h1>
-            <p class="subtitle">Test your knowledge of Tanda's features and functionality</p>
+            <div class="logo-container">
+                <img src="https://ahawa.asn.au/images/upload/176890-logo-Logo_Navy.png" alt="Tanda Logo">
+            </div>
+            <h1>Tanda Knowledge Quiz</h1>
+            <p class="subtitle">Test your knowledge of Tanda's workforce management features</p>
             <div class="controls">
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
                     <span id="themeIcon">🌙</span>
@@ -1184,15 +1200,15 @@
 
         <div id="subcategorySelection" class="difficulty-selection hidden" role="group" aria-label="Subcategory selection">
             <div id="subcategoryTitle" style="grid-column: 1 / -1; text-align: center; margin-bottom: 10px;">
-                <h2 style="color: #667eea; font-size: 1.8em; margin-bottom: 10px;" id="subcategoryHeader">Select a Topic</h2>
+                <h2 style="color: #032a56; font-size: 1.8em; margin-bottom: 10px;" id="subcategoryHeader">Select a Topic</h2>
             </div>
             <div id="subcategoryButtons"></div>
             <button class="back-btn" style="grid-column: 1 / -1; margin-top: 10px;" onclick="backToDifficulty()">Back to Difficulty Selection</button>
         </div>
 
         <!-- Submit Question Section -->
-        <div id="submitQuestionSection" style="margin-top: 30px; padding: 25px; background: var(--question-bg); border-radius: 12px; border-left: 5px solid #667eea;">
-            <h2 onclick="toggleQuestionForm()" style="color: #667eea; margin-bottom: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; transition: all 0.3s ease;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+        <div id="submitQuestionSection" style="margin-top: 30px; padding: 25px; background: var(--question-bg); border-radius: 12px; border-left: 5px solid #032a56;">
+            <h2 onclick="toggleQuestionForm()" style="color: #032a56; margin-bottom: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; transition: all 0.3s ease;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
                 <span id="questionFormToggleIcon">▶</span>
                 <span>💡</span>
                 <span>Contribute a Question</span>
@@ -1258,7 +1274,7 @@
                     </select>
                 </div>
 
-                <button type="submit" style="padding: 15px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(102, 126, 234, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                <button type="submit" style="padding: 15px; background: linear-gradient(135deg, #032a56, #0a4d8f); color: white; border: none; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(102, 126, 234, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                     Submit Question
                 </button>
             </form>
@@ -3973,8 +3989,8 @@
                     });
                 }
 
-                const typeLabel = questionType === 'multiple-select' ? ' <span style="font-size:0.85em;color:#667eea">(Select all that apply)</span>' :
-                                 questionType === 'fill-blank' ? ' <span style="font-size:0.85em;color:#667eea">(Fill in the blank)</span>' : '';
+                const typeLabel = questionType === 'multiple-select' ? ' <span style="font-size:0.85em;color:#032a56">(Select all that apply)</span>' :
+                                 questionType === 'fill-blank' ? ' <span style="font-size:0.85em;color:#032a56">(Fill in the blank)</span>' : '';
 
                 questionCard.innerHTML = `
                     <div class="question-number">
@@ -4362,7 +4378,7 @@
                     <div class="explanation">
                         <div class="explanation-title">💡 Explanation:</div>
                         ${q.explanation}
-                        ${q.helpLink ? `<div style="margin-top: 10px;"><a href="${q.helpLink}" target="_blank" rel="noopener noreferrer" style="color: #667eea; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">📚 Read more in Tanda Help Guide →</a></div>` : ''}
+                        ${q.helpLink ? `<div style="margin-top: 10px;"><a href="${q.helpLink}" target="_blank" rel="noopener noreferrer" style="color: #032a56; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">📚 Read more in Tanda Help Guide →</a></div>` : ''}
                     </div>
                 ` : '';
 
@@ -4597,7 +4613,7 @@
         function showLevelUpNotification(newLevel) {
             const rank = getRank(newLevel);
             const notif = document.createElement('div');
-            notif.style.cssText = `position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:40px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.4);z-index:10000;text-align:center;animation:scaleIn 0.6s ease;min-width:300px`;
+            notif.style.cssText = `position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:linear-gradient(135deg,#032a56,#0a4d8f);color:white;padding:40px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.4);z-index:10000;text-align:center;animation:scaleIn 0.6s ease;min-width:300px`;
             notif.innerHTML = `<div style="font-size:3em;margin-bottom:10px">${rank.icon}</div><div style="font-size:1.5em;font-weight:bold;margin-bottom:10px">LEVEL UP!</div><div style="font-size:2em;margin-bottom:10px">Level ${newLevel}</div><div style="font-size:1.2em;color:${rank.color}">${rank.name} Rank</div>`;
             document.body.appendChild(notif);
             setTimeout(() => { notif.style.animation='fadeOut 0.3s ease'; setTimeout(() => notif.remove(), 300); }, 3000);
@@ -4660,7 +4676,7 @@
             }).join('');
 
             container.innerHTML = `
-                <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:20px;border-radius:12px;margin-bottom:20px;text-align:center">
+                <div style="background:linear-gradient(135deg,#032a56,#0a4d8f);color:white;padding:20px;border-radius:12px;margin-bottom:20px;text-align:center">
                     <div style="font-size:3em;margin-bottom:10px">${rank.icon}</div>
                     <div style="font-size:2em;font-weight:bold">Level ${stats.level}</div>
                     <div style="font-size:1.2em;color:${rank.color};margin:5px 0">${rank.name} Rank</div>
@@ -4673,9 +4689,9 @@
                 <div class="stat-item"><span class="stat-label">Total Quizzes</span><span class="stat-value">${stats.totalQuizzes}</span></div>
                 <div class="stat-item"><span class="stat-label">Overall Accuracy</span><span class="stat-value">${overallAccuracy}%</span></div>
                 <div class="stat-item"><span class="stat-label">Best Score</span><span class="stat-value">${stats.bestScore}%</span></div>
-                <h3 style="margin-top:25px;margin-bottom:15px;color:#667eea">🏆 Achievements (${stats.achievements.length}/${achievements.length})</h3>
+                <h3 style="margin-top:25px;margin-bottom:15px;color:#032a56">🏆 Achievements (${stats.achievements.length}/${achievements.length})</h3>
                 <div style="margin-bottom:20px">${achievementsList || '<p style="text-align:center;opacity:0.6">Complete quizzes to unlock achievements!</p>'}</div>
-                <h3 style="margin-top:25px;margin-bottom:15px;color:#667eea">By Difficulty</h3>
+                <h3 style="margin-top:25px;margin-bottom:15px;color:#032a56">By Difficulty</h3>
                 <div class="stat-item"><span class="stat-label">🌱 Beginner (${stats.byDifficulty.beginner.taken})</span><span class="stat-value">${stats.byDifficulty.beginner.avgScore}%</span></div>
                 <div class="stat-item"><span class="stat-label">📚 Intermediate (${stats.byDifficulty.intermediate.taken})</span><span class="stat-value">${stats.byDifficulty.intermediate.avgScore}%</span></div>
                 <div class="stat-item"><span class="stat-label">🎓 Advanced (${stats.byDifficulty.advanced.taken})</span><span class="stat-value">${stats.byDifficulty.advanced.avgScore}%</span></div>
@@ -4818,7 +4834,7 @@
 
             container.innerHTML = `
                 <!-- Profile Card -->
-                <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:30px;border-radius:15px;margin-bottom:30px;text-align:center">
+                <div style="background:linear-gradient(135deg,#032a56,#0a4d8f);color:white;padding:30px;border-radius:15px;margin-bottom:30px;text-align:center">
                     <div style="font-size:4em;margin-bottom:10px">${rank.icon}</div>
                     <div style="font-size:2.5em;font-weight:bold;margin-bottom:5px">Level ${stats.level}</div>
                     <div style="font-size:1.5em;color:${rank.color};margin-bottom:15px">${rank.name} Rank</div>
@@ -5002,7 +5018,7 @@
             let certificatesHTML = '';
 
             if (earnedCertificates.length > 0) {
-                certificatesHTML += '<h3 style="color:#667eea;margin-bottom:20px">🎓 Earned Certificates</h3>';
+                certificatesHTML += '<h3 style="color:#032a56;margin-bottom:20px">🎓 Earned Certificates</h3>';
                 certificatesHTML += '<div class="certificate-badge-grid">';
                 earnedCertificates.forEach(cert => {
                     certificatesHTML += `
@@ -5010,7 +5026,7 @@
                             <div class="certificate-badge-icon">${cert.icon}</div>
                             <div class="certificate-badge-name">${cert.name}</div>
                             <div class="certificate-badge-desc">${cert.description}</div>
-                            <button style="margin-top:10px;padding:8px 15px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.9em">
+                            <button style="margin-top:10px;padding:8px 15px;background:linear-gradient(135deg,#032a56,#0a4d8f);color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.9em">
                                 View & Print
                             </button>
                         </div>
@@ -5100,7 +5116,7 @@
                 </div>
 
                 <div style="text-align:center;padding:30px;background:var(--card-bg)">
-                    <button onclick="printCertificate()" style="padding:15px 30px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:8px;font-size:1.1em;font-weight:bold;cursor:pointer;margin-right:10px">
+                    <button onclick="printCertificate()" style="padding:15px 30px;background:linear-gradient(135deg,#032a56,#0a4d8f);color:white;border:none;border-radius:8px;font-size:1.1em;font-weight:bold;cursor:pointer;margin-right:10px">
                         🖨️ Print Certificate
                     </button>
                     <button onclick="shareCertificate('${cert.name}')" style="padding:15px 30px;background:linear-gradient(135deg,#6dd5ed,#2193b0);color:white;border:none;border-radius:8px;font-size:1.1em;font-weight:bold;cursor:pointer;margin-right:10px">
@@ -5162,7 +5178,7 @@
             } else {
                 let submissionsHTML = `
                     <div style="margin-bottom:20px;text-align:center">
-                        <button onclick="exportSubmissions('json')" style="padding:12px 25px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-right:10px">
+                        <button onclick="exportSubmissions('json')" style="padding:12px 25px;background:linear-gradient(135deg,#032a56,#0a4d8f);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-right:10px">
                             💾 Export as JSON
                         </button>
                         <button onclick="exportSubmissions('github')" style="padding:12px 25px;background:linear-gradient(135deg,#6dd5ed,#2193b0);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-right:10px">
@@ -5180,13 +5196,13 @@
                 submissions.reverse().forEach((sub, idx) => {
                     const difficultyIcons = {beginner: '🌱', intermediate: '📚', advanced: '🎓', expert: '🏆'};
                     submissionsHTML += `
-                        <div style="background:var(--question-bg);padding:20px;border-radius:12px;margin-bottom:15px;border-left:4px solid #667eea">
+                        <div style="background:var(--question-bg);padding:20px;border-radius:12px;margin-bottom:15px;border-left:4px solid #032a56">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
                                 <div style="font-weight:bold;font-size:1.1em">Submission #${submissions.length - idx}</div>
                                 <div style="font-size:0.85em;opacity:0.7">${new Date(sub.submittedAt).toLocaleString()}</div>
                             </div>
                             <div style="margin-bottom:10px">
-                                <span style="display:inline-block;background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:4px 10px;border-radius:6px;font-size:0.85em;margin-right:8px">
+                                <span style="display:inline-block;background:linear-gradient(135deg,#032a56,#0a4d8f);color:white;padding:4px 10px;border-radius:6px;font-size:0.85em;margin-right:8px">
                                     ${difficultyIcons[sub.difficulty] || ''} ${sub.difficulty}
                                 </span>
                                 <span style="display:inline-block;background:var(--border-color);padding:4px 10px;border-radius:6px;font-size:0.85em">
@@ -5207,7 +5223,7 @@
                             </div>
                             ${sub.helpLink ? `
                                 <div style="margin-top:10px">
-                                    <a href="${sub.helpLink}" target="_blank" style="color:#667eea;text-decoration:none;font-weight:600">
+                                    <a href="${sub.helpLink}" target="_blank" style="color:#032a56;text-decoration:none;font-weight:600">
                                         📚 Help Guide →
                                     </a>
                                 </div>
