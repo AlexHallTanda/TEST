@@ -884,6 +884,158 @@
             opacity: 0.9;
         }
 
+        /* Certificate Styles */
+        .certificate {
+            background: white;
+            padding: 60px;
+            margin: 20px auto;
+            max-width: 800px;
+            border: 15px solid;
+            border-image: linear-gradient(135deg, #667eea, #764ba2, #FFD700) 1;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 2px solid #667eea;
+            pointer-events: none;
+        }
+
+        .certificate-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .certificate-title {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .certificate-subtitle {
+            font-size: 1.3em;
+            color: #666;
+            font-style: italic;
+        }
+
+        .certificate-body {
+            text-align: center;
+            margin: 40px 0;
+            color: #333;
+        }
+
+        .certificate-name {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+        }
+
+        .certificate-text {
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #555;
+            margin: 15px 0;
+        }
+
+        .certificate-achievement {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #764ba2;
+            margin: 25px 0;
+        }
+
+        .certificate-footer {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #667eea;
+        }
+
+        .certificate-signature {
+            text-align: center;
+        }
+
+        .certificate-signature-line {
+            border-top: 2px solid #333;
+            width: 200px;
+            margin: 10px auto;
+        }
+
+        .certificate-badge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .certificate-badge {
+            background: var(--question-bg);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 3px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .certificate-badge:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .certificate-badge.earned {
+            border-color: #FFD700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .certificate-badge-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .certificate-badge-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .certificate-badge-desc {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #certificatePrintView, #certificatePrintView * {
+                visibility: visible;
+            }
+            #certificatePrintView {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .certificate {
+                page-break-after: always;
+                margin: 0;
+            }
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .container {
@@ -1003,6 +1155,10 @@
                 <button class="stats-btn" onclick="showStats()" aria-label="View statistics">
                     <span>📊</span>
                     <span>Stats</span>
+                </button>
+                <button class="stats-btn" onclick="showCertificates()" aria-label="View certificates">
+                    <span>🎓</span>
+                    <span>Certificates</span>
                 </button>
             </div>
         </div>
@@ -1158,6 +1314,22 @@
             </div>
             <div id="dashboardContainer"></div>
         </div>
+    </div>
+
+    <!-- Certificates Modal -->
+    <div id="certificatesModal" class="stats-modal" role="dialog" aria-labelledby="certificatesTitle" aria-modal="true">
+        <div class="stats-content" style="max-width: 1000px; max-height: 90vh; overflow-y: auto;">
+            <div class="stats-header">
+                <h2 id="certificatesTitle">🎓 Your Certificates</h2>
+                <button class="close-btn" onclick="closeCertificates()" aria-label="Close certificates">&times;</button>
+            </div>
+            <div id="certificatesContainer"></div>
+        </div>
+    </div>
+
+    <!-- Certificate Print View -->
+    <div id="certificatePrintView" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 10000; overflow: auto;">
+        <div id="certificatePrintContent"></div>
     </div>
 
     <script>
@@ -2727,6 +2899,252 @@
         document.getElementById('dashboardModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeDashboard();
+            }
+        });
+
+        // Certificate Functions
+        function showCertificates() {
+            const stats = JSON.parse(localStorage.getItem('tandaQuizStats')) || {
+                level: 1, xp: 0, totalQuizzes: 0, achievements: [], byDifficulty: {},
+                bySubcategory: {}, perfectScores: 0, currentStreak: 0
+            };
+
+            const container = document.getElementById('certificatesContainer');
+            const rank = getRank(stats.level);
+
+            // Define certificate criteria
+            const certificates = [
+                {
+                    id: 'level_10',
+                    name: 'Rising Star',
+                    icon: '🌟',
+                    description: 'Reached Level 10',
+                    earned: stats.level >= 10,
+                    requirement: 'Complete quizzes to reach level 10'
+                },
+                {
+                    id: 'level_25',
+                    name: 'Expert Learner',
+                    icon: '🎓',
+                    description: 'Reached Level 25',
+                    earned: stats.level >= 25,
+                    requirement: 'Complete quizzes to reach level 25'
+                },
+                {
+                    id: 'level_50',
+                    name: 'Master',
+                    icon: '💎',
+                    description: 'Reached Level 50',
+                    earned: stats.level >= 50,
+                    requirement: 'Complete quizzes to reach level 50'
+                },
+                {
+                    id: 'beginner_master',
+                    name: 'Beginner Master',
+                    icon: '🌱',
+                    description: 'Average 90%+ on Beginner',
+                    earned: (stats.byDifficulty.beginner?.avgScore || 0) >= 90 && (stats.byDifficulty.beginner?.taken || 0) >= 5,
+                    requirement: 'Complete 5+ beginner quizzes with 90%+ average'
+                },
+                {
+                    id: 'intermediate_master',
+                    name: 'Intermediate Master',
+                    icon: '📚',
+                    description: 'Average 90%+ on Intermediate',
+                    earned: (stats.byDifficulty.intermediate?.avgScore || 0) >= 90 && (stats.byDifficulty.intermediate?.taken || 0) >= 5,
+                    requirement: 'Complete 5+ intermediate quizzes with 90%+ average'
+                },
+                {
+                    id: 'advanced_master',
+                    name: 'Advanced Master',
+                    icon: '🎓',
+                    description: 'Average 90%+ on Advanced',
+                    earned: (stats.byDifficulty.advanced?.avgScore || 0) >= 90 && (stats.byDifficulty.advanced?.taken || 0) >= 5,
+                    requirement: 'Complete 5+ advanced quizzes with 90%+ average'
+                },
+                {
+                    id: 'expert_master',
+                    name: 'Expert Master',
+                    icon: '🏆',
+                    description: 'Average 90%+ on Expert',
+                    earned: (stats.byDifficulty.expert?.avgScore || 0) >= 90 && (stats.byDifficulty.expert?.taken || 0) >= 5,
+                    requirement: 'Complete 5+ expert quizzes with 90%+ average'
+                },
+                {
+                    id: 'perfect_10',
+                    name: 'Perfect 10',
+                    icon: '💯',
+                    description: '10 Perfect Scores',
+                    earned: stats.perfectScores >= 10,
+                    requirement: 'Achieve 10 perfect scores'
+                },
+                {
+                    id: 'achievement_hunter',
+                    name: 'Achievement Hunter',
+                    icon: '🏅',
+                    description: 'All Achievements Unlocked',
+                    earned: stats.achievements.length >= achievements.length,
+                    requirement: 'Unlock all achievements'
+                },
+                {
+                    id: 'quiz_champion',
+                    name: 'Quiz Champion',
+                    icon: '👑',
+                    description: 'Completed 100 Quizzes',
+                    earned: stats.totalQuizzes >= 100,
+                    requirement: 'Complete 100 quizzes'
+                }
+            ];
+
+            const earnedCertificates = certificates.filter(c => c.earned);
+            const lockedCertificates = certificates.filter(c => !c.earned);
+
+            let certificatesHTML = '';
+
+            if (earnedCertificates.length > 0) {
+                certificatesHTML += '<h3 style="color:#667eea;margin-bottom:20px">🎓 Earned Certificates</h3>';
+                certificatesHTML += '<div class="certificate-badge-grid">';
+                earnedCertificates.forEach(cert => {
+                    certificatesHTML += `
+                        <div class="certificate-badge earned" onclick="viewCertificate('${cert.id}')">
+                            <div class="certificate-badge-icon">${cert.icon}</div>
+                            <div class="certificate-badge-name">${cert.name}</div>
+                            <div class="certificate-badge-desc">${cert.description}</div>
+                            <button style="margin-top:10px;padding:8px 15px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:6px;cursor:pointer;font-size:0.9em">
+                                View & Print
+                            </button>
+                        </div>
+                    `;
+                });
+                certificatesHTML += '</div>';
+            }
+
+            if (lockedCertificates.length > 0) {
+                certificatesHTML += '<h3 style="color:#999;margin:30px 0 20px">🔒 Locked Certificates</h3>';
+                certificatesHTML += '<div class="certificate-badge-grid">';
+                lockedCertificates.forEach(cert => {
+                    certificatesHTML += `
+                        <div class="certificate-badge" style="opacity:0.5">
+                            <div class="certificate-badge-icon">${cert.icon}</div>
+                            <div class="certificate-badge-name">${cert.name}</div>
+                            <div class="certificate-badge-desc">${cert.requirement}</div>
+                        </div>
+                    `;
+                });
+                certificatesHTML += '</div>';
+            }
+
+            if (earnedCertificates.length === 0 && lockedCertificates.length === 0) {
+                certificatesHTML = '<p style="text-align:center;opacity:0.6;padding:40px">Complete quizzes to earn certificates!</p>';
+            }
+
+            container.innerHTML = certificatesHTML;
+            document.getElementById('certificatesModal').classList.add('active');
+        }
+
+        function closeCertificates() {
+            document.getElementById('certificatesModal').classList.remove('active');
+        }
+
+        function viewCertificate(certId) {
+            const stats = JSON.parse(localStorage.getItem('tandaQuizStats')) || {};
+            const rank = getRank(stats.level);
+            const certificates = {
+                'level_10': { name: 'Rising Star', icon: '🌟', achievement: 'Reached Level 10', text: 'has demonstrated exceptional dedication and learning prowess by reaching Level 10' },
+                'level_25': { name: 'Expert Learner', icon: '🎓', achievement: 'Reached Level 25', text: 'has achieved expert status in Tanda knowledge by reaching Level 25' },
+                'level_50': { name: 'Master', icon: '💎', achievement: 'Reached Level 50', text: 'has attained mastery of Tanda systems by reaching the prestigious Level 50' },
+                'beginner_master': { name: 'Beginner Master', icon: '🌱', achievement: 'Beginner Level Mastery', text: 'has mastered all beginner-level concepts with an outstanding 90%+ average score' },
+                'intermediate_master': { name: 'Intermediate Master', icon: '📚', achievement: 'Intermediate Level Mastery', text: 'has excelled in intermediate-level knowledge with a 90%+ average score' },
+                'advanced_master': { name: 'Advanced Master', icon: '🎓', achievement: 'Advanced Level Mastery', text: 'has conquered advanced concepts with a remarkable 90%+ average score' },
+                'expert_master': { name: 'Expert Master', icon: '🏆', achievement: 'Expert Level Mastery', text: 'has achieved mastery of expert-level material with an exceptional 90%+ average score' },
+                'perfect_10': { name: 'Perfect 10', icon: '💯', achievement: '10 Perfect Scores', text: 'has demonstrated excellence by achieving 10 perfect quiz scores' },
+                'achievement_hunter': { name: 'Achievement Hunter', icon: '🏅', achievement: 'All Achievements Unlocked', text: 'has unlocked every achievement, demonstrating complete mastery of the Tanda Quiz' },
+                'quiz_champion': { name: 'Quiz Champion', icon: '👑', achievement: '100 Quizzes Completed', text: 'has shown extraordinary commitment by completing 100 quizzes' }
+            };
+
+            const cert = certificates[certId];
+            if (!cert) return;
+
+            const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            const userName = 'Tanda Learner';
+
+            const certificateHTML = `
+                <div class="certificate">
+                    <div class="certificate-header">
+                        <div style="font-size:4em;margin-bottom:10px">${cert.icon}</div>
+                        <div class="certificate-title">Certificate of Achievement</div>
+                        <div class="certificate-subtitle">Tanda Knowledge Quiz</div>
+                    </div>
+
+                    <div class="certificate-body">
+                        <div class="certificate-text">This certificate is proudly presented to</div>
+                        <div class="certificate-name">${userName}</div>
+                        <div class="certificate-text">who ${cert.text}</div>
+                        <div class="certificate-achievement">${cert.achievement}</div>
+                        <div class="certificate-text" style="margin-top:30px">
+                            Current Level: ${stats.level} | Rank: ${rank.name} ${rank.icon}<br>
+                            Total XP: ${stats.xp} | Quizzes Completed: ${stats.totalQuizzes}
+                        </div>
+                    </div>
+
+                    <div class="certificate-footer">
+                        <div class="certificate-signature">
+                            <div class="certificate-signature-line"></div>
+                            <div>Date: ${today}</div>
+                        </div>
+                        <div class="certificate-signature">
+                            <div class="certificate-signature-line"></div>
+                            <div>Tanda Quiz Platform</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align:center;padding:30px;background:var(--card-bg)">
+                    <button onclick="printCertificate()" style="padding:15px 30px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border:none;border-radius:8px;font-size:1.1em;font-weight:bold;cursor:pointer;margin-right:10px">
+                        🖨️ Print Certificate
+                    </button>
+                    <button onclick="shareCertificate('${cert.name}')" style="padding:15px 30px;background:linear-gradient(135deg,#6dd5ed,#2193b0);color:white;border:none;border-radius:8px;font-size:1.1em;font-weight:bold;cursor:pointer;margin-right:10px">
+                        📤 Share
+                    </button>
+                    <button onclick="closeCertificatePrint()" style="padding:15px 30px;background:#666;color:white;border:none;border-radius:8px;font-size:1.1em;font-weight:bold;cursor:pointer">
+                        ✕ Close
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('certificatePrintContent').innerHTML = certificateHTML;
+            document.getElementById('certificatePrintView').classList.remove('hidden');
+        }
+
+        function closeCertificatePrint() {
+            document.getElementById('certificatePrintView').classList.add('hidden');
+        }
+
+        function printCertificate() {
+            window.print();
+        }
+
+        function shareCertificate(certName) {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Tanda Quiz Certificate',
+                    text: `I just earned the "${certName}" certificate in the Tanda Knowledge Quiz!`,
+                    url: window.location.href
+                }).catch(() => {});
+            } else {
+                const message = `I just earned the "${certName}" certificate in the Tanda Knowledge Quiz!`;
+                navigator.clipboard.writeText(message).then(() => {
+                    alert('Certificate text copied to clipboard! Share it anywhere you like.');
+                }).catch(() => {
+                    alert('Share this: ' + message);
+                });
+            }
+        }
+
+        // Close certificates when clicking outside
+        document.getElementById('certificatesModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCertificates();
             }
         });
 
