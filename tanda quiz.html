@@ -1625,28 +1625,28 @@
         // Subcategory metadata
         const subcategories = {
             beginner: {
-                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
                 'time-attendance': { name: 'Time & Attendance Basics', icon: '' },
                 'rostering': { name: 'Rostering Fundamentals', icon: '' },
                 'leave': { name: 'Leave Management', icon: '' },
                 'self-service': { name: 'Employee Self-Service', icon: '' }
             },
             intermediate: {
-                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
                 'advanced-rostering': { name: 'Advanced Rostering', icon: '' },
                 'timesheets': { name: 'Timesheet Management', icon: '' },
                 'awards': { name: 'Awards & Pay Rules', icon: '' },
                 'reporting': { name: 'Reporting & Analytics', icon: '' }
             },
             advanced: {
-                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
                 'compliance': { name: 'Compliance & Awards', icon: '' },
                 'cost-management': { name: 'Cost Management', icon: '' },
                 'integrations': { name: 'Integrations', icon: '' },
                 'advanced-features': { name: 'Advanced Features', icon: '' }
             },
             expert: {
-                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
                 'api': { name: 'API & Automation', icon: '' },
                 'enterprise': { name: 'Enterprise Configuration', icon: '' },
                 'workflows': { name: 'Custom Workflows', icon: '' },
@@ -4030,8 +4030,8 @@
         }
 
         function renderOverallStats(difficulty, stats) {
-            // Calculate total questions based on topics actually attempted, not all possible topics
-            const totalQuestions = stats.topicsAttempted * 20;
+            // Calculate total questions based on topics actually attempted (10 questions per quiz)
+            const totalQuestions = stats.topicsAttempted * 10;
             const progress = totalQuestions > 0 ? (stats.totalCompleted / totalQuestions * 100).toFixed(0) : 0;
 
             return `
@@ -4103,7 +4103,7 @@
                     bestScore: null,
                     avgScore: 0,
                     bestPercentage: 0,
-                    totalQuestions: 20,
+                    totalQuestions: 10,
                     lastAttempt: null,
                     completed: false
                 };
