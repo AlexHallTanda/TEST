@@ -509,7 +509,7 @@
         .question-counter {
             font-size: 1.2em;
             font-weight: 600;
-            color: var(--text-color);
+            color: #ffffff;
         }
 
         .progress-bar {
@@ -1535,7 +1535,7 @@
         </div>
 
         <!-- View Submissions Section (Password Protected) -->
-        <div style="margin-top: 20px; text-align: center;">
+        <div id="viewSubmissionsSection" style="margin-top: 20px; text-align: center;">
             <button class="stats-btn" onclick="showSubmissionsWithPassword()" aria-label="View submitted questions" style="background:linear-gradient(135deg,#f093fb,#f5576c); padding: 12px 24px; font-size: 1em;">
                 <span>📝</span>
                 <span>View Submissions</span>
@@ -1625,28 +1625,28 @@
         // Subcategory metadata
         const subcategories = {
             beginner: {
-                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
                 'time-attendance': { name: 'Time & Attendance Basics', icon: '' },
                 'rostering': { name: 'Rostering Fundamentals', icon: '' },
                 'leave': { name: 'Leave Management', icon: '' },
                 'self-service': { name: 'Employee Self-Service', icon: '' }
             },
             intermediate: {
-                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
                 'advanced-rostering': { name: 'Advanced Rostering', icon: '' },
                 'timesheets': { name: 'Timesheet Management', icon: '' },
                 'awards': { name: 'Awards & Pay Rules', icon: '' },
                 'reporting': { name: 'Reporting & Analytics', icon: '' }
             },
             advanced: {
-                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
                 'compliance': { name: 'Compliance & Awards', icon: '' },
                 'cost-management': { name: 'Cost Management', icon: '' },
                 'integrations': { name: 'Integrations', icon: '' },
                 'advanced-features': { name: 'Advanced Features', icon: '' }
             },
             expert: {
-                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
                 'api': { name: 'API & Automation', icon: '' },
                 'enterprise': { name: 'Enterprise Configuration', icon: '' },
                 'workflows': { name: 'Custom Workflows', icon: '' },
@@ -4030,8 +4030,9 @@
         }
 
         function renderOverallStats(difficulty, stats) {
-            const totalQuestions = Object.keys(subcategories[difficulty]).length * 20; // Assuming 20 questions per topic
-            const progress = (stats.totalCompleted / totalQuestions * 100).toFixed(0);
+            // Calculate total questions based on topics actually attempted (10 questions per quiz)
+            const totalQuestions = stats.topicsAttempted * 10;
+            const progress = totalQuestions > 0 ? (stats.totalCompleted / totalQuestions * 100).toFixed(0) : 0;
 
             return `
                 <div class="overall-stats-panel">
@@ -4102,7 +4103,7 @@
                     bestScore: null,
                     avgScore: 0,
                     bestPercentage: 0,
-                    totalQuestions: 20,
+                    totalQuestions: 10,
                     lastAttempt: null,
                     completed: false
                 };
@@ -4165,6 +4166,7 @@
             return {
                 totalCompleted,
                 completedTopics,
+                topicsAttempted: topicsWithScores,
                 avgScore: topicsWithScores > 0 ? Math.round(totalScore / topicsWithScores) : 0,
                 totalTime,
                 perfectScores,
@@ -4376,6 +4378,7 @@
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('viewSubmissionsSection').classList.add('hidden');
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
 
@@ -4687,6 +4690,7 @@
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('viewSubmissionsSection').classList.add('hidden');
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
 
@@ -4990,6 +4994,7 @@
             document.getElementById('difficultySelection').classList.remove('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
+            document.getElementById('viewSubmissionsSection').classList.remove('hidden');
             document.getElementById('quizContainer').classList.remove('active');
             document.getElementById('results').classList.remove('active');
             document.getElementById('progressFill').style.width = '0%';
