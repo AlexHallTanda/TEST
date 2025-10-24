@@ -23,15 +23,15 @@
         }
 
         [data-theme="dark"] {
-            --bg-gradient: linear-gradient(135deg, #000000 0%, #032a56 100%);
-            --bg-color: #000000;
-            --text-color: #e0e0e0;
-            --card-bg: #0a1929;
-            --question-bg: #021627;
-            --border-color: #032a56;
-            --hover-bg: #0d2844;
-            --shadow: rgba(0, 0, 0, 0.6);
-            --shadow-light: rgba(3, 42, 86, 0.3);
+            --bg-gradient: linear-gradient(135deg, #0a1929 0%, #032a56 100%);
+            --bg-color: #0f1f35;
+            --text-color: #f0f4f8;
+            --card-bg: #1a2942;
+            --question-bg: #142337;
+            --border-color: #2a5280;
+            --hover-bg: #1e3a5f;
+            --shadow: rgba(0, 0, 0, 0.4);
+            --shadow-light: rgba(3, 42, 86, 0.2);
         }
 
         * {
@@ -94,7 +94,7 @@
         }
 
         [data-theme="dark"] .subtitle {
-            color: #a0a0a0;
+            color: #c5d5e8;
         }
 
         .controls {
@@ -347,6 +347,15 @@
             accent-color: #032a56;
         }
 
+        .option input[type="checkbox"] {
+            margin-right: 20px;
+            cursor: pointer;
+            width: 22px;
+            height: 22px;
+            accent-color: #032a56;
+            flex-shrink: 0;
+        }
+
         .option label {
             cursor: pointer;
             flex: 1;
@@ -362,8 +371,9 @@
         }
 
         [data-theme="dark"] .option.selected {
-            background: linear-gradient(135deg, #2a3f5f, #1e2f47) !important;
-            border-color: #032a56 !important;
+            background: linear-gradient(135deg, #2a5280, #1e4060) !important;
+            border-color: #4a8fd6 !important;
+            box-shadow: 0 3px 10px rgba(74, 143, 214, 0.3);
         }
 
         .option.unselected {
@@ -467,18 +477,21 @@
         }
 
         [data-theme="dark"] .option.correct {
-            background: #1e4620 !important;
-            border-color: #28a745 !important;
+            background: #1e5a28 !important;
+            border-color: #3ed75f !important;
+            box-shadow: 0 3px 10px rgba(62, 215, 95, 0.3);
         }
 
         [data-theme="dark"] .option.incorrect {
-            background: #4a1e1e !important;
-            border-color: #dc3545 !important;
+            background: #5a1e28 !important;
+            border-color: #ff4d5f !important;
+            box-shadow: 0 3px 10px rgba(255, 77, 95, 0.3);
         }
 
         [data-theme="dark"] .option.correct-answer {
-            background: #1e3a4a !important;
-            border-color: #17a2b8 !important;
+            background: #1e4a5a !important;
+            border-color: #3dc4de !important;
+            box-shadow: 0 3px 10px rgba(61, 196, 222, 0.3);
         }
 
         .option.correct::after {
@@ -3882,7 +3895,7 @@
             Object.keys(subs).forEach(subKey => {
                 const sub = subs[subKey];
                 const btn = document.createElement('button');
-                btn.className = 'difficulty-btn';
+                btn.className = `difficulty-btn ${difficulty}`;
                 btn.onclick = () => selectSubcategory(difficulty, subKey);
                 btn.setAttribute('aria-label', `Start ${sub.name} quiz`);
 
