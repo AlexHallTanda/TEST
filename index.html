@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Test your knowledge of Tanda's workforce management features with this interactive quiz">
-    <title>Tanda Knowledge Quiz</title>
+    <title>Tanda Quiz Learning</title>
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -779,7 +779,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎯 Tanda Knowledge Quiz</h1>
+            <h1>🎯 Tanda Quiz Learning</h1>
             <p class="subtitle">Test your knowledge of Tanda's features and functionality</p>
             <div class="controls">
                 <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
@@ -931,24 +931,28 @@
         // Subcategory metadata
         const subcategories = {
             beginner: {
+                'general': { name: '🎯 General Quiz', icon: '🎯', description: '20 mixed questions' },
                 'time-attendance': { name: '🕐 Time & Attendance Basics', icon: '🕐' },
                 'rostering': { name: '📅 Rostering Fundamentals', icon: '📅' },
                 'leave': { name: '🏖️ Leave Management', icon: '🏖️' },
                 'self-service': { name: '👤 Employee Self-Service', icon: '👤' }
             },
             intermediate: {
+                'general': { name: '🎯 General Quiz', icon: '🎯', description: '20 mixed questions' },
                 'advanced-rostering': { name: '📊 Advanced Rostering', icon: '📊' },
                 'timesheets': { name: '⏱️ Timesheet Management', icon: '⏱️' },
                 'awards': { name: '💰 Awards & Pay Rules', icon: '💰' },
                 'reporting': { name: '📈 Reporting & Analytics', icon: '📈' }
             },
             advanced: {
+                'general': { name: '🎯 General Quiz', icon: '🎯', description: '20 mixed questions' },
                 'compliance': { name: '⚖️ Compliance & Awards', icon: '⚖️' },
                 'cost-management': { name: '💵 Cost Management', icon: '💵' },
                 'integrations': { name: '🔗 Integrations', icon: '🔗' },
                 'advanced-features': { name: '🎯 Advanced Features', icon: '🎯' }
             },
             expert: {
+                'general': { name: '🎯 General Quiz', icon: '🎯', description: '20 mixed questions' },
                 'api': { name: '🔌 API & Automation', icon: '🔌' },
                 'enterprise': { name: '🏢 Enterprise Configuration', icon: '🏢' },
                 'workflows': { name: '⚙️ Custom Workflows', icon: '⚙️' },
@@ -958,7 +962,7 @@
 
         const quizData = {
             beginner: {
-                'time-attendance': [
+                'general': [
                 {
                     question: "What is Tanda primarily used for?",
                     options: [
@@ -1073,8 +1077,14 @@
                     correct: 1,
                     explanation: "Tanda supports multiple notification channels including push notifications, email, and SMS to ensure employees are promptly informed of schedule changes."
                 }
-            ],
-            intermediate: [
+                ],
+                'time-attendance': [],
+                'rostering': [],
+                'leave': [],
+                'self-service': []
+            },
+            intermediate: {
+                'general': [
                 {
                     question: "What is the difference between 'Published' and 'Unpublished' rosters?",
                     options: [
@@ -1185,8 +1195,14 @@
                     correct: 1,
                     explanation: "Open shifts are unassigned shifts that qualified employees can claim on a first-come-first-served basis, increasing flexibility and employee engagement."
                 }
-            ],
-            advanced: [
+                ],
+                'advanced-rostering': [],
+                'timesheets': [],
+                'awards': [],
+                'reporting': []
+            },
+            advanced: {
+                'general': [
                 {
                     question: "How does Tanda handle compliance with award interpretations?",
                     options: [
@@ -1297,8 +1313,14 @@
                     correct: 1,
                     explanation: "Tanda offers comprehensive reporting including custom report builder, real-time dashboards, scheduled reports, and CSV/Excel exports for detailed analysis."
                 }
-            ],
-            expert: [
+                ],
+                'compliance': [],
+                'cost-management': [],
+                'integrations': [],
+                'advanced-features': []
+            },
+            expert: {
+                'general': [
                 {
                     question: "How can you configure custom pay rules in Tanda?",
                     options: [
@@ -1409,11 +1431,17 @@
                     correct: 1,
                     explanation: "Enterprise customers can customize branding elements like logos, color schemes, and domain names, though complete white-labeling has limitations to maintain platform consistency."
                 }
-            ]
+                ],
+                'api': [],
+                'enterprise': [],
+                'workflows': [],
+                'architecture': []
+            }
         };
 
         // Application state
         let currentDifficulty = '';
+        let currentSubcategory = '';
         let userAnswers = {};
         let currentQuestions = [];
         let timerInterval = null;
@@ -1554,20 +1582,88 @@
             showResults();
         }
 
-        // Quiz management
-        function startQuiz(difficulty) {
+        // Difficulty and Subcategory Navigation
+        function selectDifficulty(difficulty) {
             currentDifficulty = difficulty;
+
+            // Hide difficulty selection and show subcategory selection
+            document.getElementById('difficultySelection').classList.add('hidden');
+            document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('subcategorySelection').classList.remove('hidden');
+
+            // Update header
+            const difficultyNames = {
+                'beginner': '🌱 Beginner',
+                'intermediate': '📚 Intermediate',
+                'advanced': '🎓 Advanced',
+                'expert': '🏆 Expert'
+            };
+            document.getElementById('subcategoryHeader').textContent = `Select a Topic - ${difficultyNames[difficulty]}`;
+
+            // Build subcategory buttons
+            const container = document.getElementById('subcategoryButtons');
+            container.innerHTML = '';
+            container.style.display = 'grid';
+            container.style.gridTemplateColumns = 'repeat(auto-fit, minmax(200px, 1fr))';
+            container.style.gap = '15px';
+            container.style.gridColumn = '1 / -1';
+
+            const subs = subcategories[difficulty];
+            Object.keys(subs).forEach(subKey => {
+                const sub = subs[subKey];
+                const btn = document.createElement('button');
+                btn.className = 'difficulty-btn';
+                btn.onclick = () => selectSubcategory(difficulty, subKey);
+                btn.setAttribute('aria-label', `Start ${sub.name} quiz`);
+
+                // Style general quiz differently
+                if (subKey === 'general') {
+                    btn.style.background = 'linear-gradient(135deg, #f093fb, #f5576c)';
+                    btn.style.gridColumn = '1 / -1';
+                    btn.innerHTML = `
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+                            <span style="font-size: 1.5em;">${sub.icon}</span>
+                            <span>${sub.name}</span>
+                            <small style="opacity: 0.9; font-size: 0.85em;">${sub.description || ''}</small>
+                        </div>
+                    `;
+                } else {
+                    btn.innerHTML = `<span>${sub.icon} ${sub.name}</span>`;
+                }
+
+                container.appendChild(btn);
+            });
+        }
+
+        function selectSubcategory(difficulty, subcategory) {
+            currentSubcategory = subcategory;
+            startQuiz(difficulty, subcategory);
+        }
+
+        function backToDifficulty() {
+            document.getElementById('subcategorySelection').classList.add('hidden');
+            document.getElementById('difficultySelection').classList.remove('hidden');
+            document.getElementById('submitQuestionSection').classList.remove('hidden');
+            currentDifficulty = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Quiz management
+        function startQuiz(difficulty, subcategory) {
+            currentDifficulty = difficulty;
+            currentSubcategory = subcategory;
             userAnswers = {};
             quizStartTime = Date.now();
 
             // Shuffle questions and options
-            currentQuestions = shuffleArray([...quizData[currentDifficulty]])
+            currentQuestions = shuffleArray([...quizData[currentDifficulty][currentSubcategory]])
                 .map(q => ({
                     ...q,
                     options: shuffleOptionsWithCorrect(q.options, q.correct)
                 }));
 
             document.getElementById('difficultySelection').classList.add('hidden');
+            document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
@@ -1739,6 +1835,7 @@
         function saveQuizProgress() {
             const quizState = {
                 difficulty: currentDifficulty,
+                subcategory: currentSubcategory,
                 answers: userAnswers,
                 questions: currentQuestions,
                 startTime: quizStartTime,
@@ -1751,12 +1848,15 @@
             const savedState = JSON.parse(localStorage.getItem('tandaQuizInProgress'));
 
             currentDifficulty = savedState.difficulty;
+            currentSubcategory = savedState.subcategory || 'general';
             userAnswers = savedState.answers;
             currentQuestions = savedState.questions;
             quizStartTime = savedState.startTime;
             timeRemaining = savedState.timeRemaining;
 
             document.getElementById('difficultySelection').classList.add('hidden');
+            document.getElementById('subcategorySelection').classList.add('hidden');
+            document.getElementById('submitQuestionSection').classList.add('hidden');
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
 
@@ -1886,10 +1986,12 @@
         function restartQuiz() {
             stopTimer();
             currentDifficulty = '';
+            currentSubcategory = '';
             userAnswers = {};
             currentQuestions = [];
 
             document.getElementById('difficultySelection').classList.remove('hidden');
+            document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
             document.getElementById('quizContainer').classList.remove('active');
             document.getElementById('results').classList.remove('active');
