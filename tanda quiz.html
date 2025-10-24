@@ -509,7 +509,7 @@
         .question-counter {
             font-size: 1.2em;
             font-weight: 600;
-            color: var(--text-color);
+            color: #ffffff;
         }
 
         .progress-bar {
@@ -1535,7 +1535,7 @@
         </div>
 
         <!-- View Submissions Section (Password Protected) -->
-        <div style="margin-top: 20px; text-align: center;">
+        <div id="viewSubmissionsSection" style="margin-top: 20px; text-align: center;">
             <button class="stats-btn" onclick="showSubmissionsWithPassword()" aria-label="View submitted questions" style="background:linear-gradient(135deg,#f093fb,#f5576c); padding: 12px 24px; font-size: 1em;">
                 <span>📝</span>
                 <span>View Submissions</span>
@@ -4376,6 +4376,7 @@
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('viewSubmissionsSection').classList.add('hidden');
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
 
@@ -4687,6 +4688,7 @@
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('viewSubmissionsSection').classList.add('hidden');
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
 
@@ -4990,6 +4992,7 @@
             document.getElementById('difficultySelection').classList.remove('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
+            document.getElementById('viewSubmissionsSection').classList.remove('hidden');
             document.getElementById('quizContainer').classList.remove('active');
             document.getElementById('results').classList.remove('active');
             document.getElementById('progressFill').style.width = '0%';
