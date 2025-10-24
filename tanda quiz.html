@@ -475,10 +475,12 @@
             border-radius: 20px;
             font-size: 0.85em;
             margin-right: 10px;
+            color: white;
         }
 
         .quiz-title .topic-name {
             font-size: 1.1em;
+            color: white;
         }
 
         .quiz-header {
@@ -556,7 +558,7 @@
 
         .question-text {
             font-size: 1.25em;
-            color: var(--text-color);
+            color: #333333;
             margin-bottom: 25px;
             font-weight: 600;
             line-height: 1.5;
@@ -3998,7 +4000,7 @@
                         <div class="topic-list">
                             ${topics.map(topic => renderTopicItem(difficulty, topic)).join('')}
                         </div>
-                        ${diffStats.totalCompleted > 0 ? renderOverallStats(difficulty, diffStats) : ''}
+                        ${renderOverallStats(difficulty, diffStats)}
                     </div>
                 `;
 
@@ -4030,8 +4032,10 @@
         }
 
         function renderOverallStats(difficulty, stats) {
-            // Calculate total questions based on topics actually attempted (10 questions per quiz)
-            const totalQuestions = stats.topicsAttempted * 10;
+            // Calculate total questions: use attempted topics if any, otherwise show all available topics
+            const totalAvailableTopics = Object.keys(subcategories[difficulty]).length;
+            const topicsToShow = stats.topicsAttempted > 0 ? stats.topicsAttempted : totalAvailableTopics;
+            const totalQuestions = topicsToShow * 10; // 10 questions per quiz
             const progress = totalQuestions > 0 ? (stats.totalCompleted / totalQuestions * 100).toFixed(0) : 0;
 
             return `
@@ -4114,7 +4118,7 @@
                 bestScore: subStats.bestScore || 0,
                 avgScore: subStats.avgScore || 0,
                 bestPercentage: subStats.bestPercentage || 0,
-                totalQuestions: 20,
+                totalQuestions: 10,
                 lastAttempt: subStats.lastAttempt || null,
                 completed: subStats.completed || false
             };
