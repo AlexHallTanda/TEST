@@ -2115,23 +2115,51 @@
                 questionCard.className = 'question-card';
                 questionCard.id = `question-${index}`;
 
+                const questionType = q.type || 'multiple-choice';
                 let optionsHTML = '';
-                q.options.options.forEach((option, optIndex) => {
-                    optionsHTML += `
-                        <div class="option" onclick="selectOption(${index}, ${optIndex})" tabindex="0" role="radio" aria-checked="false">
-                            <input type="radio" name="question${index}" value="${optIndex}" id="q${index}o${optIndex}" aria-label="Option ${optIndex + 1}: ${option}">
-                            <label for="q${index}o${optIndex}">${option}</label>
+
+                // Render based on question type
+                if (questionType === 'fill-blank') {
+                    optionsHTML = `
+                        <div class="fill-blank-input">
+                            <input type="text" id="fillblank${index}" placeholder="Type your answer here..."
+                                   oninput="selectFillBlank(${index}, this.value)"
+                                   value="${userAnswers[index] || ''}"
+                                   style="width:100%;padding:15px;border:2px solid var(--border-color);border-radius:8px;font-size:1em;background:var(--card-bg);color:var(--text-color)">
                         </div>
                     `;
-                });
+                } else if (questionType === 'multiple-select') {
+                    q.options.options.forEach((option, optIndex) => {
+                        const isChecked = userAnswers[index] && userAnswers[index].includes(optIndex);
+                        optionsHTML += `
+                            <div class="option ${isChecked ? 'selected' : ''}" onclick="selectMultiple(${index}, ${optIndex})" tabindex="0" role="checkbox" aria-checked="${isChecked}">
+                                <input type="checkbox" name="question${index}" value="${optIndex}" id="q${index}o${optIndex}" ${isChecked ? 'checked' : ''} aria-label="Option ${optIndex + 1}: ${option}">
+                                <label for="q${index}o${optIndex}">${option}</label>
+                            </div>
+                        `;
+                    });
+                } else {
+                    // multiple-choice or true-false (both use radio buttons)
+                    q.options.options.forEach((option, optIndex) => {
+                        optionsHTML += `
+                            <div class="option" onclick="selectOption(${index}, ${optIndex})" tabindex="0" role="radio" aria-checked="false">
+                                <input type="radio" name="question${index}" value="${optIndex}" id="q${index}o${optIndex}" aria-label="Option ${optIndex + 1}: ${option}">
+                                <label for="q${index}o${optIndex}">${option}</label>
+                            </div>
+                        `;
+                    });
+                }
+
+                const typeLabel = questionType === 'multiple-select' ? ' <span style="font-size:0.85em;color:#667eea">(Select all that apply)</span>' :
+                                 questionType === 'fill-blank' ? ' <span style="font-size:0.85em;color:#667eea">(Fill in the blank)</span>' : '';
 
                 questionCard.innerHTML = `
                     <div class="question-number">
                         <span>Question ${index + 1} of ${currentQuestions.length}</span>
-                        ${userAnswers[index] !== undefined ? '<span style="color: #28a745;">✓</span>' : ''}
+                        ${userAnswers[index] !== undefined && userAnswers[index] !== '' ? '<span style="color: #28a745;">✓</span>' : ''}
                     </div>
-                    <div class="question-text">${q.question}</div>
-                    <div class="options" role="radiogroup" aria-label="Answer options">
+                    <div class="question-text">${q.question}${typeLabel}</div>
+                    <div class="options" role="${questionType === 'multiple-select' ? 'group' : 'radiogroup'}" aria-label="Answer options">
                         ${optionsHTML}
                     </div>
                 `;
@@ -2204,10 +2232,86 @@
             }
         }
 
+        function selectMultiple(questionIndex, optionIndex) {
+            const checkbox = document.getElementById(`q${questionIndex}o${optionIndex}`);
+            const optionDiv = checkbox.closest('.option');
+
+            // Initialize userAnswers as array if not exists
+            if (!Array.isArray(userAnswers[questionIndex])) {
+                userAnswers[questionIndex] = [];
+            }
+
+            // Toggle selection
+            if (userAnswers[questionIndex].includes(optionIndex)) {
+                userAnswers[questionIndex] = userAnswers[questionIndex].filter(i => i !== optionIndex);
+                checkbox.checked = false;
+                optionDiv.classList.remove('selected');
+                optionDiv.setAttribute('aria-checked', 'false');
+            } else {
+                userAnswers[questionIndex].push(optionIndex);
+                checkbox.checked = true;
+                optionDiv.classList.add('selected');
+                optionDiv.setAttribute('aria-checked', 'true');
+            }
+
+            updateProgressBar();
+            updateQuestionCounter();
+            updateSubmitButton();
+            saveQuizProgress();
+
+            // Update question counter checkmark
+            const questionNumber = document.querySelector(`#question-${questionIndex} .question-number`);
+            if (userAnswers[questionIndex].length > 0) {
+                if (questionNumber && !questionNumber.querySelector('span[style*="color: #28a745"]')) {
+                    questionNumber.innerHTML = `
+                        <span>Question ${questionIndex + 1} of ${currentQuestions.length}</span>
+                        <span style="color: #28a745;">✓</span>
+                    `;
+                }
+            } else {
+                questionNumber.innerHTML = `<span>Question ${questionIndex + 1} of ${currentQuestions.length}</span>`;
+            }
+        }
+
+        function selectFillBlank(questionIndex, value) {
+            userAnswers[questionIndex] = value.trim();
+
+            updateProgressBar();
+            updateQuestionCounter();
+            updateSubmitButton();
+            saveQuizProgress();
+
+            // Update question counter checkmark
+            const questionNumber = document.querySelector(`#question-${questionIndex} .question-number`);
+            if (value.trim()) {
+                if (questionNumber && !questionNumber.querySelector('span[style*="color: #28a745"]')) {
+                    questionNumber.innerHTML = `
+                        <span>Question ${questionIndex + 1} of ${currentQuestions.length}</span>
+                        <span style="color: #28a745;">✓</span>
+                    `;
+                }
+            } else {
+                questionNumber.innerHTML = `<span>Question ${questionIndex + 1} of ${currentQuestions.length}</span>`;
+            }
+        }
+
         function updateSubmitButton() {
             const submitBtn = document.getElementById('submitBtn');
             const totalQuestions = currentQuestions.length;
-            const answeredQuestions = Object.keys(userAnswers).length;
+
+            // Count answered questions properly for different types
+            let answeredQuestions = 0;
+            for (let i = 0; i < totalQuestions; i++) {
+                const answer = userAnswers[i];
+                if (answer !== undefined && answer !== null && answer !== '') {
+                    // For arrays (multiple-select), check if at least one option is selected
+                    if (Array.isArray(answer)) {
+                        if (answer.length > 0) answeredQuestions++;
+                    } else {
+                        answeredQuestions++;
+                    }
+                }
+            }
 
             if (answeredQuestions === totalQuestions) {
                 submitBtn.disabled = false;
@@ -2289,9 +2393,34 @@
             let score = 0;
 
             questions.forEach((q, index) => {
-                if (userAnswers[index] === q.options.correct) {
-                    score++;
+                const questionType = q.type || 'multiple-choice';
+                const userAnswer = userAnswers[index];
+                const correctAnswer = q.options.correct;
+
+                let isCorrect = false;
+
+                if (questionType === 'multiple-select') {
+                    // Compare arrays (order doesn't matter)
+                    if (Array.isArray(userAnswer) && Array.isArray(correctAnswer)) {
+                        const sorted1 = [...userAnswer].sort();
+                        const sorted2 = [...correctAnswer].sort();
+                        isCorrect = JSON.stringify(sorted1) === JSON.stringify(sorted2);
+                    }
+                } else if (questionType === 'fill-blank') {
+                    // Case-insensitive string matching
+                    // correctAnswer can be a string or array of acceptable answers
+                    const userAnswerLower = (userAnswer || '').toLowerCase().trim();
+                    if (Array.isArray(correctAnswer)) {
+                        isCorrect = correctAnswer.some(ans => ans.toLowerCase().trim() === userAnswerLower);
+                    } else {
+                        isCorrect = correctAnswer.toLowerCase().trim() === userAnswerLower;
+                    }
+                } else {
+                    // multiple-choice or true-false (number comparison)
+                    isCorrect = userAnswer === correctAnswer;
                 }
+
+                if (isCorrect) score++;
             });
 
             const timeTaken = Math.floor((Date.now() - quizStartTime) / 1000);
@@ -2339,24 +2468,72 @@
                 const questionCard = document.createElement('div');
                 questionCard.className = 'question-card';
 
+                const questionType = q.type || 'multiple-choice';
+                const userAnswer = userAnswers[index];
+                const correctAnswer = q.options.correct;
+
                 let optionsHTML = '';
-                q.options.options.forEach((option, optIndex) => {
-                    let optionClass = '';
 
-                    if (userAnswers[index] === optIndex && optIndex === q.options.correct) {
-                        optionClass = 'correct';
-                    } else if (userAnswers[index] === optIndex && optIndex !== q.options.correct) {
-                        optionClass = 'incorrect';
-                    } else if (optIndex === q.options.correct) {
-                        optionClass = 'correct-answer';
-                    }
+                if (questionType === 'fill-blank') {
+                    // Show fill-in-the-blank answer
+                    const acceptableAnswers = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
+                    const userAnswerLower = (userAnswer || '').toLowerCase().trim();
+                    const isCorrect = acceptableAnswers.some(ans => ans.toLowerCase().trim() === userAnswerLower);
 
-                    optionsHTML += `
-                        <div class="option ${optionClass}">
-                            <label>${option}</label>
+                    optionsHTML = `
+                        <div class="option ${isCorrect ? 'correct' : 'incorrect'}" style="background:var(--question-bg);padding:15px;border-radius:8px;margin:10px 0">
+                            <label><strong>Your answer:</strong> ${userAnswer || '(No answer provided)'}</label>
+                        </div>
+                        <div class="option correct-answer" style="background:var(--question-bg);padding:15px;border-radius:8px;border-left:4px solid #28a745">
+                            <label><strong>Correct answer${acceptableAnswers.length > 1 ? 's' : ''}:</strong> ${acceptableAnswers.join(' / ')}</label>
                         </div>
                     `;
-                });
+                } else if (questionType === 'multiple-select') {
+                    // Show multiple-select answers
+                    const correctIndices = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
+                    const userIndices = Array.isArray(userAnswer) ? userAnswer : [];
+
+                    q.options.options.forEach((option, optIndex) => {
+                        let optionClass = '';
+                        const isUserSelected = userIndices.includes(optIndex);
+                        const isCorrect = correctIndices.includes(optIndex);
+
+                        if (isUserSelected && isCorrect) {
+                            optionClass = 'correct';
+                        } else if (isUserSelected && !isCorrect) {
+                            optionClass = 'incorrect';
+                        } else if (!isUserSelected && isCorrect) {
+                            optionClass = 'correct-answer';
+                        }
+
+                        const checkIcon = isUserSelected ? '☑' : '☐';
+
+                        optionsHTML += `
+                            <div class="option ${optionClass}">
+                                <label>${checkIcon} ${option}</label>
+                            </div>
+                        `;
+                    });
+                } else {
+                    // Show multiple-choice/true-false answers
+                    q.options.options.forEach((option, optIndex) => {
+                        let optionClass = '';
+
+                        if (userAnswer === optIndex && optIndex === correctAnswer) {
+                            optionClass = 'correct';
+                        } else if (userAnswer === optIndex && optIndex !== correctAnswer) {
+                            optionClass = 'incorrect';
+                        } else if (optIndex === correctAnswer) {
+                            optionClass = 'correct-answer';
+                        }
+
+                        optionsHTML += `
+                            <div class="option ${optionClass}">
+                                <label>${option}</label>
+                            </div>
+                        `;
+                    });
+                }
 
                 const explanationHTML = q.explanation ? `
                     <div class="explanation">
