@@ -798,18 +798,93 @@
         </div>
 
         <div id="difficultySelection" class="difficulty-selection" role="group" aria-label="Difficulty selection">
-            <button class="difficulty-btn beginner" onclick="startQuiz('beginner')" aria-label="Start beginner quiz">
+            <button class="difficulty-btn beginner" onclick="selectDifficulty('beginner')" aria-label="Select beginner level">
                 <span>🌱 Beginner</span>
             </button>
-            <button class="difficulty-btn intermediate" onclick="startQuiz('intermediate')" aria-label="Start intermediate quiz">
+            <button class="difficulty-btn intermediate" onclick="selectDifficulty('intermediate')" aria-label="Select intermediate level">
                 <span>📚 Intermediate</span>
             </button>
-            <button class="difficulty-btn advanced" onclick="startQuiz('advanced')" aria-label="Start advanced quiz">
+            <button class="difficulty-btn advanced" onclick="selectDifficulty('advanced')" aria-label="Select advanced level">
                 <span>🎓 Advanced</span>
             </button>
-            <button class="difficulty-btn expert" onclick="startQuiz('expert')" aria-label="Start expert quiz">
+            <button class="difficulty-btn expert" onclick="selectDifficulty('expert')" aria-label="Select expert level">
                 <span>🏆 Expert</span>
             </button>
+        </div>
+
+        <div id="subcategorySelection" class="difficulty-selection hidden" role="group" aria-label="Subcategory selection">
+            <div id="subcategoryTitle" style="grid-column: 1 / -1; text-align: center; margin-bottom: 10px;">
+                <h2 style="color: #667eea; font-size: 1.8em; margin-bottom: 10px;" id="subcategoryHeader">Select a Topic</h2>
+            </div>
+            <div id="subcategoryButtons"></div>
+            <button class="back-btn" style="grid-column: 1 / -1; margin-top: 10px;" onclick="backToDifficulty()">Back to Difficulty Selection</button>
+        </div>
+
+        <!-- Submit Question Section -->
+        <div id="submitQuestionSection" style="margin-top: 30px; padding: 25px; background: var(--question-bg); border-radius: 12px; border-left: 5px solid #667eea;">
+            <h2 style="color: #667eea; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <span>💡</span>
+                <span>Contribute a Question</span>
+            </h2>
+            <p style="margin-bottom: 20px; color: var(--text-color); line-height: 1.6;">
+                Help improve this quiz! Submit your own Tanda knowledge question to help others learn.
+            </p>
+
+            <form id="submitQuestionForm" style="display: flex; flex-direction: column; gap: 15px;">
+                <div>
+                    <label for="questionText" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Question *</label>
+                    <textarea id="questionText" required rows="3" placeholder="Enter your question about Tanda..." style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Answer Options * (enter 4 options)</label>
+                    <input type="text" id="option1" required placeholder="Option 1" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
+                    <input type="text" id="option2" required placeholder="Option 2" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
+                    <input type="text" id="option3" required placeholder="Option 3" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
+                    <input type="text" id="option4" required placeholder="Option 4" style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
+                </div>
+
+                <div>
+                    <label for="correctAnswer" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Correct Answer *</label>
+                    <select id="correctAnswer" required style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
+                        <option value="">-- Select the correct option --</option>
+                        <option value="0">Option 1</option>
+                        <option value="1">Option 2</option>
+                        <option value="2">Option 3</option>
+                        <option value="3">Option 4</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="explanation" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Explanation *</label>
+                    <textarea id="explanation" required rows="3" placeholder="Explain why this is the correct answer..." style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label for="helpGuideLink" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Help Guide Link (optional)</label>
+                    <input type="url" id="helpGuideLink" placeholder="https://help.tanda.co/..." style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
+                    <small style="color: #666; margin-top: 5px; display: block;">Link to relevant Tanda help documentation</small>
+                </div>
+
+                <div>
+                    <label for="difficulty" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Difficulty Level *</label>
+                    <select id="difficulty" required style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
+                        <option value="">-- Select difficulty --</option>
+                        <option value="beginner">🌱 Beginner</option>
+                        <option value="intermediate">📚 Intermediate</option>
+                        <option value="advanced">🎓 Advanced</option>
+                        <option value="expert">🏆 Expert</option>
+                    </select>
+                </div>
+
+                <button type="submit" style="padding: 15px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(102, 126, 234, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                    Submit Question
+                </button>
+            </form>
+
+            <div id="submissionSuccess" class="hidden" style="margin-top: 20px; padding: 15px; background: #d4edda; border: 2px solid #28a745; border-radius: 8px; color: #155724;">
+                <strong>✅ Thank you!</strong> Your question has been saved locally. In a full implementation, this would be sent to a server for review.
+            </div>
         </div>
 
         <div id="quizContainer" class="quiz-container" role="main">
@@ -853,8 +928,37 @@
     </div>
 
     <script>
+        // Subcategory metadata
+        const subcategories = {
+            beginner: {
+                'time-attendance': { name: '🕐 Time & Attendance Basics', icon: '🕐' },
+                'rostering': { name: '📅 Rostering Fundamentals', icon: '📅' },
+                'leave': { name: '🏖️ Leave Management', icon: '🏖️' },
+                'self-service': { name: '👤 Employee Self-Service', icon: '👤' }
+            },
+            intermediate: {
+                'advanced-rostering': { name: '📊 Advanced Rostering', icon: '📊' },
+                'timesheets': { name: '⏱️ Timesheet Management', icon: '⏱️' },
+                'awards': { name: '💰 Awards & Pay Rules', icon: '💰' },
+                'reporting': { name: '📈 Reporting & Analytics', icon: '📈' }
+            },
+            advanced: {
+                'compliance': { name: '⚖️ Compliance & Awards', icon: '⚖️' },
+                'cost-management': { name: '💵 Cost Management', icon: '💵' },
+                'integrations': { name: '🔗 Integrations', icon: '🔗' },
+                'advanced-features': { name: '🎯 Advanced Features', icon: '🎯' }
+            },
+            expert: {
+                'api': { name: '🔌 API & Automation', icon: '🔌' },
+                'enterprise': { name: '🏢 Enterprise Configuration', icon: '🏢' },
+                'workflows': { name: '⚙️ Custom Workflows', icon: '⚙️' },
+                'architecture': { name: '🏗️ System Architecture', icon: '🏗️' }
+            }
+        };
+
         const quizData = {
-            beginner: [
+            beginner: {
+                'time-attendance': [
                 {
                     question: "What is Tanda primarily used for?",
                     options: [
@@ -864,7 +968,8 @@
                         "Accounting software"
                     ],
                     correct: 1,
-                    explanation: "Tanda is a comprehensive workforce management platform that specializes in rostering, time and attendance tracking, payroll processing, and employee scheduling."
+                    explanation: "Tanda is a comprehensive workforce management platform that specializes in rostering, time and attendance tracking, payroll processing, and employee scheduling.",
+                    helpLink: "https://help.tanda.co/en/collections/1395832-getting-started"
                 },
                 {
                     question: "How can employees clock in/out in Tanda?",
@@ -875,7 +980,8 @@
                         "By emailing their manager"
                     ],
                     correct: 2,
-                    explanation: "Tanda offers flexible clocking options including the mobile app, web browser portal, physical time clocks, and kiosk mode to accommodate different workplace environments."
+                    explanation: "Tanda offers flexible clocking options including the mobile app, web browser portal, physical time clocks, and kiosk mode to accommodate different workplace environments.",
+                    helpLink: "https://help.tanda.co/en/collections/1395843-timesheets-time-clocks"
                 },
                 {
                     question: "What feature allows employees to view their schedules?",
@@ -897,7 +1003,8 @@
                         "Leave is not tracked in Tanda"
                     ],
                     correct: 1,
-                    explanation: "Tanda's self-service portal empowers employees to request leave directly, which then goes through the approval workflow for manager review."
+                    explanation: "Tanda's self-service portal empowers employees to request leave directly, which then goes through the approval workflow for manager review.",
+                    helpLink: "https://help.tanda.co/en/collections/1395846-leave"
                 },
                 {
                     question: "What is a 'shift' in Tanda?",
@@ -919,7 +1026,8 @@
                         "Rosters cannot be created in Tanda"
                     ],
                     correct: 1,
-                    explanation: "Managers have flexible options to create rosters including building from scratch, using saved templates, copying previous rosters, or importing from external sources."
+                    explanation: "Managers have flexible options to create rosters including building from scratch, using saved templates, copying previous rosters, or importing from external sources.",
+                    helpLink: "https://help.tanda.co/en/collections/1395835-rosters"
                 },
                 {
                     question: "What is the purpose of awards in Tanda?",
@@ -1460,6 +1568,7 @@
                 }));
 
             document.getElementById('difficultySelection').classList.add('hidden');
+            document.getElementById('submitQuestionSection').classList.add('hidden');
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
 
@@ -1748,6 +1857,7 @@
                     <div class="explanation">
                         <div class="explanation-title">💡 Explanation:</div>
                         ${q.explanation}
+                        ${q.helpLink ? `<div style="margin-top: 10px;"><a href="${q.helpLink}" target="_blank" rel="noopener noreferrer" style="color: #667eea; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">📚 Read more in Tanda Help Guide →</a></div>` : ''}
                     </div>
                 ` : '';
 
@@ -1780,6 +1890,7 @@
             currentQuestions = [];
 
             document.getElementById('difficultySelection').classList.remove('hidden');
+            document.getElementById('submitQuestionSection').classList.remove('hidden');
             document.getElementById('quizContainer').classList.remove('active');
             document.getElementById('results').classList.remove('active');
             document.getElementById('progressFill').style.width = '0%';
@@ -1911,6 +2022,45 @@
             if (e.target === this) {
                 closeStats();
             }
+        });
+
+        // Handle question submission form
+        document.getElementById('submitQuestionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const submittedQuestion = {
+                question: document.getElementById('questionText').value,
+                options: [
+                    document.getElementById('option1').value,
+                    document.getElementById('option2').value,
+                    document.getElementById('option3').value,
+                    document.getElementById('option4').value
+                ],
+                correct: parseInt(document.getElementById('correctAnswer').value),
+                explanation: document.getElementById('explanation').value,
+                helpLink: document.getElementById('helpGuideLink').value,
+                difficulty: document.getElementById('difficulty').value,
+                submittedAt: new Date().toISOString()
+            };
+
+            // Save to localStorage
+            const submittedQuestions = JSON.parse(localStorage.getItem('tandaSubmittedQuestions') || '[]');
+            submittedQuestions.push(submittedQuestion);
+            localStorage.setItem('tandaSubmittedQuestions', JSON.stringify(submittedQuestions));
+
+            // Show success message
+            document.getElementById('submissionSuccess').classList.remove('hidden');
+
+            // Reset form
+            this.reset();
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                document.getElementById('submissionSuccess').classList.add('hidden');
+            }, 5000);
+
+            // Scroll to success message
+            document.getElementById('submissionSuccess').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
 
         // Initialize app when DOM is loaded
