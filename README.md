@@ -5,24 +5,24 @@ An interactive quiz application to test your knowledge of Tanda's workforce mana
 ## How to Open the Quiz
 
 ### Method 1: Double-Click (Easiest)
-1. Find the `index.html` file in this folder
+1. Find the `tanda quiz.html` file in this folder
 2. **Double-click** it
 3. The quiz will open in your default web browser
 
 ### Method 2: Drag & Drop
 1. Open your web browser (Chrome, Firefox, Safari, Edge, etc.)
-2. Drag the `index.html` file into the browser window
+2. Drag the `tanda quiz.html` file into the browser window
 3. The quiz will load automatically
 
 ### Method 3: Right-Click
-1. Right-click on `index.html`
+1. Right-click on `tanda quiz.html`
 2. Select "Open with"
 3. Choose your preferred web browser
 
 ### Method 4: From Browser Menu
 1. Open your web browser
 2. Press `Ctrl+O` (Windows/Linux) or `Cmd+O` (Mac)
-3. Navigate to this folder and select `index.html`
+3. Navigate to this folder and select `tanda quiz.html`
 4. Click "Open"
 
 ## Features
