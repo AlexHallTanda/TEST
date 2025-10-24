@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Test your knowledge of Tanda's workforce management features with this interactive quiz">
+    <title>Tanda Knowledge Quiz</title>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --card-bg: #ffffff;
+            --question-bg: #f8f9fa;
+            --border-color: #e0e0e0;
+            --hover-bg: #f0f4ff;
+            --shadow: rgba(0, 0, 0, 0.2);
+            --shadow-light: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            --bg-color: #1a1a2e;
+            --text-color: #e0e0e0;
+            --card-bg: #16213e;
+            --question-bg: #0f1419;
+            --border-color: #2d3748;
+            --hover-bg: #1e2838;
+            --shadow: rgba(0, 0, 0, 0.5);
+            --shadow-light: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px var(--shadow);
+            transition: background 0.3s ease;
+        }
+
+        .header {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        [data-theme="dark"] .subtitle {
+            color: #a0a0a0;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .theme-toggle, .timer-toggle, .stats-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle:hover, .timer-toggle:hover, .stats-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .difficulty-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .difficulty-btn {
+            padding: 25px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .difficulty-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .difficulty-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .difficulty-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+
+        .difficulty-btn:focus {
+            outline: 3px solid #667eea;
+            outline-offset: 3px;
+        }
+
+        .beginner {
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            color: white;
+        }
+
+        .intermediate {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+
+        .advanced {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+            color: white;
+        }
+
+        .expert {
+            background: linear-gradient(135deg, #30cfd0, #330867);
+            color: white;
+        }
+
+        .quiz-container {
+            display: none;
+        }
+
+        .quiz-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .timer-display {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            padding: 10px 20px;
+            background: var(--question-bg);
+            border-radius: 8px;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .timer-display.warning {
+            color: #f5576c;
+            animation: pulse 1s infinite;
+        }
+
+        .question-counter {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px var(--shadow-light);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.4s ease;
+            border-radius: 10px;
+        }
+
+        .question-card {
+            background: var(--question-bg);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+            transition: all 0.3s ease;
+            animation: slideIn 0.4s ease;
+        }
+
+        .question-card:hover {
+            box-shadow: 0 5px 15px var(--shadow-light);
+            transform: translateX(5px);
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .question-text {
+            font-size: 1.25em;
+            color: var(--text-color);
+            margin-bottom: 25px;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 18px 22px;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: var(--hover-bg);
+            transform: translateX(5px);
+        }
+
+        .option:focus-within {
+            outline: 3px solid #667eea;
+            outline-offset: 2px;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 15px;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            accent-color: #667eea;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 1.05em;
+        }
+
+        .submit-btn, .restart-btn, .back-btn {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover, .restart-btn:hover, .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-btn {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            margin-top: 10px;
+        }
+
+        .results {
+            display: none;
+        }
+
+        .results.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .score-display {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            animation: scaleIn 0.5s ease;
+        }
+
+        .score-display h2 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            animation: countUp 1s ease;
+        }
+
+        .score-display p {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .score-percentage {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .option.correct {
+            background: #d4edda !important;
+            border-color: #28a745 !important;
+            animation: correctPulse 0.5s ease;
+        }
+
+        .option.incorrect {
+            background: #f8d7da !important;
+            border-color: #dc3545 !important;
+            animation: shake 0.5s ease;
+        }
+
+        .option.correct-answer {
+            background: #d1ecf1 !important;
+            border-color: #17a2b8 !important;
+        }
+
+        [data-theme="dark"] .option.correct {
+            background: #1e4620 !important;
+            border-color: #28a745 !important;
+        }
+
+        [data-theme="dark"] .option.incorrect {
+            background: #4a1e1e !important;
+            border-color: #dc3545 !important;
+        }
+
+        [data-theme="dark"] .option.correct-answer {
+            background: #1e3a4a !important;
+            border-color: #17a2b8 !important;
+        }
+
+        .option.correct::after {
+            content: "✓ Your answer (Correct!)";
+            margin-left: auto;
+            color: #28a745;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .option.incorrect::after {
+            content: "✗ Your answer (Wrong)";
+            margin-left: auto;
+            color: #dc3545;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .option.correct-answer::after {
+            content: "✓ Correct Answer";
+            margin-left: auto;
+            color: #17a2b8;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--hover-bg);
+            border-left: 4px solid #17a2b8;
+            border-radius: 6px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .explanation-title {
+            font-weight: bold;
+            color: #17a2b8;
+            margin-bottom: 8px;
+        }
+
+        .stats-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .stats-modal.active {
+            display: flex;
+        }
+
+        .stats-content {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .stats-header h2 {
+            color: #667eea;
+            font-size: 2em;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: transform 0.3s ease;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: var(--question-bg);
+            border-radius: 8px;
+            align-items: center;
+        }
+
+        .stat-label {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .stat-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .clear-stats-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .clear-stats-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-5px);
+            }
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        @keyframes correctPulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.02);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .difficulty-selection {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-header {
+                flex-direction: column;
+            }
+
+            .timer-display {
+                width: 100%;
+            }
+
+            .question-text {
+                font-size: 1.1em;
+            }
+
+            .score-display h2 {
+                font-size: 2.5em;
+            }
+
+            .stats-content {
+                padding: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.6em;
+            }
+
+            .subtitle {
+                font-size: 0.95em;
+            }
+
+            .difficulty-btn {
+                padding: 20px 15px;
+                font-size: 1em;
+            }
+
+            .question-card {
+                padding: 20px;
+            }
+
+            .option {
+                padding: 15px;
+            }
+
+            .option label {
+                font-size: 0.95em;
+            }
+        }
+
+        /* Accessibility improvements */
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            padding: 0;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+
+            .theme-toggle, .timer-toggle, .stats-btn, .restart-btn, .back-btn {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Tanda Knowledge Quiz</h1>
+            <p class="subtitle">Test your knowledge of Tanda's features and functionality</p>
+            <div class="controls">
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                    <span id="themeIcon">🌙</span>
+                    <span id="themeText">Dark Mode</span>
+                </button>
+                <button class="timer-toggle" onclick="toggleTimerPreference()" aria-label="Toggle timer">
+                    <span>⏱️</span>
+                    <span id="timerPrefText">Timer: Off</span>
+                </button>
+                <button class="stats-btn" onclick="showStats()" aria-label="View statistics">
+                    <span>📊</span>
+                    <span>Stats</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="difficultySelection" class="difficulty-selection" role="group" aria-label="Difficulty selection">
+            <button class="difficulty-btn beginner" onclick="startQuiz('beginner')" aria-label="Start beginner quiz">
+                <span>🌱 Beginner</span>
+            </button>
+            <button class="difficulty-btn intermediate" onclick="startQuiz('intermediate')" aria-label="Start intermediate quiz">
+                <span>📚 Intermediate</span>
+            </button>
+            <button class="difficulty-btn advanced" onclick="startQuiz('advanced')" aria-label="Start advanced quiz">
+                <span>🎓 Advanced</span>
+            </button>
+            <button class="difficulty-btn expert" onclick="startQuiz('expert')" aria-label="Start expert quiz">
+                <span>🏆 Expert</span>
+            </button>
+        </div>
+
+        <div id="quizContainer" class="quiz-container" role="main">
+            <div class="quiz-header">
+                <div class="question-counter" id="questionCounter" aria-live="polite">Question 0 of 0</div>
+                <div class="timer-display hidden" id="timerDisplay" aria-live="polite" role="timer">
+                    <span id="timerText">00:00</span>
+                </div>
+            </div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+            </div>
+            <form id="quizForm">
+                <div id="questionsContainer"></div>
+                <button type="submit" class="submit-btn" id="submitBtn">Submit Quiz</button>
+                <button type="button" class="back-btn" onclick="backToSelection()">Back to Difficulty Selection</button>
+            </form>
+        </div>
+
+        <div id="results" class="results" role="region" aria-label="Quiz results">
+            <div class="score-display">
+                <h2 id="scoreText" aria-live="polite">0/10</h2>
+                <p id="scoreMessage"></p>
+                <p class="score-percentage" id="scorePercentage"></p>
+            </div>
+            <div id="answersReview"></div>
+            <button class="restart-btn" onclick="restartQuiz()">Take Another Quiz</button>
+        </div>
+    </div>
+
+    <!-- Statistics Modal -->
+    <div id="statsModal" class="stats-modal" role="dialog" aria-labelledby="statsTitle" aria-modal="true">
+        <div class="stats-content">
+            <div class="stats-header">
+                <h2 id="statsTitle">📊 Your Statistics</h2>
+                <button class="close-btn" onclick="closeStats()" aria-label="Close statistics">&times;</button>
+            </div>
+            <div id="statsContainer"></div>
+            <button class="clear-stats-btn" onclick="clearStats()">Clear All Statistics</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = {
+            beginner: [
+                {
+                    question: "What is Tanda primarily used for?",
+                    options: [
+                        "Project management",
+                        "Workforce management and rostering",
+                        "Customer relationship management",
+                        "Accounting software"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda is a comprehensive workforce management platform that specializes in rostering, time and attendance tracking, payroll processing, and employee scheduling."
+                },
+                {
+                    question: "How can employees clock in/out in Tanda?",
+                    options: [
+                        "Only through the web browser",
+                        "Only through a physical time clock",
+                        "Through mobile app, web browser, or time clock",
+                        "By emailing their manager"
+                    ],
+                    correct: 2,
+                    explanation: "Tanda offers flexible clocking options including the mobile app, web browser portal, physical time clocks, and kiosk mode to accommodate different workplace environments."
+                },
+                {
+                    question: "What feature allows employees to view their schedules?",
+                    options: [
+                        "The Tanda mobile app and web portal",
+                        "Only email notifications",
+                        "Physical notice board only",
+                        "Phone calls from managers"
+                    ],
+                    correct: 0,
+                    explanation: "Employees can access their schedules anytime through the Tanda mobile app or web portal, providing real-time visibility of their work schedule."
+                },
+                {
+                    question: "Can employees request leave through Tanda?",
+                    options: [
+                        "No, they must use paper forms",
+                        "Yes, through the self-service portal",
+                        "Only managers can enter leave",
+                        "Leave is not tracked in Tanda"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda's self-service portal empowers employees to request leave directly, which then goes through the approval workflow for manager review."
+                },
+                {
+                    question: "What is a 'shift' in Tanda?",
+                    options: [
+                        "A physical location",
+                        "A scheduled work period for an employee",
+                        "A department in the company",
+                        "A type of leave"
+                    ],
+                    correct: 1,
+                    explanation: "A shift represents a scheduled work period that includes the date, start time, end time, role, and employee assigned to work during that period."
+                },
+                {
+                    question: "How can managers create a roster in Tanda?",
+                    options: [
+                        "Only by importing Excel files",
+                        "Through the roster interface, using templates or from scratch",
+                        "Tanda automatically creates all rosters",
+                        "Rosters cannot be created in Tanda"
+                    ],
+                    correct: 1,
+                    explanation: "Managers have flexible options to create rosters including building from scratch, using saved templates, copying previous rosters, or importing from external sources."
+                },
+                {
+                    question: "What is the purpose of awards in Tanda?",
+                    options: [
+                        "To give employees bonuses",
+                        "To define pay rates and rules based on employment agreements",
+                        "To track employee achievements",
+                        "To manage vacation packages"
+                    ],
+                    correct: 1,
+                    explanation: "Awards in Tanda define the legal framework for pay rates, penalty rates, allowances, and working conditions based on modern awards or enterprise agreements."
+                },
+                {
+                    question: "Can Tanda integrate with payroll systems?",
+                    options: [
+                        "No, data must be manually entered",
+                        "Yes, it integrates with various payroll systems",
+                        "Only with Tanda's own payroll",
+                        "Integration is not possible"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda offers extensive integrations with major payroll systems including Xero, MYOB, KeyPay, and many others, streamlining the payroll process."
+                },
+                {
+                    question: "What is the Staff App used for?",
+                    options: [
+                        "Only for managers to create rosters",
+                        "For employees to view schedules, clock in/out, and request leave",
+                        "For customers to book appointments",
+                        "For accounting purposes only"
+                    ],
+                    correct: 1,
+                    explanation: "The Tanda Staff App is the employee-facing mobile application that provides access to schedules, time clock, leave requests, availability settings, and more."
+                },
+                {
+                    question: "How are employees notified of new shifts in Tanda?",
+                    options: [
+                        "Only through postal mail",
+                        "Through push notifications, email, and SMS",
+                        "They must check manually every day",
+                        "Notifications are not available"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda supports multiple notification channels including push notifications, email, and SMS to ensure employees are promptly informed of schedule changes."
+                }
+            ],
+            intermediate: [
+                {
+                    question: "What is the difference between 'Published' and 'Unpublished' rosters?",
+                    options: [
+                        "There is no difference",
+                        "Published rosters are visible to staff; unpublished are drafts",
+                        "Unpublished rosters are deleted automatically",
+                        "Published rosters cannot be edited"
+                    ],
+                    correct: 1,
+                    explanation: "Unpublished rosters are draft versions visible only to managers, while published rosters become visible to employees and trigger notifications."
+                },
+                {
+                    question: "What feature helps prevent overstaffing or understaffing?",
+                    options: [
+                        "Email alerts only",
+                        "Demand-based scheduling and budget tracking",
+                        "Tanda doesn't have this feature",
+                        "Manual calculations only"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda's demand-based scheduling uses historical data and forecasting to optimize staffing levels, while budget tracking provides real-time cost visibility."
+                },
+                {
+                    question: "How can you handle shift swaps in Tanda?",
+                    options: [
+                        "Managers must manually recreate all shifts",
+                        "Employees can request swaps through the app for manager approval",
+                        "Shift swaps are not possible",
+                        "Only HR can perform swaps"
+                    ],
+                    correct: 1,
+                    explanation: "The shift swap feature allows employees to initiate swap requests with qualified colleagues, which then require manager approval before being finalized."
+                },
+                {
+                    question: "What is a 'timesheet' in Tanda?",
+                    options: [
+                        "A paper document",
+                        "A record of actual hours worked by employees",
+                        "The same as a roster",
+                        "A type of leave request"
+                    ],
+                    correct: 1,
+                    explanation: "Timesheets capture actual hours worked through clock-ins/outs or manual entries, which are used for payroll processing and differ from rostered hours."
+                },
+                {
+                    question: "Can Tanda track different pay rates for the same employee?",
+                    options: [
+                        "No, each employee has only one rate",
+                        "Yes, through different roles, times, and conditions",
+                        "Only for managers",
+                        "Pay rates cannot be tracked"
+                    ],
+                    correct: 1,
+                    explanation: "Employees can have multiple pay rates based on their assigned roles, time of day (penalty rates), overtime, and other award conditions."
+                },
+                {
+                    question: "What is the purpose of 'Unavailability' in Tanda?",
+                    options: [
+                        "To mark when equipment is broken",
+                        "To indicate when employees cannot work",
+                        "To show when the business is closed",
+                        "To track sick days only"
+                    ],
+                    correct: 1,
+                    explanation: "Unavailability allows employees to specify times when they're not available to work, helping managers create rosters that respect employee preferences."
+                },
+                {
+                    question: "How does Tanda handle overtime calculations?",
+                    options: [
+                        "It doesn't calculate overtime",
+                        "Automatically based on award rules and timesheet hours",
+                        "Only managers can manually add overtime",
+                        "Overtime is not tracked"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda automatically calculates overtime based on configured award rules, daily/weekly thresholds, and actual hours worked as recorded in timesheets."
+                },
+                {
+                    question: "What is a 'roster template' used for?",
+                    options: [
+                        "To create email templates",
+                        "To quickly create recurring roster patterns",
+                        "To design employee badges",
+                        "Templates don't exist in Tanda"
+                    ],
+                    correct: 1,
+                    explanation: "Roster templates save common scheduling patterns that can be quickly applied to future periods, saving time on recurring rosters."
+                },
+                {
+                    question: "Can employees see their accrued leave balances in Tanda?",
+                    options: [
+                        "No, only managers can see this",
+                        "Yes, through their self-service portal",
+                        "Leave balances are not tracked",
+                        "Only after requesting it in writing"
+                    ],
+                    correct: 1,
+                    explanation: "Employees have transparent access to their leave balances through the self-service portal, promoting autonomy and reducing HR inquiries."
+                },
+                {
+                    question: "What is the 'Open Shifts' feature?",
+                    options: [
+                        "Shifts that haven't been saved",
+                        "Shifts available for eligible employees to claim",
+                        "Shifts without a specific time",
+                        "This feature doesn't exist"
+                    ],
+                    correct: 1,
+                    explanation: "Open shifts are unassigned shifts that qualified employees can claim on a first-come-first-served basis, increasing flexibility and employee engagement."
+                }
+            ],
+            advanced: [
+                {
+                    question: "How does Tanda handle compliance with award interpretations?",
+                    options: [
+                        "It doesn't handle compliance",
+                        "Through built-in award rules and regular updates",
+                        "Only through manual configuration",
+                        "Compliance is the user's responsibility only"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda maintains a library of award interpretations that are regularly updated to reflect changes in industrial relations laws and Fair Work decisions."
+                },
+                {
+                    question: "What is the purpose of 'Locations' in Tanda's hierarchy?",
+                    options: [
+                        "To track GPS coordinates only",
+                        "To organize rosters, teams, and reporting by physical workplace",
+                        "Locations are not used in Tanda",
+                        "Only for delivery services"
+                    ],
+                    correct: 1,
+                    explanation: "Locations represent physical workplaces and serve as the top-level organizational unit for managing rosters, timesheets, teams, and generating location-specific reports."
+                },
+                {
+                    question: "How can you prevent employees from clocking in early?",
+                    options: [
+                        "This cannot be prevented",
+                        "Using clock-in rules and geofencing settings",
+                        "Only by disabling the time clock",
+                        "Manual monitoring only"
+                    ],
+                    correct: 1,
+                    explanation: "Clock-in rules can enforce restrictions on early clock-ins, while geofencing ensures employees can only clock in when at the workplace location."
+                },
+                {
+                    question: "What is 'Cost vs Budget' reporting used for?",
+                    options: [
+                        "Personal expense tracking",
+                        "Comparing actual labor costs against budgeted amounts",
+                        "Inventory management",
+                        "Customer billing"
+                    ],
+                    correct: 1,
+                    explanation: "Cost vs Budget reports provide real-time visibility into labor costs compared to budgeted amounts, enabling proactive cost management and decision-making."
+                },
+                {
+                    question: "How does Tanda handle different penalty rates?",
+                    options: [
+                        "All hours are paid at the same rate",
+                        "Automatically applies rates based on time, day, and award rules",
+                        "Penalties must be calculated externally",
+                        "Penalty rates are not supported"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda automatically applies penalty rates for weekends, public holidays, late nights, and overtime based on the configured award rules and shift timing."
+                },
+                {
+                    question: "What is the 'Qualification' feature used for?",
+                    options: [
+                        "Educational background only",
+                        "Tracking certifications, licenses, and skills for compliance",
+                        "Employee performance reviews",
+                        "Qualifications are not tracked"
+                    ],
+                    correct: 1,
+                    explanation: "Qualifications track certifications, licenses, training, and skills with expiry dates, ensuring compliance and helping managers roster appropriately qualified staff."
+                },
+                {
+                    question: "Can Tanda automatically approve certain leave requests?",
+                    options: [
+                        "No, all leave requires manual approval",
+                        "Yes, using auto-approval rules based on conditions",
+                        "Only emergency leave",
+                        "Leave cannot be approved in Tanda"
+                    ],
+                    correct: 1,
+                    explanation: "Auto-approval rules can be configured based on criteria like leave type, advance notice, available balance, and roster conflicts to streamline the approval process."
+                },
+                {
+                    question: "What is the purpose of 'Departments' or 'Teams'?",
+                    options: [
+                        "Only for organizational charts",
+                        "To organize staff, control access, and segment reporting",
+                        "Departments don't exist in Tanda",
+                        "Only for large enterprises"
+                    ],
+                    correct: 1,
+                    explanation: "Teams/departments organize employees into groups for rostering, permissions, and reporting purposes, and can have their own managers and settings."
+                },
+                {
+                    question: "How does Tanda handle split shifts?",
+                    options: [
+                        "Split shifts are not supported",
+                        "Can be rostered and tracked with appropriate breaks",
+                        "Only as two separate employment records",
+                        "Manual calculation required"
+                    ],
+                    correct: 1,
+                    explanation: "Split shifts can be configured with multiple breaks and appropriate penalty rates as defined by award rules for interrupted work periods."
+                },
+                {
+                    question: "What reporting options are available for labor cost analysis?",
+                    options: [
+                        "No reporting available",
+                        "Custom reports, dashboards, and export options",
+                        "Only basic timesheets",
+                        "Reports must be created externally"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda offers comprehensive reporting including custom report builder, real-time dashboards, scheduled reports, and CSV/Excel exports for detailed analysis."
+                }
+            ],
+            expert: [
+                {
+                    question: "How can you configure custom pay rules in Tanda?",
+                    options: [
+                        "Custom rules are not possible",
+                        "Through allowances, loadings, and award interpretation settings",
+                        "Only by contacting support for each change",
+                        "Pay rules are completely automated and unchangeable"
+                    ],
+                    correct: 1,
+                    explanation: "Custom pay rules can be configured through allowances, loadings, custom award interpretations, and pay rule conditions that evaluate shift attributes."
+                },
+                {
+                    question: "What is the purpose of the Tanda API?",
+                    options: [
+                        "To make the interface prettier",
+                        "To integrate Tanda with other systems and automate workflows",
+                        "APIs are not available",
+                        "Only for internal Tanda use"
+                    ],
+                    correct: 1,
+                    explanation: "The Tanda API enables integration with external systems, custom automation workflows, data synchronization, and building custom applications on top of Tanda."
+                },
+                {
+                    question: "How does Tanda handle complex award calculations like annualized salaries?",
+                    options: [
+                        "It doesn't support annualized salaries",
+                        "Through specific award rules and salary sacrifice configurations",
+                        "Only through manual adjustments",
+                        "Annualized salaries are calculated in payroll only"
+                    ],
+                    correct: 1,
+                    explanation: "Annualized salary employees can be configured with their annual salary, which Tanda then uses to calculate appropriate hourly rates and track worked hours for compliance."
+                },
+                {
+                    question: "What is 'data streaming' in Tanda used for?",
+                    options: [
+                        "Video streaming for training",
+                        "Real-time data export for analytics and integrations",
+                        "Music in the workplace",
+                        "Streaming is not available"
+                    ],
+                    correct: 1,
+                    explanation: "Data streaming provides real-time export of Tanda data to external systems, enabling live analytics dashboards and keeping integrated systems synchronized."
+                },
+                {
+                    question: "How can you implement multi-level approval workflows?",
+                    options: [
+                        "Only single-level approval is possible",
+                        "Through manager hierarchies and approval routing rules",
+                        "All approvals must be done manually",
+                        "Workflows are not customizable"
+                    ],
+                    correct: 1,
+                    explanation: "Multi-level approvals use manager hierarchies and conditional routing rules to send requests through sequential approval chains based on criteria like amount or type."
+                },
+                {
+                    question: "What options exist for custom timesheet fields?",
+                    options: [
+                        "Timesheets cannot be customized",
+                        "Custom fields, tags, and notes can be configured",
+                        "Only pre-defined fields exist",
+                        "Customization requires code changes"
+                    ],
+                    correct: 1,
+                    explanation: "Custom fields allow tracking of additional data on timesheets such as project codes, cost centers, or custom attributes specific to business needs."
+                },
+                {
+                    question: "How does Tanda support enterprise-level security requirements?",
+                    options: [
+                        "Basic password protection only",
+                        "SSO, 2FA, role-based permissions, and audit logs",
+                        "Security features are not available",
+                        "Only on-premise deployment"
+                    ],
+                    correct: 1,
+                    explanation: "Enterprise security features include SSO (SAML), two-factor authentication, granular role-based permissions, IP restrictions, and comprehensive audit logging."
+                },
+                {
+                    question: "What is 'demand-based rostering' and how is it configured?",
+                    options: [
+                        "It's another name for regular rostering",
+                        "Rostering based on forecasted demand using sales/traffic data",
+                        "Demand-based rostering is not available",
+                        "Only available for retail businesses"
+                    ],
+                    correct: 1,
+                    explanation: "Demand-based rostering uses historical sales, foot traffic, or custom metrics to forecast staffing needs and automatically suggest optimal roster configurations."
+                },
+                {
+                    question: "How can you automate roster creation in Tanda?",
+                    options: [
+                        "Rosters must always be created manually",
+                        "Using templates, auto-rostering rules, and demand forecasting",
+                        "Automation is only available for small teams",
+                        "Only through third-party tools"
+                    ],
+                    correct: 1,
+                    explanation: "Auto-rostering combines templates, demand forecasting, employee availability, qualifications, and labor budgets to generate optimized roster suggestions automatically."
+                },
+                {
+                    question: "What options exist for white-labeling or customizing the Tanda interface?",
+                    options: [
+                        "Complete white-labeling for all plans",
+                        "Limited branding options for enterprise customers",
+                        "No customization possible",
+                        "Only color scheme changes"
+                    ],
+                    correct: 1,
+                    explanation: "Enterprise customers can customize branding elements like logos, color schemes, and domain names, though complete white-labeling has limitations to maintain platform consistency."
+                }
+            ]
+        };
+
+        // Application state
+        let currentDifficulty = '';
+        let userAnswers = {};
+        let currentQuestions = [];
+        let timerInterval = null;
+        let timeRemaining = 0;
+        let timerEnabled = false;
+        let quizStartTime = null;
+
+        // Timer durations in seconds for each difficulty
+        const timerDurations = {
+            beginner: 600,    // 10 minutes
+            intermediate: 480, // 8 minutes
+            advanced: 420,    // 7 minutes
+            expert: 360       // 6 minutes
+        };
+
+        // Initialize app
+        function initializeApp() {
+            loadTheme();
+            loadTimerPreference();
+            loadStats();
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Escape to close modals
+                if (e.key === 'Escape') {
+                    closeStats();
+                }
+
+                // Numbers 1-4 to select difficulty when on selection screen
+                if (document.getElementById('difficultySelection').classList.contains('hidden') === false) {
+                    if (e.key >= '1' && e.key <= '4') {
+                        const difficulties = ['beginner', 'intermediate', 'advanced', 'expert'];
+                        startQuiz(difficulties[parseInt(e.key) - 1]);
+                    }
+                }
+            });
+
+            // Check for saved quiz in progress
+            const savedQuiz = localStorage.getItem('tandaQuizInProgress');
+            if (savedQuiz) {
+                const shouldResume = confirm('You have a quiz in progress. Would you like to resume it?');
+                if (shouldResume) {
+                    resumeQuiz();
+                } else {
+                    localStorage.removeItem('tandaQuizInProgress');
+                }
+            }
+        }
+
+        // Theme management
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('tandaQuizTheme', newTheme);
+
+            updateThemeButton(newTheme);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('tandaQuizTheme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeButton(savedTheme);
+        }
+
+        function updateThemeButton(theme) {
+            const icon = document.getElementById('themeIcon');
+            const text = document.getElementById('themeText');
+
+            if (theme === 'dark') {
+                icon.textContent = '☀️';
+                text.textContent = 'Light Mode';
+            } else {
+                icon.textContent = '🌙';
+                text.textContent = 'Dark Mode';
+            }
+        }
+
+        // Timer management
+        function toggleTimerPreference() {
+            timerEnabled = !timerEnabled;
+            localStorage.setItem('tandaQuizTimerEnabled', timerEnabled);
+            updateTimerButton();
+        }
+
+        function loadTimerPreference() {
+            timerEnabled = localStorage.getItem('tandaQuizTimerEnabled') === 'true';
+            updateTimerButton();
+        }
+
+        function updateTimerButton() {
+            const text = document.getElementById('timerPrefText');
+            text.textContent = timerEnabled ? 'Timer: On' : 'Timer: Off';
+        }
+
+        function startTimer() {
+            if (!timerEnabled) return;
+
+            const timerDisplay = document.getElementById('timerDisplay');
+            timerDisplay.classList.remove('hidden');
+
+            timeRemaining = timerDurations[currentDifficulty];
+
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+
+                if (timeRemaining <= 60) {
+                    document.getElementById('timerDisplay').classList.add('warning');
+                }
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmitQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('timerText').textContent =
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function autoSubmitQuiz() {
+            alert('Time is up! Your quiz will be submitted automatically.');
+            showResults();
+        }
+
+        // Quiz management
+        function startQuiz(difficulty) {
+            currentDifficulty = difficulty;
+            userAnswers = {};
+            quizStartTime = Date.now();
+
+            // Shuffle questions and options
+            currentQuestions = shuffleArray([...quizData[currentDifficulty]])
+                .map(q => ({
+                    ...q,
+                    options: shuffleOptionsWithCorrect(q.options, q.correct)
+                }));
+
+            document.getElementById('difficultySelection').classList.add('hidden');
+            document.getElementById('quizContainer').classList.add('active');
+            document.getElementById('results').classList.remove('active');
+
+            displayQuestions();
+            updateProgressBar();
+            updateQuestionCounter();
+
+            startTimer();
+
+            // Save quiz state
+            saveQuizProgress();
+        }
+
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function shuffleOptionsWithCorrect(options, correctIndex) {
+            const correctAnswer = options[correctIndex];
+            const shuffled = shuffleArray(options);
+
+            // Update the correct index to match new position
+            const newCorrectIndex = shuffled.indexOf(correctAnswer);
+
+            return {
+                options: shuffled,
+                correct: newCorrectIndex
+            };
+        }
+
+        function displayQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            currentQuestions.forEach((q, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.id = `question-${index}`;
+
+                let optionsHTML = '';
+                q.options.options.forEach((option, optIndex) => {
+                    optionsHTML += `
+                        <div class="option" onclick="selectOption(${index}, ${optIndex})" tabindex="0" role="radio" aria-checked="false">
+                            <input type="radio" name="question${index}" value="${optIndex}" id="q${index}o${optIndex}" aria-label="Option ${optIndex + 1}: ${option}">
+                            <label for="q${index}o${optIndex}">${option}</label>
+                        </div>
+                    `;
+                });
+
+                questionCard.innerHTML = `
+                    <div class="question-number">
+                        <span>Question ${index + 1} of ${currentQuestions.length}</span>
+                        ${userAnswers[index] !== undefined ? '<span style="color: #28a745;">✓</span>' : ''}
+                    </div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options" role="radiogroup" aria-label="Answer options">
+                        ${optionsHTML}
+                    </div>
+                `;
+
+                container.appendChild(questionCard);
+            });
+
+            // Add keyboard support for options
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+        }
+
+        function selectOption(questionIndex, optionIndex) {
+            const radio = document.getElementById(`q${questionIndex}o${optionIndex}`);
+            radio.checked = true;
+            userAnswers[questionIndex] = optionIndex;
+
+            // Update aria-checked for all options in this question
+            const allOptions = document.querySelectorAll(`input[name="question${questionIndex}"]`);
+            allOptions.forEach((opt, idx) => {
+                const optionDiv = opt.closest('.option');
+                optionDiv.setAttribute('aria-checked', idx === optionIndex ? 'true' : 'false');
+            });
+
+            updateProgressBar();
+            updateQuestionCounter();
+            saveQuizProgress();
+
+            // Update question card to show it's answered
+            displayQuestions();
+        }
+
+        function updateProgressBar() {
+            const totalQuestions = currentQuestions.length;
+            const answeredQuestions = Object.keys(userAnswers).length;
+            const percentage = (answeredQuestions / totalQuestions) * 100;
+
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = percentage + '%';
+
+            const progressBar = progressFill.parentElement;
+            progressBar.setAttribute('aria-valuenow', Math.round(percentage));
+        }
+
+        function updateQuestionCounter() {
+            const totalQuestions = currentQuestions.length;
+            const answeredQuestions = Object.keys(userAnswers).length;
+            document.getElementById('questionCounter').textContent =
+                `Answered: ${answeredQuestions} of ${totalQuestions}`;
+        }
+
+        function saveQuizProgress() {
+            const quizState = {
+                difficulty: currentDifficulty,
+                answers: userAnswers,
+                questions: currentQuestions,
+                startTime: quizStartTime,
+                timeRemaining: timeRemaining
+            };
+            localStorage.setItem('tandaQuizInProgress', JSON.stringify(quizState));
+        }
+
+        function resumeQuiz() {
+            const savedState = JSON.parse(localStorage.getItem('tandaQuizInProgress'));
+
+            currentDifficulty = savedState.difficulty;
+            userAnswers = savedState.answers;
+            currentQuestions = savedState.questions;
+            quizStartTime = savedState.startTime;
+            timeRemaining = savedState.timeRemaining;
+
+            document.getElementById('difficultySelection').classList.add('hidden');
+            document.getElementById('quizContainer').classList.add('active');
+            document.getElementById('results').classList.remove('active');
+
+            displayQuestions();
+            updateProgressBar();
+            updateQuestionCounter();
+
+            if (timerEnabled && timeRemaining > 0) {
+                startTimer();
+            }
+        }
+
+        document.getElementById('quizForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const totalQuestions = currentQuestions.length;
+            if (Object.keys(userAnswers).length < totalQuestions) {
+                const unanswered = totalQuestions - Object.keys(userAnswers).length;
+                const confirmSubmit = confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`);
+                if (!confirmSubmit) return;
+            }
+
+            showResults();
+        });
+
+        function showResults() {
+            stopTimer();
+
+            const questions = currentQuestions;
+            let score = 0;
+
+            questions.forEach((q, index) => {
+                if (userAnswers[index] === q.options.correct) {
+                    score++;
+                }
+            });
+
+            const timeTaken = Math.floor((Date.now() - quizStartTime) / 1000);
+
+            document.getElementById('quizContainer').classList.remove('active');
+            document.getElementById('results').classList.add('active');
+
+            document.getElementById('scoreText').textContent = `${score}/${questions.length}`;
+
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('scorePercentage').textContent = `${percentage}%`;
+
+            let message = '';
+            if (percentage === 100) {
+                message = '🎉 Perfect Score! You\'re a Tanda expert!';
+            } else if (percentage >= 80) {
+                message = '🌟 Excellent work! You know your Tanda!';
+            } else if (percentage >= 60) {
+                message = '👍 Good job! Keep learning!';
+            } else if (percentage >= 40) {
+                message = '📚 Not bad! Review the materials and try again.';
+            } else {
+                message = '💪 Keep practicing! You\'ll get there!';
+            }
+
+            document.getElementById('scoreMessage').textContent = message;
+
+            displayAnswersReview(questions);
+
+            // Save statistics
+            saveQuizStats(score, questions.length, timeTaken, percentage);
+
+            // Clear saved progress
+            localStorage.removeItem('tandaQuizInProgress');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function displayAnswersReview(questions) {
+            const container = document.getElementById('answersReview');
+            container.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+
+                let optionsHTML = '';
+                q.options.options.forEach((option, optIndex) => {
+                    let optionClass = '';
+
+                    if (userAnswers[index] === optIndex && optIndex === q.options.correct) {
+                        optionClass = 'correct';
+                    } else if (userAnswers[index] === optIndex && optIndex !== q.options.correct) {
+                        optionClass = 'incorrect';
+                    } else if (optIndex === q.options.correct) {
+                        optionClass = 'correct-answer';
+                    }
+
+                    optionsHTML += `
+                        <div class="option ${optionClass}">
+                            <label>${option}</label>
+                        </div>
+                    `;
+                });
+
+                const explanationHTML = q.explanation ? `
+                    <div class="explanation">
+                        <div class="explanation-title">💡 Explanation:</div>
+                        ${q.explanation}
+                    </div>
+                ` : '';
+
+                questionCard.innerHTML = `
+                    <div class="question-number">Question ${index + 1}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${optionsHTML}
+                    </div>
+                    ${explanationHTML}
+                `;
+
+                container.appendChild(questionCard);
+            });
+        }
+
+        function backToSelection() {
+            const confirmBack = confirm('Are you sure you want to go back? Your progress will be lost.');
+            if (!confirmBack) return;
+
+            stopTimer();
+            localStorage.removeItem('tandaQuizInProgress');
+            restartQuiz();
+        }
+
+        function restartQuiz() {
+            stopTimer();
+            currentDifficulty = '';
+            userAnswers = {};
+            currentQuestions = [];
+
+            document.getElementById('difficultySelection').classList.remove('hidden');
+            document.getElementById('quizContainer').classList.remove('active');
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('progressFill').style.width = '0%';
+            document.getElementById('timerDisplay').classList.add('hidden');
+            document.getElementById('timerDisplay').classList.remove('warning');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Statistics management
+        function saveQuizStats(score, total, timeTaken, percentage) {
+            const stats = JSON.parse(localStorage.getItem('tandaQuizStats')) || {
+                totalQuizzes: 0,
+                totalQuestions: 0,
+                totalCorrect: 0,
+                bestScore: 0,
+                byDifficulty: {
+                    beginner: { taken: 0, avgScore: 0 },
+                    intermediate: { taken: 0, avgScore: 0 },
+                    advanced: { taken: 0, avgScore: 0 },
+                    expert: { taken: 0, avgScore: 0 }
+                },
+                averageTime: 0,
+                totalTime: 0
+            };
+
+            stats.totalQuizzes++;
+            stats.totalQuestions += total;
+            stats.totalCorrect += score;
+            stats.bestScore = Math.max(stats.bestScore, percentage);
+            stats.totalTime += timeTaken;
+            stats.averageTime = Math.round(stats.totalTime / stats.totalQuizzes);
+
+            const diffStats = stats.byDifficulty[currentDifficulty];
+            diffStats.taken++;
+            diffStats.avgScore = Math.round(
+                ((diffStats.avgScore * (diffStats.taken - 1)) + percentage) / diffStats.taken
+            );
+
+            localStorage.setItem('tandaQuizStats', JSON.stringify(stats));
+        }
+
+        function loadStats() {
+            // Stats are loaded when needed
+        }
+
+        function showStats() {
+            const stats = JSON.parse(localStorage.getItem('tandaQuizStats')) || {
+                totalQuizzes: 0,
+                totalQuestions: 0,
+                totalCorrect: 0,
+                bestScore: 0,
+                byDifficulty: {
+                    beginner: { taken: 0, avgScore: 0 },
+                    intermediate: { taken: 0, avgScore: 0 },
+                    advanced: { taken: 0, avgScore: 0 },
+                    expert: { taken: 0, avgScore: 0 }
+                },
+                averageTime: 0
+            };
+
+            const container = document.getElementById('statsContainer');
+
+            const overallAccuracy = stats.totalQuestions > 0
+                ? Math.round((stats.totalCorrect / stats.totalQuestions) * 100)
+                : 0;
+
+            const avgMinutes = Math.floor(stats.averageTime / 60);
+            const avgSeconds = stats.averageTime % 60;
+
+            container.innerHTML = `
+                <div class="stat-item">
+                    <span class="stat-label">Total Quizzes Taken</span>
+                    <span class="stat-value">${stats.totalQuizzes}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Questions Answered</span>
+                    <span class="stat-value">${stats.totalQuestions}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Overall Accuracy</span>
+                    <span class="stat-value">${overallAccuracy}%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Best Score</span>
+                    <span class="stat-value">${stats.bestScore}%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Average Time</span>
+                    <span class="stat-value">${avgMinutes}:${String(avgSeconds).padStart(2, '0')}</span>
+                </div>
+                <h3 style="margin-top: 25px; margin-bottom: 15px; color: #667eea;">By Difficulty</h3>
+                <div class="stat-item">
+                    <span class="stat-label">🌱 Beginner (${stats.byDifficulty.beginner.taken} taken)</span>
+                    <span class="stat-value">${stats.byDifficulty.beginner.avgScore}%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">📚 Intermediate (${stats.byDifficulty.intermediate.taken} taken)</span>
+                    <span class="stat-value">${stats.byDifficulty.intermediate.avgScore}%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">🎓 Advanced (${stats.byDifficulty.advanced.taken} taken)</span>
+                    <span class="stat-value">${stats.byDifficulty.advanced.avgScore}%</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">🏆 Expert (${stats.byDifficulty.expert.taken} taken)</span>
+                    <span class="stat-value">${stats.byDifficulty.expert.avgScore}%</span>
+                </div>
+            `;
+
+            document.getElementById('statsModal').classList.add('active');
+        }
+
+        function closeStats() {
+            document.getElementById('statsModal').classList.remove('active');
+        }
+
+        function clearStats() {
+            const confirmClear = confirm('Are you sure you want to clear all statistics? This cannot be undone.');
+            if (!confirmClear) return;
+
+            localStorage.removeItem('tandaQuizStats');
+            closeStats();
+            alert('Statistics cleared successfully!');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('statsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeStats();
+            }
+        });
+
+        // Initialize app when DOM is loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            initializeApp();
+        }
+    </script>
+</body>
+</html>
