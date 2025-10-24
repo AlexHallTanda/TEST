@@ -4422,10 +4422,22 @@
         }
 
         function shuffleOptionsWithCorrect(options, correctIndex) {
-            const correctAnswer = options[correctIndex];
             const shuffled = shuffleArray(options);
 
-            // Update the correct index to match new position
+            // Handle multiple-select questions (correctIndex is an array)
+            if (Array.isArray(correctIndex)) {
+                const newCorrectIndices = correctIndex.map(idx => {
+                    const correctAnswer = options[idx];
+                    return shuffled.indexOf(correctAnswer);
+                });
+                return {
+                    options: shuffled,
+                    correct: newCorrectIndices
+                };
+            }
+
+            // Handle multiple-choice/true-false questions (correctIndex is a number)
+            const correctAnswer = options[correctIndex];
             const newCorrectIndex = shuffled.indexOf(correctAnswer);
 
             return {
