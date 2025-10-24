@@ -4445,8 +4445,14 @@
                 const explanationHTML = q.explanation ? `
                     <div class="explanation">
                         <div class="explanation-title">💡 Explanation:</div>
-                        ${q.explanation}
-                        ${q.helpLink ? `<div style="margin-top: 10px;"><a href="${q.helpLink}" target="_blank" rel="noopener noreferrer" style="color: #032a56; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">📚 Read more in Tanda Help Guide →</a></div>` : ''}
+                        <div style="margin-bottom: 12px;">${q.explanation}</div>
+                        ${q.helpLink ? `
+                            <div style="margin-top: 15px; padding: 12px; background: linear-gradient(135deg, rgba(3, 42, 86, 0.05), rgba(10, 77, 143, 0.05)); border-left: 4px solid #032a56; border-radius: 6px;">
+                                <a href="${q.helpLink}" target="_blank" rel="noopener noreferrer" style="color: #032a56; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; font-size: 0.95em;">
+                                    📚 <span style="border-bottom: 2px solid rgba(3, 42, 86, 0.3);">Learn more in Tanda Help Guide</span> →
+                                </a>
+                            </div>
+                        ` : ''}
                     </div>
                 ` : '';
 
