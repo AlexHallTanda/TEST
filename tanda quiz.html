@@ -4757,13 +4757,37 @@
                 const correctAnswer = q.options.correct;
 
                 let isCorrect = false;
+                let partialCredit = 0;
 
                 if (questionType === 'multiple-select') {
-                    // Compare arrays (order doesn't matter)
-                    if (Array.isArray(userAnswer) && Array.isArray(correctAnswer)) {
-                        const sorted1 = [...userAnswer].sort();
-                        const sorted2 = [...correctAnswer].sort();
-                        isCorrect = JSON.stringify(sorted1) === JSON.stringify(sorted2);
+                    // Partial credit scoring for multiple-select questions
+                    if (Array.isArray(correctAnswer)) {
+                        const userIndices = Array.isArray(userAnswer) ? userAnswer : [];
+
+                        // Calculate how many correct selections and incorrect selections
+                        let correctSelections = 0;
+                        let incorrectSelections = 0;
+
+                        userIndices.forEach(idx => {
+                            if (correctAnswer.includes(idx)) {
+                                correctSelections++;
+                            } else {
+                                incorrectSelections++;
+                            }
+                        });
+
+                        // Each correct answer is worth equal points
+                        // Give credit for correct selections, penalize for incorrect selections
+                        const pointsPerCorrect = 1.0 / correctAnswer.length;
+                        partialCredit = Math.max(0, (correctSelections - incorrectSelections) * pointsPerCorrect);
+
+                        // Check if fully correct
+                        if (correctSelections === correctAnswer.length && incorrectSelections === 0) {
+                            isCorrect = true;
+                            partialCredit = 1.0;
+                        }
+
+                        score += partialCredit;
                     }
                 } else if (questionType === 'fill-blank') {
                     // Case-insensitive string matching
@@ -4774,12 +4798,12 @@
                     } else {
                         isCorrect = correctAnswer.toLowerCase().trim() === userAnswerLower;
                     }
+                    if (isCorrect) score++;
                 } else {
                     // multiple-choice or true-false (number comparison)
                     isCorrect = userAnswer === correctAnswer;
+                    if (isCorrect) score++;
                 }
-
-                if (isCorrect) score++;
             });
 
             const timeTaken = Math.floor((Date.now() - quizStartTime) / 1000);
@@ -4787,7 +4811,9 @@
             document.getElementById('quizContainer').classList.remove('active');
             document.getElementById('results').classList.add('active');
 
-            document.getElementById('scoreText').textContent = `${score}/${questions.length}`;
+            // Format score to 1 decimal place if needed
+            const scoreDisplay = Number.isInteger(score) ? score : score.toFixed(1);
+            document.getElementById('scoreText').textContent = `${scoreDisplay}/${questions.length}`;
 
             const percentage = Math.round((score / questions.length) * 100);
             document.getElementById('scorePercentage').textContent = `${percentage}%`;
