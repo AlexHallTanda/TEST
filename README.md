@@ -1,4 +1,4 @@
-# Tanda Quiz Learning
+# Tanda Quiz
 
 An interactive quiz application to test your knowledge of Tanda's workforce management features with targeted subcategories for focused learning.
 
