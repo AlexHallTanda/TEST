@@ -1569,7 +1569,10 @@
                 <p class="score-percentage" id="scorePercentage"></p>
             </div>
             <div id="answersReview"></div>
-            <button class="restart-btn" onclick="restartQuiz()">Take Another Quiz</button>
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                <button class="restart-btn" onclick="retryQuiz()">Retry This Quiz</button>
+                <button class="restart-btn" onclick="restartQuiz()">Take Another Quiz</button>
+            </div>
         </div>
     </div>
 
@@ -4998,6 +5001,26 @@
             stopTimer();
             localStorage.removeItem('tandaQuizInProgress');
             restartQuiz();
+        }
+
+        function retryQuiz() {
+            // Save current difficulty and subcategory
+            const difficulty = currentDifficulty;
+            const subcategory = currentSubcategory;
+
+            // Clear results
+            stopTimer();
+            userAnswers = {};
+            currentQuestions = [];
+
+            // Hide results, show quiz
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('quizContainer').classList.add('active');
+
+            // Restart the same quiz
+            startQuiz(difficulty, subcategory);
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function restartQuiz() {
