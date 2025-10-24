@@ -315,6 +315,28 @@
             font-size: 1.05em;
         }
 
+        .option.selected {
+            background: linear-gradient(135deg, #e8f0fe, #d4e7fd) !important;
+            border-color: #667eea !important;
+            border-width: 3px !important;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+            transform: translateX(5px);
+        }
+
+        [data-theme="dark"] .option.selected {
+            background: linear-gradient(135deg, #2a3f5f, #1e2f47) !important;
+            border-color: #667eea !important;
+        }
+
+        .option.unselected {
+            opacity: 0.5;
+            background: var(--card-bg);
+        }
+
+        .option.unselected:hover {
+            opacity: 0.7;
+        }
+
         .submit-btn, .restart-btn, .back-btn {
             display: block;
             width: 100%;
@@ -1509,6 +1531,23 @@
                     }
                 });
             });
+
+            // Restore selection styling for already answered questions
+            Object.keys(userAnswers).forEach(qIndex => {
+                const selectedOptionIndex = userAnswers[qIndex];
+                const allOptions = document.querySelectorAll(`input[name="question${qIndex}"]`);
+
+                allOptions.forEach((opt, idx) => {
+                    const optionDiv = opt.closest('.option');
+
+                    if (idx === selectedOptionIndex) {
+                        optionDiv.classList.add('selected');
+                        opt.checked = true;
+                    } else {
+                        optionDiv.classList.add('unselected');
+                    }
+                });
+            });
         }
 
         function selectOption(questionIndex, optionIndex) {
@@ -1516,19 +1555,35 @@
             radio.checked = true;
             userAnswers[questionIndex] = optionIndex;
 
-            // Update aria-checked for all options in this question
+            // Update aria-checked and visual styling for all options in this question
             const allOptions = document.querySelectorAll(`input[name="question${questionIndex}"]`);
             allOptions.forEach((opt, idx) => {
                 const optionDiv = opt.closest('.option');
                 optionDiv.setAttribute('aria-checked', idx === optionIndex ? 'true' : 'false');
+
+                // Remove existing classes
+                optionDiv.classList.remove('selected', 'unselected');
+
+                // Add appropriate class
+                if (idx === optionIndex) {
+                    optionDiv.classList.add('selected');
+                } else {
+                    optionDiv.classList.add('unselected');
+                }
             });
 
             updateProgressBar();
             updateQuestionCounter();
             saveQuizProgress();
 
-            // Update question card to show it's answered
-            displayQuestions();
+            // Update question counter checkmark
+            const questionNumber = document.querySelector(`#question-${questionIndex} .question-number`);
+            if (questionNumber && !questionNumber.querySelector('span[style*="color: #28a745"]')) {
+                questionNumber.innerHTML = `
+                    <span>Question ${questionIndex + 1} of ${currentQuestions.length}</span>
+                    <span style="color: #28a745;">✓</span>
+                `;
+            }
         }
 
         function updateProgressBar() {
