@@ -360,9 +360,15 @@
         }
 
         .submit-btn:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
             transform: none;
+            box-shadow: none;
+        }
+
+        .submit-btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
         }
 
         .back-btn {
@@ -1460,6 +1466,7 @@
             displayQuestions();
             updateProgressBar();
             updateQuestionCounter();
+            updateSubmitButton();
 
             startTimer();
 
@@ -1574,6 +1581,7 @@
 
             updateProgressBar();
             updateQuestionCounter();
+            updateSubmitButton();
             saveQuizProgress();
 
             // Update question counter checkmark
@@ -1583,6 +1591,20 @@
                     <span>Question ${questionIndex + 1} of ${currentQuestions.length}</span>
                     <span style="color: #28a745;">✓</span>
                 `;
+            }
+        }
+
+        function updateSubmitButton() {
+            const submitBtn = document.getElementById('submitBtn');
+            const totalQuestions = currentQuestions.length;
+            const answeredQuestions = Object.keys(userAnswers).length;
+
+            if (answeredQuestions === totalQuestions) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Quiz';
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.textContent = `Submit Quiz (${answeredQuestions}/${totalQuestions} answered)`;
             }
         }
 
@@ -1632,6 +1654,7 @@
             displayQuestions();
             updateProgressBar();
             updateQuestionCounter();
+            updateSubmitButton();
 
             if (timerEnabled && timeRemaining > 0) {
                 startTimer();
@@ -1641,13 +1664,7 @@
         document.getElementById('quizForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const totalQuestions = currentQuestions.length;
-            if (Object.keys(userAnswers).length < totalQuestions) {
-                const unanswered = totalQuestions - Object.keys(userAnswers).length;
-                const confirmSubmit = confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`);
-                if (!confirmSubmit) return;
-            }
-
+            // Button is disabled until all questions answered, so just submit
             showResults();
         });
 
