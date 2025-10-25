@@ -1078,6 +1078,104 @@
             font-size: 0.95em;
             color: #032a56;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .shuffle-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #6c757d, #495057);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .shuffle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        /* Question Type Badges */
+        .question-type-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .badge-scenario {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+        }
+
+        .badge-ordering {
+            background: linear-gradient(135deg, #6f42c1, #5a32a3);
+            color: white;
+        }
+
+        .badge-troubleshooting {
+            background: linear-gradient(135deg, #fd7e14, #e8590c);
+            color: white;
+        }
+
+        .badge-multiple-select {
+            background: linear-gradient(135deg, #20c997, #199d76);
+            color: white;
+        }
+
+        /* Keyboard navigation hint */
+        .keyboard-hint {
+            font-size: 0.75em;
+            color: #6c757d;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .keyboard-hint kbd {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        /* Selected item highlight for keyboard nav */
+        .ordering-item.keyboard-selected {
+            border-color: #6f42c1;
+            border-width: 3px;
+            box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.2);
+        }
+
+        /* Touch feedback for mobile */
+        .ordering-item:active {
+            transform: scale(0.98);
+        }
+
+        /* Celebration animation for perfect ordering */
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.05) rotate(2deg); }
+            75% { transform: scale(1.05) rotate(-2deg); }
+        }
+
+        .ordering-container.perfect {
+            animation: celebrate 0.5s ease;
         }
 
         .submit-btn, .restart-btn, .back-btn {
@@ -5895,9 +5993,17 @@
 
                     optionsHTML = `
                         <div class="ordering-instruction">
-                            Drag and drop to arrange items in the correct order
+                            <span>🔀 Drag and drop to arrange items in the correct order</span>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <span class="keyboard-hint">
+                                    <kbd>↑</kbd><kbd>↓</kbd> to navigate
+                                </span>
+                                <button class="shuffle-btn" onclick="shuffleOrdering(${index}); event.stopPropagation();" title="Shuffle items to practice">
+                                    🔀 Shuffle
+                                </button>
+                            </div>
                         </div>
-                        <div class="ordering-container" id="ordering-container-${index}" data-question-index="${index}">
+                        <div class="ordering-container" id="ordering-container-${index}" data-question-index="${index}" tabindex="0">
                     `;
 
                     currentOrder.forEach((optIndex, position) => {
@@ -5942,9 +6048,24 @@
                     });
                 }
 
-                const typeLabel = questionType === 'multiple-select' ? ' <span style="font-size:0.85em;color:#032a56">(Select all that apply)</span>' :
-                                 questionType === 'fill-blank' ? ' <span style="font-size:0.85em;color:#032a56">(Fill in the blank)</span>' :
-                                 questionType === 'ordering' ? ' <span style="font-size:0.85em;color:#032a56">(Drag to reorder)</span>' : '';
+                // Detect question type badges based on question content
+                let questionBadge = '';
+                const questionText = q.question.toUpperCase();
+
+                if (questionText.includes('SCENARIO:')) {
+                    questionBadge = '<span class="question-type-badge badge-scenario">📋 Scenario</span>';
+                } else if (questionText.includes('ORDERING:')) {
+                    questionBadge = '<span class="question-type-badge badge-ordering">🔢 Ordering</span>';
+                } else if (questionText.includes('TROUBLESHOOTING:')) {
+                    questionBadge = '<span class="question-type-badge badge-troubleshooting">🔧 Troubleshooting</span>';
+                } else if (questionType === 'ordering') {
+                    questionBadge = '<span class="question-type-badge badge-ordering">🔢 Ordering</span>';
+                } else if (questionType === 'multiple-select') {
+                    questionBadge = '<span class="question-type-badge badge-multiple-select">☑️ Multiple Select</span>';
+                }
+
+                const typeLabel = questionType === 'multiple-select' && !questionBadge ? ' <span style="font-size:0.85em;color:#032a56">(Select all that apply)</span>' :
+                                 questionType === 'fill-blank' ? ' <span style="font-size:0.85em;color:#032a56">(Fill in the blank)</span>' : '';
 
                 const currentBookmarks = getCurrentQuizBookmarks();
                 const isBookmarked = currentBookmarks.includes(index);
@@ -5961,7 +6082,7 @@
                             ${isBookmarked ? '🔖' : '🏷️'}
                         </button>
                     </div>
-                    <div class="question-text">${q.question}${typeLabel}</div>
+                    <div class="question-text">${questionBadge}${q.question}${typeLabel}</div>
                     <div class="options" role="${questionType === 'multiple-select' ? 'group' : 'radiogroup'}" aria-label="Answer options">
                         ${optionsHTML}
                     </div>
@@ -5999,6 +6120,8 @@
 
             // Initialize drag-and-drop for ordering questions
             initializeOrderingQuestions();
+            initializeKeyboardNavigation();
+            initializeTouchSupport();
         }
 
         // Drag and drop handlers for ordering questions
@@ -6094,8 +6217,10 @@
                     container.appendChild(item);
                 });
 
-                // Re-initialize drag handlers
+                // Re-initialize all handlers
                 initializeOrderingQuestions();
+                initializeKeyboardNavigation();
+                initializeTouchSupport();
 
                 // Update progress
                 updateProgressBar();
@@ -6114,6 +6239,156 @@
             }
 
             return false;
+        }
+
+        // Shuffle ordering question items
+        function shuffleOrdering(questionIndex) {
+            const container = document.getElementById(`ordering-container-${questionIndex}`);
+            const items = Array.from(container.querySelectorAll('.ordering-item'));
+
+            // Fisher-Yates shuffle
+            const shuffled = [...items];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+
+            // Update order in userAnswers
+            const newOrder = shuffled.map(item => parseInt(item.dataset.optionIndex));
+            userAnswers[questionIndex] = newOrder;
+
+            // Re-render items
+            container.innerHTML = '';
+            shuffled.forEach((item, newPos) => {
+                item.dataset.position = newPos;
+                item.querySelector('.ordering-number').textContent = newPos + 1;
+                container.appendChild(item);
+            });
+
+            // Re-initialize all handlers
+            initializeOrderingQuestions();
+            initializeKeyboardNavigation();
+            initializeTouchSupport();
+
+            // Update progress
+            updateProgressBar();
+            updateQuestionCounter();
+            updateSubmitButton();
+            saveQuizProgress();
+        }
+
+        // Keyboard navigation for ordering questions
+        let selectedOrderingItem = null;
+
+        function initializeKeyboardNavigation() {
+            document.querySelectorAll('.ordering-container').forEach(container => {
+                container.addEventListener('keydown', function(e) {
+                    const items = Array.from(this.querySelectorAll('.ordering-item'));
+
+                    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                        e.preventDefault();
+
+                        // If no item selected, select first
+                        if (!selectedOrderingItem || !this.contains(selectedOrderingItem)) {
+                            selectedOrderingItem = items[0];
+                            selectedOrderingItem.classList.add('keyboard-selected');
+                            selectedOrderingItem.focus();
+                            return;
+                        }
+
+                        const currentIndex = items.indexOf(selectedOrderingItem);
+
+                        if (e.key === 'ArrowDown' && currentIndex < items.length - 1) {
+                            // Move item down (swap with next)
+                            const nextItem = items[currentIndex + 1];
+                            swapOrderingItems(selectedOrderingItem, nextItem, this);
+                        } else if (e.key === 'ArrowUp' && currentIndex > 0) {
+                            // Move item up (swap with previous)
+                            const prevItem = items[currentIndex - 1];
+                            swapOrderingItems(selectedOrderingItem, prevItem, this);
+                        }
+                    } else if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        // Toggle selection
+                        if (selectedOrderingItem && this.contains(selectedOrderingItem)) {
+                            selectedOrderingItem.classList.remove('keyboard-selected');
+                            selectedOrderingItem = null;
+                        } else {
+                            items.forEach(item => item.classList.remove('keyboard-selected'));
+                            selectedOrderingItem = items[0];
+                            selectedOrderingItem.classList.add('keyboard-selected');
+                        }
+                    }
+                });
+
+                // Click to select item for keyboard navigation
+                container.querySelectorAll('.ordering-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        if (selectedOrderingItem) {
+                            selectedOrderingItem.classList.remove('keyboard-selected');
+                        }
+                        selectedOrderingItem = this;
+                        this.classList.add('keyboard-selected');
+                    });
+                });
+            });
+        }
+
+        function swapOrderingItems(item1, item2, container) {
+            const questionIndex = parseInt(container.dataset.questionIndex);
+
+            // Swap positions in DOM
+            const parent = item1.parentNode;
+            const item1Next = item1.nextSibling;
+            const item2Next = item2.nextSibling;
+
+            if (item1Next === item2) {
+                parent.insertBefore(item2, item1);
+            } else if (item2Next === item1) {
+                parent.insertBefore(item1, item2);
+            } else {
+                parent.insertBefore(item1, item2Next);
+                parent.insertBefore(item2, item1Next);
+            }
+
+            // Update data attributes and numbers
+            const allItems = Array.from(container.querySelectorAll('.ordering-item'));
+            allItems.forEach((item, newPos) => {
+                item.dataset.position = newPos;
+                item.querySelector('.ordering-number').textContent = newPos + 1;
+            });
+
+            // Update userAnswers
+            const newOrder = allItems.map(item => parseInt(item.dataset.optionIndex));
+            userAnswers[questionIndex] = newOrder;
+
+            // Update progress
+            updateProgressBar();
+            updateQuestionCounter();
+            updateSubmitButton();
+            saveQuizProgress();
+
+            // Keep selection on moved item
+            item1.classList.add('keyboard-selected');
+        }
+
+        // Add touch event support for mobile
+        function initializeTouchSupport() {
+            let touchStartY = 0;
+            let touchedItem = null;
+
+            document.querySelectorAll('.ordering-item').forEach(item => {
+                item.addEventListener('touchstart', function(e) {
+                    touchedItem = this;
+                    touchStartY = e.touches[0].clientY;
+                    this.classList.add('dragging');
+                });
+
+                item.addEventListener('touchend', function(e) {
+                    this.classList.remove('dragging');
+                    touchedItem = null;
+                });
+            });
         }
 
         function selectOption(questionIndex, optionIndex) {
