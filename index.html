@@ -1902,7 +1902,7 @@
             </form>
 
             <div id="submissionSuccess" class="hidden" style="margin-top: 20px; padding: 15px; background: #d4edda; border: 2px solid #28a745; border-radius: 8px; color: #155724;">
-                <strong>✅ Thank you!</strong> Your question has been saved locally. In a full implementation, this would be sent to a server for review.
+                <strong>✅ Thank you!</strong> Your question has been saved successfully.
             </div>
             </div><!-- End questionFormContent -->
         </div>
@@ -7236,6 +7236,7 @@
                 `;
 
                 submissions.reverse().forEach((sub, idx) => {
+                    const originalIndex = submissions.length - 1 - idx; // Calculate original array index
                     const questionTypeLabel = {
                         'multiple-choice': 'Multiple Choice',
                         'true-false': 'True/False',
@@ -7249,7 +7250,12 @@
                         <div style="background:#f8f9fa;padding:20px;border-radius:12px;margin-bottom:15px;border-left:4px solid #032a56">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
                                 <div style="font-weight:bold;font-size:1.1em">Submission #${submissions.length - idx}</div>
-                                <div style="font-size:0.85em;opacity:0.7">${new Date(sub.submittedAt).toLocaleString()}</div>
+                                <div style="display:flex;align-items:center;gap:10px">
+                                    <div style="font-size:0.85em;opacity:0.7">${new Date(sub.submittedAt).toLocaleString()}</div>
+                                    <button onclick="deleteSubmission(${originalIndex})" style="padding:6px 12px;background:#dc3545;color:white;border:none;border-radius:6px;font-size:0.85em;font-weight:600;cursor:pointer;" onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                                        🗑️ Delete
+                                    </button>
+                                </div>
                             </div>
                             <div style="margin-bottom:10px">
                                 <span style="display:inline-block;background:linear-gradient(135deg,#032a56,#0a4d8f);color:white;padding:4px 10px;border-radius:6px;font-size:0.85em;margin-right:8px">
@@ -7296,6 +7302,18 @@
 
         function closeSubmissions() {
             document.getElementById('submissionsModal').classList.remove('active');
+        }
+
+        function deleteSubmission(index) {
+            const confirmDelete = confirm('Are you sure you want to delete this submission? This cannot be undone.');
+            if (!confirmDelete) return;
+
+            const submissions = JSON.parse(localStorage.getItem('tandaSubmittedQuestions') || '[]');
+            submissions.splice(index, 1);
+            localStorage.setItem('tandaSubmittedQuestions', JSON.stringify(submissions));
+
+            // Refresh the display
+            showSubmissions();
         }
 
         function exportSubmissions(format) {
@@ -7671,28 +7689,6 @@ if (typeof window !== 'undefined') {
             reports.push(report);
             localStorage.setItem('tandaIncorrectAnswerReports', JSON.stringify(reports));
 
-            // Send email notification via FormSubmit (silently in background)
-            try {
-                const formData = new FormData();
-                formData.append('_subject', 'Tanda Quiz - Incorrect Answer Report');
-                formData.append('_template', 'table');
-                formData.append('_captcha', 'false');
-                formData.append('Question', question);
-                formData.append('Current Answer', currentAnswer);
-                formData.append('Suggested Answer', suggestedAnswer);
-                formData.append('Reason', reason);
-                formData.append('Reference', reference || 'N/A');
-                formData.append('Submitted', new Date().toLocaleString());
-
-                fetch('https://formsubmit.co/alex.hall@tanda.co', {
-                    method: 'POST',
-                    body: formData,
-                    mode: 'no-cors' // This prevents CORS issues and doesn't open new tab
-                }).catch(err => console.log('Email sent (or may have failed silently)'));
-            } catch (error) {
-                console.error('Error sending email:', error);
-            }
-
             closeQuickIncorrectAnswerReport();
             alert('Thank you! Your incorrect answer report has been submitted successfully.');
         }
@@ -7877,90 +7873,6 @@ if (typeof window !== 'undefined') {
             submittedQuestions.push(submittedQuestion);
             localStorage.setItem('tandaSubmittedQuestions', JSON.stringify(submittedQuestions));
 
-            // Send email notification to alex.hall@tanda.com.au
-            try {
-                // Build options list
-                let optionsList = '';
-                submittedQuestion.options.forEach((opt, idx) => {
-                    optionsList += `${idx + 1}. ${opt}\n`;
-                });
-
-                // Build correct answer display
-                let correctAnswerText = '';
-                if (Array.isArray(submittedQuestion.correct)) {
-                    // Multiple correct answers
-                    const correctOptions = submittedQuestion.correct.map(idx =>
-                        `Option ${idx + 1} - ${submittedQuestion.options[idx]}`
-                    ).join(', ');
-                    correctAnswerText = `Multiple Correct Answers: ${correctOptions}`;
-                } else {
-                    // Single correct answer
-                    correctAnswerText = `Option ${submittedQuestion.correct + 1} - ${submittedQuestion.options[submittedQuestion.correct]}`;
-                }
-
-                const questionTypeLabel = {
-                    'multiple-choice': 'Multiple Choice',
-                    'true-false': 'True/False',
-                    'multiple-select': 'Select All That Apply'
-                }[submittedQuestion.type] || submittedQuestion.type;
-
-                const emailBody = `
-New Question Submission - Tanda Knowledge Quiz
-=============================================
-
-Question Type: ${questionTypeLabel}
-
-Question: ${submittedQuestion.question}
-
-Options:
-${optionsList}
-Correct Answer: ${correctAnswerText}
-
-Explanation: ${submittedQuestion.explanation}
-
-Help Link: ${submittedQuestion.helpLink || 'Not provided'}
-
-Difficulty: ${submittedQuestion.difficulty}
-Subcategory: ${submittedQuestion.subcategory}
-
-Submitted At: ${new Date(submittedQuestion.submittedAt).toLocaleString()}
-
----
-This question was submitted via the Tanda Knowledge Quiz platform.
-To export all submissions, use the "Export Submissions" feature in the admin panel.
-                `.trim();
-
-                // Use FormSubmit.co free service (no signup required)
-                const formData = new FormData();
-                formData.append('_subject', 'New Tanda Quiz Question Submission');
-                formData.append('_template', 'box');
-                formData.append('_captcha', 'false');
-                formData.append('Question_Type', questionTypeLabel);
-                formData.append('Question', submittedQuestion.question);
-                formData.append('Options', submittedQuestion.options.join(' | '));
-                formData.append('Correct_Answer', correctAnswerText);
-                formData.append('Explanation', submittedQuestion.explanation);
-                formData.append('Help_Link', submittedQuestion.helpLink || 'Not provided');
-                formData.append('Difficulty', submittedQuestion.difficulty);
-                formData.append('Subcategory', submittedQuestion.subcategory);
-                formData.append('Submitted_At', new Date(submittedQuestion.submittedAt).toLocaleString());
-                formData.append('Full_Details', emailBody);
-
-                // Send to FormSubmit (will send to alex.hall@tanda.com.au)
-                await fetch('https://formsubmit.co/alex.hall@tanda.com.au', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-
-                console.log('Question submitted and email sent successfully');
-            } catch (error) {
-                console.error('Error sending email:', error);
-                // Continue even if email fails - question is still saved locally
-            }
-
             // Show success message
             document.getElementById('submissionSuccess').classList.remove('hidden');
 
@@ -8026,49 +7938,6 @@ To export all submissions, use the "Export Submissions" feature in the admin pan
             const bugReports = JSON.parse(localStorage.getItem('tandaBugReports') || '[]');
             bugReports.push(bugReport);
             localStorage.setItem('tandaBugReports', JSON.stringify(bugReports));
-
-            // Send email notification
-            try {
-                const emailBody = `
-New Bug Report - Tanda Knowledge Quiz
-======================================
-
-Title: ${bugReport.title}
-
-Description:
-${bugReport.description}
-
-Steps to Reproduce:
-${bugReport.steps || 'Not provided'}
-
-Device/Browser: ${bugReport.device}
-
-User Agent: ${bugReport.userAgent}
-
-Submitted At: ${new Date(bugReport.submittedAt).toLocaleString()}
-
----
-This bug report was submitted via the Tanda Knowledge Quiz platform.
-                `.trim();
-
-                const formData = new FormData();
-                formData.append('_subject', 'Bug Report - Tanda Knowledge Quiz');
-                formData.append('_template', 'box');
-                formData.append('_captcha', 'false');
-                formData.append('Title', bugReport.title);
-                formData.append('Description', bugReport.description);
-                formData.append('Steps', bugReport.steps || 'Not provided');
-                formData.append('Device', bugReport.device);
-                formData.append('Submitted_At', new Date(bugReport.submittedAt).toLocaleString());
-                formData.append('message', emailBody);
-
-                await fetch('https://formsubmit.co/alex.hall@tanda.com.au', {
-                    method: 'POST',
-                    body: formData
-                });
-            } catch (error) {
-                console.error('Failed to send bug report email:', error);
-            }
 
             // Show success message
             document.getElementById('bugSubmissionSuccess').classList.remove('hidden');
