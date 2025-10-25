@@ -2,6 +2,19 @@
 
 An interactive quiz application to test your knowledge of Tanda's workforce management features with targeted subcategories for focused learning.
 
+## NEW: IP-Based User Tracking
+
+The application now includes a backend server that automatically saves all your quiz data (progress, statistics, achievements) based on your IP address. No login required - just start using it and your data persists across sessions!
+
+**Key Benefits:**
+- Your progress is saved automatically by IP address
+- Resume quizzes on any browser on your network
+- Statistics persist across browser sessions
+- No need to create accounts or remember passwords
+- Works offline with localStorage fallback
+
+See [SETUP.md](SETUP.md) for installation and deployment instructions.
+
 ## File Structure
 
 This repository contains a single, unified responsive quiz file:
@@ -27,6 +40,27 @@ To enable GitHub Pages:
 4. Click **Save**
 5. Wait a few minutes for deployment
 6. Visit the URL above to access your quiz online from any device!
+
+## Quick Start
+
+### Option 1: With Backend Server (Recommended - Enables IP-based tracking)
+
+1. Install Node.js (v14 or higher)
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the server:
+   ```bash
+   npm start
+   ```
+4. Open your browser to: `http://localhost:3000`
+
+Your data will be automatically saved per IP address!
+
+See [SETUP.md](SETUP.md) for detailed setup instructions and deployment options.
+
+### Option 2: Static File Only (No data persistence across sessions)
 
 ## How to Open the Quiz
 
@@ -105,18 +139,20 @@ If you host the quiz online, generate a QR code for the URL:
 
 ## Features
 
+- 🔐 **IP-Based User Tracking**: Automatic data persistence per IP (NEW!)
 - 🎯 **4 Difficulty Levels**: Beginner, Intermediate, Advanced, Expert
 - 📚 **Subcategories**: Focus on specific topics within each difficulty
 - 🎲 **General Quiz**: 20-question mixed quiz for comprehensive testing
 - 🎲 **Randomized Questions**: Different questions each time
 - 💡 **Explanations**: Learn from detailed explanations with links to Tanda Help Guide
-- 💾 **Auto-Save Progress**: Resume unfinished quizzes anytime
+- 💾 **Auto-Save Progress**: Resume unfinished quizzes anytime (saved to server by IP)
 - ⏱️ **Optional Timer**: Challenge yourself with timed mode
-- 📊 **Statistics**: Track your performance and progress over time
+- 📊 **Statistics**: Track your performance and progress over time (synced to server)
 - 🃏 **Flashcard Mode**: Study questions in flashcard format
 - ✅ **Multiple Question Types**: True/False, Multiple Choice, Multiple Select, Fill-in-the-Blank
 - 📱 **Mobile Friendly**: Fully responsive design works on all devices
 - 💡 **Submit Questions**: Contribute your own quiz questions
+- 🌐 **Offline Support**: Works offline with automatic sync when reconnected
 
 ## Quiz Difficulty Levels & Subcategories
 
@@ -150,10 +186,18 @@ If you host the quiz online, generate a QR code for the URL:
 
 ## Tips
 
-- All your preferences are saved locally in your browser
-- You can pause and resume quizzes anytime
-- Check your statistics to track improvement
+- When using the backend server, all your data is automatically saved by IP address
+- You can pause and resume quizzes anytime - they're saved automatically
+- Check your statistics to track improvement across sessions
 - Try enabling the timer for an extra challenge!
+- Works offline - data syncs when you reconnect to the server
+
+## Technology Stack
+
+- **Frontend**: Vanilla HTML, CSS, JavaScript
+- **Backend**: Node.js + Express
+- **Database**: SQLite (better-sqlite3)
+- **Features**: RESTful API, IP-based authentication, offline support
 
 ## Keyboard Shortcuts
 

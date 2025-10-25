@@ -2393,6 +2393,223 @@
     </div>
 
     <script>
+        // ============================================
+        // API Client for IP-based User Data Storage
+        // ============================================
+        const API_BASE_URL = window.location.origin + '/api';
+        let isOnline = true;
+
+        const API = {
+            // Check if server is available
+            async checkHealth() {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/health`, { timeout: 3000 });
+                    isOnline = response.ok;
+                    return response.ok;
+                } catch (error) {
+                    console.warn('Server not available, using local storage');
+                    isOnline = false;
+                    return false;
+                }
+            },
+
+            // Load all user data from server
+            async loadUserData() {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/user/data`);
+                    if (!response.ok) throw new Error('Failed to load user data');
+                    const data = await response.json();
+                    console.log('User data loaded from server:', data.user);
+                    return data;
+                } catch (error) {
+                    console.error('Error loading user data:', error);
+                    return null;
+                }
+            },
+
+            // Save quiz stats to server
+            async saveStats(stats) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/user/stats`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ stats })
+                    });
+                    if (!response.ok) throw new Error('Failed to save stats');
+                    console.log('Stats saved to server');
+                    return true;
+                } catch (error) {
+                    console.error('Error saving stats:', error);
+                    return false;
+                }
+            },
+
+            // Save quiz progress to server
+            async saveProgress(progress) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/user/progress`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ progress })
+                    });
+                    if (!response.ok) throw new Error('Failed to save progress');
+                    return true;
+                } catch (error) {
+                    console.error('Error saving progress:', error);
+                    return false;
+                }
+            },
+
+            // Delete quiz progress from server
+            async deleteProgress() {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/user/progress`, {
+                        method: 'DELETE'
+                    });
+                    if (!response.ok) throw new Error('Failed to delete progress');
+                    return true;
+                } catch (error) {
+                    console.error('Error deleting progress:', error);
+                    return false;
+                }
+            },
+
+            // Save user preferences to server
+            async savePreferences(preferences) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/user/preferences`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ preferences })
+                    });
+                    if (!response.ok) throw new Error('Failed to save preferences');
+                    return true;
+                } catch (error) {
+                    console.error('Error saving preferences:', error);
+                    return false;
+                }
+            }
+        };
+
+        // ============================================
+        // Storage Manager - Syncs between API and localStorage
+        // ============================================
+        const StorageManager = {
+            // Initialize - load data from server on page load
+            async init() {
+                console.log('Initializing storage manager...');
+                await API.checkHealth();
+
+                if (isOnline) {
+                    const userData = await API.loadUserData();
+                    if (userData) {
+                        // Sync server data to localStorage
+                        if (userData.stats) {
+                            localStorage.setItem('tandaQuizStats', JSON.stringify(userData.stats));
+                        }
+                        if (userData.progress) {
+                            localStorage.setItem('tandaQuizInProgress', JSON.stringify(userData.progress));
+                        }
+                        if (userData.preferences) {
+                            if (userData.preferences.timerEnabled !== undefined) {
+                                localStorage.setItem('tandaQuizTimerEnabled', userData.preferences.timerEnabled);
+                            }
+                        }
+                        console.log('Data synced from server to local storage');
+                    }
+                } else {
+                    console.log('Running in offline mode - using local storage only');
+                }
+            },
+
+            // Get quiz stats (from localStorage, synced with server)
+            getStats() {
+                const stats = localStorage.getItem('tandaQuizStats');
+                return stats ? JSON.parse(stats) : null;
+            },
+
+            // Save quiz stats (to both localStorage and server)
+            async saveStats(stats) {
+                localStorage.setItem('tandaQuizStats', JSON.stringify(stats));
+                if (isOnline) {
+                    await API.saveStats(stats);
+                }
+            },
+
+            // Get quiz progress
+            getProgress() {
+                const progress = localStorage.getItem('tandaQuizInProgress');
+                return progress ? JSON.parse(progress) : null;
+            },
+
+            // Save quiz progress (to both localStorage and server)
+            async saveProgress(progress) {
+                localStorage.setItem('tandaQuizInProgress', JSON.stringify(progress));
+                if (isOnline) {
+                    await API.saveProgress(progress);
+                }
+            },
+
+            // Delete quiz progress
+            async deleteProgress() {
+                localStorage.removeItem('tandaQuizInProgress');
+                if (isOnline) {
+                    await API.deleteProgress();
+                }
+            },
+
+            // Get timer preference
+            getTimerEnabled() {
+                return localStorage.getItem('tandaQuizTimerEnabled') === 'true';
+            },
+
+            // Save timer preference
+            async saveTimerEnabled(enabled) {
+                localStorage.setItem('tandaQuizTimerEnabled', enabled);
+                if (isOnline) {
+                    await API.savePreferences({ timerEnabled: enabled });
+                }
+            },
+
+            // Generic localStorage operations for other data (bookmarks, submissions, etc.)
+            get(key) {
+                const value = localStorage.getItem(key);
+                return value ? JSON.parse(value) : null;
+            },
+
+            set(key, value) {
+                localStorage.setItem(key, JSON.stringify(value));
+            },
+
+            remove(key) {
+                localStorage.removeItem(key);
+            },
+
+            // Clear all stats (for reset functionality)
+            async clearStats() {
+                localStorage.removeItem('tandaQuizStats');
+                if (isOnline) {
+                    const emptyStats = {
+                        totalQuizzes: 0,
+                        totalQuestions: 0,
+                        totalCorrect: 0,
+                        byDifficulty: {},
+                        bySubcategory: {},
+                        xp: 0,
+                        level: 1,
+                        achievements: [],
+                        quizHistory: []
+                    };
+                    await API.saveStats(emptyStats);
+                }
+            }
+        };
+
+        // Initialize storage manager when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            StorageManager.init();
+        });
+
         // Subcategory metadata
         const subcategories = {
             beginner: {
@@ -6217,7 +6434,7 @@
                 if (shouldResume) {
                     resumeQuiz();
                 } else {
-                    localStorage.removeItem('tandaQuizInProgress');
+                    StorageManager.deleteProgress();
                 }
             }
         }
@@ -6226,12 +6443,12 @@
         // Timer management
         function toggleTimerPreference() {
             timerEnabled = !timerEnabled;
-            localStorage.setItem('tandaQuizTimerEnabled', timerEnabled);
+            StorageManager.saveTimerEnabled(timerEnabled);
             updateTimerButton();
         }
 
         function loadTimerPreference() {
-            timerEnabled = localStorage.getItem('tandaQuizTimerEnabled') === 'true';
+            timerEnabled = StorageManager.getTimerEnabled();
             updateTimerButton();
         }
 
@@ -7101,7 +7318,7 @@
                 startTime: quizStartTime,
                 timeRemaining: timeRemaining
             };
-            localStorage.setItem('tandaQuizInProgress', JSON.stringify(quizState));
+            StorageManager.saveProgress(quizState);
         }
 
         function resumeQuiz() {
@@ -7273,7 +7490,7 @@
             saveQuizStats(score, questions.length, timeTaken, percentage);
 
             // Clear saved progress
-            localStorage.removeItem('tandaQuizInProgress');
+            StorageManager.deleteProgress();
 
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -7494,7 +7711,7 @@
             if (!confirmBack) return;
 
             stopTimer();
-            localStorage.removeItem('tandaQuizInProgress');
+            StorageManager.deleteProgress();
             restartQuiz();
         }
 
@@ -7563,7 +7780,7 @@
                 currentSubcategory = '';
                 userAnswers = {};
                 currentQuestions = [];
-                localStorage.removeItem('tandaQuizInProgress');
+                StorageManager.deleteProgress();
 
                 // Hide quiz container and results
                 document.getElementById('quizContainer').classList.remove('active');
@@ -7873,7 +8090,7 @@
                 stats.quizHistory = stats.quizHistory.slice(-50);
             }
 
-            localStorage.setItem('tandaQuizStats', JSON.stringify(stats));
+            StorageManager.saveStats(stats);
             showXPNotification(xpEarned);
         }
 
@@ -8047,7 +8264,7 @@
             const confirmClear = confirm('Are you sure you want to clear all statistics? This cannot be undone.');
             if (!confirmClear) return;
 
-            localStorage.removeItem('tandaQuizStats');
+            StorageManager.clearStats();
             closeStats();
             alert('Statistics cleared successfully!');
         }
