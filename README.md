@@ -115,8 +115,7 @@ If you host the quiz online, generate a QR code for the URL:
 - 💡 **Submit Questions**: Contribute your own quiz questions
 - 📱 **Mobile Friendly**: Works on all devices
 - 🔖 **Bookmark Questions**: Flag difficult questions for later review
-- 🃏 **Flashcard Study Mode**: Study questions in flashcard format with flip animations
-- 📋 **Quiz Preview**: See quiz details before starting (question count, types, time limit)
+- 🃏 **Flashcard Study Mode**: Study questions in flashcard format with flip animations and dropdown topic selection
 - ✅ **Multiple Question Types**: True/False, Multiple Choice, Multiple Select, Fill-in-the-Blank
 
 ## Quiz Difficulty Levels & Subcategories
