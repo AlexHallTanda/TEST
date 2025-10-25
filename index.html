@@ -6007,6 +6007,8 @@
             document.getElementById('viewSubmissionsSection').classList.remove('hidden');
             document.getElementById('quizContainer').classList.remove('active');
             document.getElementById('results').classList.remove('active');
+            document.getElementById('quizPreview').classList.remove('active');
+            document.getElementById('quizPreview').classList.add('hidden');
             document.getElementById('progressFill').style.width = '0%';
             document.getElementById('timerDisplay').classList.add('hidden');
             document.getElementById('timerDisplay').classList.remove('warning');
@@ -6040,6 +6042,10 @@
                 document.getElementById('quizContainer').classList.remove('active');
                 document.getElementById('results').classList.remove('active');
             }
+
+            // Hide quiz preview if it's showing
+            document.getElementById('quizPreview').classList.remove('active');
+            document.getElementById('quizPreview').classList.add('hidden');
 
             // Show main page first
             document.getElementById('difficultySelection').classList.remove('hidden');
@@ -6188,6 +6194,8 @@
             document.getElementById('flashcardContainer').classList.remove('active');
             document.getElementById('flashcardSelection').style.display = 'block';
             document.getElementById('flashcardDisplay').classList.remove('active');
+            document.getElementById('quizPreview').classList.remove('active');
+            document.getElementById('quizPreview').classList.add('hidden');
             document.getElementById('difficultySelection').classList.remove('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
             document.getElementById('viewSubmissionsSection').classList.remove('hidden');
