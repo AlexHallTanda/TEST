@@ -7533,11 +7533,17 @@ if (typeof window !== 'undefined') {
                 `;
 
                 reports.reverse().forEach((report, idx) => {
+                    const originalIndex = reports.length - 1 - idx; // Calculate original array index
                     reportsHTML += `
                         <div style="background:#f8d7da;padding:20px;border-radius:12px;margin-bottom:15px;border-left:4px solid #dc3545">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
                                 <div style="font-weight:bold;font-size:1.1em">Report #${reports.length - idx}</div>
-                                <div style="font-size:0.85em;opacity:0.7">${new Date(report.submittedAt).toLocaleString()}</div>
+                                <div style="display:flex;align-items:center;gap:10px">
+                                    <div style="font-size:0.85em;opacity:0.7">${new Date(report.submittedAt).toLocaleString()}</div>
+                                    <button onclick="deleteIncorrectAnswerReport(${originalIndex})" style="padding:6px 12px;background:#dc3545;color:white;border:none;border-radius:6px;font-size:0.85em;font-weight:600;cursor:pointer;" onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                                        🗑️ Delete
+                                    </button>
+                                </div>
                             </div>
                             <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
                                 <div style="font-weight:600;margin-bottom:5px">Question:</div>
@@ -7574,6 +7580,18 @@ if (typeof window !== 'undefined') {
 
         function closeIncorrectAnswers() {
             document.getElementById('incorrectAnswersModal').classList.remove('active');
+        }
+
+        function deleteIncorrectAnswerReport(index) {
+            const confirmDelete = confirm('Are you sure you want to delete this incorrect answer report? This cannot be undone.');
+            if (!confirmDelete) return;
+
+            const reports = JSON.parse(localStorage.getItem('tandaIncorrectAnswerReports') || '[]');
+            reports.splice(index, 1);
+            localStorage.setItem('tandaIncorrectAnswerReports', JSON.stringify(reports));
+
+            // Refresh the display
+            showIncorrectAnswers();
         }
 
         function exportIncorrectAnswers(format) {
@@ -7653,35 +7671,27 @@ if (typeof window !== 'undefined') {
             reports.push(report);
             localStorage.setItem('tandaIncorrectAnswerReports', JSON.stringify(reports));
 
-            // Send email notification via FormSubmit
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = 'https://formsubmit.co/alex.hall@tanda.co';
-            form.target = '_blank';
+            // Send email notification via FormSubmit (silently in background)
+            try {
+                const formData = new FormData();
+                formData.append('_subject', 'Tanda Quiz - Incorrect Answer Report');
+                formData.append('_template', 'table');
+                formData.append('_captcha', 'false');
+                formData.append('Question', question);
+                formData.append('Current Answer', currentAnswer);
+                formData.append('Suggested Answer', suggestedAnswer);
+                formData.append('Reason', reason);
+                formData.append('Reference', reference || 'N/A');
+                formData.append('Submitted', new Date().toLocaleString());
 
-            const fields = {
-                '_subject': `Tanda Quiz - Incorrect Answer Report`,
-                '_template': 'table',
-                '_captcha': 'false',
-                'Question': question,
-                'Current Answer': currentAnswer,
-                'Suggested Answer': suggestedAnswer,
-                'Reason': reason,
-                'Reference': reference || 'N/A',
-                'Submitted': new Date().toLocaleString()
-            };
-
-            for (const [key, value] of Object.entries(fields)) {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = value;
-                form.appendChild(input);
+                fetch('https://formsubmit.co/alex.hall@tanda.co', {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors' // This prevents CORS issues and doesn't open new tab
+                }).catch(err => console.log('Email sent (or may have failed silently)'));
+            } catch (error) {
+                console.error('Error sending email:', error);
             }
-
-            document.body.appendChild(form);
-            form.submit();
-            document.body.removeChild(form);
 
             closeQuickIncorrectAnswerReport();
             alert('Thank you! Your incorrect answer report has been submitted successfully.');
