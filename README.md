@@ -111,10 +111,13 @@ If you host the quiz online, generate a QR code for the URL:
 - 💡 **Explanations with Help Links**: Learn from detailed explanations with links to Tanda Help Guide
 - 💾 **Auto-Save Progress**: Resume unfinished quizzes
 - ⏱️ **Optional Timer**: Timed mode for extra challenge
-- 🌙 **Dark Mode**: Toggle between light and dark themes
-- 📊 **Statistics**: Track your performance over time
+- 📊 **Statistics & Progress Bars**: Track your performance over time with visual progress indicators
 - 💡 **Submit Questions**: Contribute your own quiz questions
 - 📱 **Mobile Friendly**: Works on all devices
+- 🔖 **Bookmark Questions**: Flag difficult questions for later review
+- 🃏 **Flashcard Study Mode**: Study questions in flashcard format with flip animations
+- 📋 **Quiz Preview**: See quiz details before starting (question count, types, time limit)
+- ✅ **Multiple Question Types**: True/False, Multiple Choice, Multiple Select, Fill-in-the-Blank
 
 ## Quiz Difficulty Levels & Subcategories
 

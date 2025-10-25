@@ -14,23 +14,6 @@
 
     <title>Tanda Quiz</title>
     <style>
-        :root {
-            --tanda-navy: #032a56;
-            --tanda-navy-dark: #022d5c;
-            --tanda-accent: #0a4d8f;
-            --primary-gradient: linear-gradient(135deg, #032a56 0%, #022d5c 100%);
-            --bg-gradient: linear-gradient(135deg, #032a56 0%, #022d5c 100%);
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --card-bg: #ffffff;
-            --question-bg: #f8f9fa;
-            --border-color: #e0e0e0;
-            --hover-bg: #e8f1f8;
-            --shadow: rgba(3, 42, 86, 0.15);
-            --shadow-light: rgba(3, 42, 86, 0.08);
-        }
-
-
         * {
             margin: 0;
             padding: 0;
@@ -39,20 +22,20 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg-gradient);
+            background: linear-gradient(135deg, #032a56 0%, #022d5c 100%);
             min-height: 100vh;
             padding: 20px;
-            color: var(--text-color);
+            color: #333333;
             transition: background 0.3s ease, color 0.3s ease;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background: var(--card-bg);
+            background: #ffffff;
             border-radius: 15px;
             padding: 40px;
-            box-shadow: 0 10px 40px var(--shadow);
+            box-shadow: 0 10px 40px rgba(3, 42, 86, 0.15);
             transition: background 0.3s ease;
         }
 
@@ -129,15 +112,15 @@
 
         /* Accordion Styles */
         .difficulty-accordion {
-            background: var(--card-bg);
+            background: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 2px 8px var(--shadow-light);
+            box-shadow: 0 2px 8px rgba(3, 42, 86, 0.08);
             overflow: hidden;
             transition: all 0.3s ease;
         }
 
         .difficulty-accordion:hover {
-            box-shadow: 0 4px 15px var(--shadow);
+            box-shadow: 0 4px 15px rgba(3, 42, 86, 0.15);
         }
 
         .difficulty-header {
@@ -226,11 +209,8 @@
         }
 
         .topic-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
             padding: 15px 18px;
-            background: var(--question-bg);
+            background: #f8f9fa;
             border-radius: 10px;
             border-left: 4px solid #dee2e6;
             transition: all 0.2s ease;
@@ -238,9 +218,35 @@
         }
 
         .topic-item:hover {
-            background: var(--hover-bg);
+            background: #e8f1f8;
             transform: translateX(5px);
-            box-shadow: 0 2px 8px var(--shadow-light);
+            box-shadow: 0 2px 8px rgba(3, 42, 86, 0.08);
+        }
+
+        .topic-item-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .topic-item-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .topic-progress-bar {
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .topic-progress-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 3px;
         }
 
         .topic-item.completed {
@@ -268,7 +274,7 @@
 
         .topic-name {
             font-weight: 600;
-            color: var(--text-color);
+            color: #333333;
             font-size: 1em;
         }
 
@@ -427,7 +433,7 @@
 
         .difficulty-btn:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px var(--shadow);
+            box-shadow: 0 8px 20px rgba(3, 42, 86, 0.15);
         }
 
         .difficulty-btn:focus {
@@ -462,6 +468,254 @@
         .quiz-container.active {
             display: block;
             animation: fadeIn 0.5s ease;
+        }
+
+        .quiz-preview {
+            display: none;
+        }
+
+        .quiz-preview.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .preview-header h2 {
+            font-size: 2em;
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .preview-content {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(3, 42, 86, 0.1);
+        }
+
+        .preview-info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #ffffff;
+            border-radius: 8px;
+            border-left: 4px solid #032a56;
+            box-shadow: 0 2px 8px rgba(3, 42, 86, 0.08);
+        }
+
+        .preview-info-item .icon {
+            font-size: 1.8em;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .preview-info-item .info {
+            flex: 1;
+        }
+
+        .preview-info-item .label {
+            font-weight: 600;
+            color: #032a56;
+            margin-bottom: 5px;
+        }
+
+        .preview-info-item .value {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .start-quiz-btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .start-quiz-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        /* Flashcard Mode Styles */
+        .flashcard-container {
+            display: none;
+        }
+
+        .flashcard-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .flashcard-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .flashcard-header h2 {
+            font-size: 2em;
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .flashcard-progress {
+            font-size: 1.1em;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .flashcard-wrapper {
+            perspective: 1000px;
+            margin-bottom: 30px;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flashcard {
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 30px rgba(3, 42, 86, 0.2);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, #f8f9fa, #e8f1f8);
+            border: 3px solid #032a56;
+        }
+
+        .flashcard-back {
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-label {
+            font-size: 0.9em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .flashcard-content {
+            font-size: 1.5em;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .flashcard-hint {
+            font-size: 0.9em;
+            opacity: 0.6;
+            font-style: italic;
+        }
+
+        .flashcard-explanation {
+            font-size: 1em;
+            line-height: 1.6;
+            text-align: center;
+            opacity: 0.9;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .flashcard-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .flashcard-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .flashcard-btn {
+            padding: 12px 30px;
+            background: #ffffff;
+            color: #032a56;
+            border: 2px solid #032a56;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .flashcard-btn:hover {
+            background: #032a56;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .flashcard-btn.primary {
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
+            color: white;
+            border: none;
+        }
+
+        .flashcard-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(3, 42, 86, 0.3);
+        }
+
+        .flashcard-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .quiz-title {
@@ -505,7 +759,7 @@
             font-weight: bold;
             color: #032a56;
             padding: 10px 20px;
-            background: var(--question-bg);
+            background: #f8f9fa;
             border-radius: 8px;
             min-width: 120px;
             text-align: center;
@@ -525,11 +779,11 @@
         .progress-bar {
             width: 100%;
             height: 10px;
-            background: var(--border-color);
+            background: #e0e0e0;
             border-radius: 10px;
             margin-bottom: 30px;
             overflow: hidden;
-            box-shadow: inset 0 2px 4px var(--shadow-light);
+            box-shadow: inset 0 2px 4px rgba(3, 42, 86, 0.08);
         }
 
         .progress-fill {
@@ -540,7 +794,7 @@
         }
 
         .question-card {
-            background: var(--question-bg);
+            background: #f8f9fa;
             padding: 30px;
             border-radius: 12px;
             margin-bottom: 25px;
@@ -550,18 +804,53 @@
         }
 
         .question-card:hover {
-            box-shadow: 0 5px 15px var(--shadow-light);
+            box-shadow: 0 5px 15px rgba(3, 42, 86, 0.08);
             transform: translateX(5px);
+        }
+
+        .question-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
         .question-number {
             color: #032a56;
             font-weight: bold;
             font-size: 0.9em;
-            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        .bookmark-btn {
+            background: none;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bookmark-btn:hover {
+            border-color: #032a56;
+            background: #e8f1f8;
+            transform: scale(1.1);
+        }
+
+        .bookmark-btn.bookmarked {
+            border-color: #ffc107;
+            background: #fff3cd;
+        }
+
+        .bookmark-btn.bookmarked:hover {
+            border-color: #ff9800;
+            background: #ffe082;
         }
 
         .question-text {
@@ -580,8 +869,8 @@
 
         .option {
             padding: 18px 22px;
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -592,7 +881,7 @@
 
         .option:hover {
             border-color: #032a56;
-            background: var(--hover-bg);
+            background: #e8f1f8;
             transform: translateX(5px);
         }
 
@@ -635,7 +924,7 @@
 
         .option.unselected {
             opacity: 0.5;
-            background: var(--card-bg);
+            background: #ffffff;
         }
 
         .option.unselected:hover {
@@ -761,7 +1050,7 @@
         .explanation {
             margin-top: 15px;
             padding: 15px;
-            background: var(--hover-bg);
+            background: #e8f1f8;
             border-left: 4px solid #17a2b8;
             border-radius: 6px;
             font-size: 0.95em;
@@ -793,7 +1082,7 @@
         }
 
         .stats-content {
-            background: var(--card-bg);
+            background: #ffffff;
             padding: 40px;
             border-radius: 15px;
             max-width: 600px;
@@ -820,7 +1109,7 @@
             border: none;
             font-size: 2em;
             cursor: pointer;
-            color: var(--text-color);
+            color: #333333;
             transition: transform 0.3s ease;
         }
 
@@ -833,14 +1122,14 @@
             justify-content: space-between;
             padding: 15px;
             margin-bottom: 10px;
-            background: var(--question-bg);
+            background: #f8f9fa;
             border-radius: 8px;
             align-items: center;
         }
 
         .stat-label {
             font-weight: 600;
-            color: var(--text-color);
+            color: #333333;
         }
 
         .stat-value {
@@ -1022,10 +1311,10 @@
         }
 
         .dashboard-card {
-            background: var(--question-bg);
+            background: #f8f9fa;
             padding: 20px;
             border-radius: 12px;
-            border: 2px solid var(--border-color);
+            border: 2px solid #e0e0e0;
         }
 
         .dashboard-card h3 {
@@ -1051,7 +1340,7 @@
         .chart-label {
             min-width: 120px;
             font-size: 0.9em;
-            color: var(--text-color);
+            color: #333333;
         }
 
         .chart-bar-fill {
@@ -1090,7 +1379,7 @@
             align-items: center;
             padding: 12px;
             margin-bottom: 8px;
-            background: var(--card-bg);
+            background: #ffffff;
             border-radius: 8px;
             border-left: 4px solid #032a56;
         }
@@ -1123,9 +1412,9 @@
         .achievement-item {
             text-align: center;
             padding: 15px;
-            background: var(--card-bg);
+            background: #ffffff;
             border-radius: 10px;
-            border: 2px solid var(--border-color);
+            border: 2px solid #e0e0e0;
             transition: all 0.3s ease;
         }
 
@@ -1147,7 +1436,7 @@
         .achievement-name {
             font-size: 0.85em;
             font-weight: bold;
-            color: var(--text-color);
+            color: #333333;
             margin-bottom: 5px;
         }
 
@@ -1272,11 +1561,11 @@
         }
 
         .certificate-badge {
-            background: var(--question-bg);
+            background: #f8f9fa;
             padding: 20px;
             border-radius: 12px;
             text-align: center;
-            border: 3px solid var(--border-color);
+            border: 3px solid #e0e0e0;
             cursor: pointer;
             transition: all 0.3s ease;
         }
@@ -1300,7 +1589,7 @@
         .certificate-badge-name {
             font-weight: bold;
             margin-bottom: 5px;
-            color: var(--text-color);
+            color: #333333;
         }
 
         .certificate-badge-desc {
@@ -1438,6 +1727,10 @@
                     <span>⏱️</span>
                     <span id="timerPrefText">Timer: Off</span>
                 </button>
+                <button class="stats-btn" onclick="startFlashcardMode()" aria-label="Flashcard mode">
+                    <span>🃏</span>
+                    <span>Flashcards</span>
+                </button>
                 <button class="stats-btn" onclick="showDashboard()" aria-label="View dashboard">
                     <span>📈</span>
                     <span>Dashboard</span>
@@ -1466,7 +1759,7 @@
         </div>
 
         <!-- Submit Question Section -->
-        <div id="submitQuestionSection" style="margin-top: 30px; padding: 25px; background: var(--question-bg); border-radius: 12px; border-left: 5px solid #032a56;">
+        <div id="submitQuestionSection" style="margin-top: 30px; padding: 25px; background: #f8f9fa; border-radius: 12px; border-left: 5px solid #032a56;">
             <h2 onclick="toggleQuestionForm()" style="color: #032a56; margin-bottom: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; transition: all 0.3s ease;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
                 <span id="questionFormToggleIcon">▶</span>
                 <span>💡</span>
@@ -1475,27 +1768,27 @@
             </h2>
 
             <div id="questionFormContent" class="hidden">
-                <p style="margin: 20px 0; color: var(--text-color); line-height: 1.6;">
+                <p style="margin: 20px 0; color: #333333; line-height: 1.6;">
                     Help improve this quiz! Submit your own Tanda knowledge question to help others learn.
                 </p>
 
                 <form id="submitQuestionForm" style="display: flex; flex-direction: column; gap: 15px;">
                 <div>
-                    <label for="questionText" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Question *</label>
-                    <textarea id="questionText" required rows="3" placeholder="Enter your question about Tanda..." style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em; resize: vertical;"></textarea>
+                    <label for="questionText" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Question *</label>
+                    <textarea id="questionText" required rows="3" placeholder="Enter your question about Tanda..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em; resize: vertical;"></textarea>
                 </div>
 
                 <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Answer Options * (enter 4 options)</label>
-                    <input type="text" id="option1" required placeholder="Option 1" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
-                    <input type="text" id="option2" required placeholder="Option 2" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
-                    <input type="text" id="option3" required placeholder="Option 3" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
-                    <input type="text" id="option4" required placeholder="Option 4" style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Answer Options * (enter 4 options)</label>
+                    <input type="text" id="option1" required placeholder="Option 1" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                    <input type="text" id="option2" required placeholder="Option 2" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                    <input type="text" id="option3" required placeholder="Option 3" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                    <input type="text" id="option4" required placeholder="Option 4" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
                 </div>
 
                 <div>
-                    <label for="correctAnswer" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Correct Answer *</label>
-                    <select id="correctAnswer" required style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
+                    <label for="correctAnswer" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Correct Answer *</label>
+                    <select id="correctAnswer" required style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
                         <option value="">-- Select the correct option --</option>
                         <option value="0">Option 1</option>
                         <option value="1">Option 2</option>
@@ -1505,19 +1798,19 @@
                 </div>
 
                 <div>
-                    <label for="explanation" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Explanation *</label>
-                    <textarea id="explanation" required rows="3" placeholder="Explain why this is the correct answer..." style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em; resize: vertical;"></textarea>
+                    <label for="explanation" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Explanation *</label>
+                    <textarea id="explanation" required rows="3" placeholder="Explain why this is the correct answer..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em; resize: vertical;"></textarea>
                 </div>
 
                 <div>
-                    <label for="helpGuideLink" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Help Guide Link (optional)</label>
-                    <input type="url" id="helpGuideLink" placeholder="https://help.tanda.co/..." style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
+                    <label for="helpGuideLink" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Help Guide Link (optional)</label>
+                    <input type="url" id="helpGuideLink" placeholder="https://help.tanda.co/..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
                     <small style="color: #666; margin-top: 5px; display: block;">Link to relevant Tanda help documentation</small>
                 </div>
 
                 <div>
-                    <label for="questionDifficulty" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Difficulty Level *</label>
-                    <select id="questionDifficulty" required onchange="showSubcategorySelect()" style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
+                    <label for="questionDifficulty" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Difficulty Level *</label>
+                    <select id="questionDifficulty" required onchange="showSubcategorySelect()" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
                         <option value="">-- Select difficulty --</option>
                         <option value="beginner">🌱 Beginner</option>
                         <option value="intermediate">📚 Intermediate</option>
@@ -1527,8 +1820,8 @@
                 </div>
 
                 <div id="subcategorySelectContainer" class="hidden">
-                    <label for="questionSubcategory" style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-color);">Topic/Subcategory *</label>
-                    <select id="questionSubcategory" required style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; background: var(--card-bg); color: var(--text-color); font-family: inherit; font-size: 1em;">
+                    <label for="questionSubcategory" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Topic/Subcategory *</label>
+                    <select id="questionSubcategory" required style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
                         <option value="">-- Select topic --</option>
                     </select>
                 </div>
@@ -1550,6 +1843,52 @@
                 <span>📝</span>
                 <span>View Submissions</span>
             </button>
+        </div>
+
+        <!-- Quiz Preview Section -->
+        <div id="quizPreview" class="quiz-preview hidden" role="region" aria-label="Quiz preview">
+            <div class="preview-header">
+                <h2 id="previewTitle">📋 Quiz Preview</h2>
+            </div>
+            <div id="previewContent" class="preview-content"></div>
+            <div class="preview-actions">
+                <button class="start-quiz-btn" onclick="beginQuizFromPreview()">🚀 Start Quiz Now</button>
+                <button class="back-btn" onclick="backToSelection()">← Back to Selection</button>
+            </div>
+        </div>
+
+        <!-- Flashcard Mode Section -->
+        <div id="flashcardContainer" class="flashcard-container hidden" role="region" aria-label="Flashcard mode">
+            <div class="flashcard-header">
+                <h2 id="flashcardTitle">🃏 Flashcard Study Mode</h2>
+                <div class="flashcard-progress" id="flashcardProgress">Card 1 of 10</div>
+            </div>
+            <div class="flashcard-wrapper">
+                <div class="flashcard" id="flashcard" onclick="flipFlashcard()">
+                    <div class="flashcard-front">
+                        <div class="flashcard-label">Question</div>
+                        <div class="flashcard-content" id="flashcardQuestion"></div>
+                        <div class="flashcard-hint">Click to reveal answer</div>
+                    </div>
+                    <div class="flashcard-back">
+                        <div class="flashcard-label">Answer</div>
+                        <div class="flashcard-content" id="flashcardAnswer"></div>
+                        <div class="flashcard-explanation" id="flashcardExplanation"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="flashcard-controls">
+                <button class="flashcard-btn" onclick="previousFlashcard()" id="prevFlashcard">
+                    ← Previous
+                </button>
+                <button class="flashcard-btn primary" onclick="nextFlashcard()" id="nextFlashcard">
+                    Next →
+                </button>
+            </div>
+            <div class="flashcard-actions">
+                <button class="back-btn" onclick="exitFlashcardMode()">← Back to Selection</button>
+                <button class="flashcard-btn" onclick="shuffleFlashcards()">🔀 Shuffle</button>
+            </div>
         </div>
 
         <div id="quizContainer" class="quiz-container" role="main">
@@ -3960,6 +4299,10 @@
         let timeRemaining = 0;
         let timerEnabled = false;
         let quizStartTime = null;
+        let bookmarkedQuestions = [];
+        let flashcardMode = false;
+        let flashcardQuestions = [];
+        let currentFlashcardIndex = 0;
 
         // Timer durations in seconds for each difficulty
         const timerDurations = {
@@ -4020,20 +4363,30 @@
             const topicInfo = subcategories[difficulty][subcategory];
             const stats = getTopicStats(difficulty, subcategory);
             const statusInfo = getTopicStatus(stats);
+            const progressPercent = stats.bestPercentage || 0;
 
             return `
                 <div class="topic-item ${statusInfo.class}" onclick="selectSubcategory('${difficulty}', '${subcategory}')">
-                    <div class="topic-item-left">
-                        <span class="topic-status-icon">${statusInfo.icon}</span>
-                        <span class="topic-name">${topicInfo.name}</span>
-                    </div>
-                    <div class="topic-item-right">
+                    <div class="topic-item-content">
+                        <div class="topic-item-header">
+                            <div class="topic-item-left">
+                                <span class="topic-status-icon">${statusInfo.icon}</span>
+                                <span class="topic-name">${topicInfo.name}</span>
+                            </div>
+                            <div class="topic-item-right">
+                                ${stats.bestScore !== null ? `
+                                    <span class="topic-score ${statusInfo.scoreClass}">
+                                        ${stats.bestScore}/${stats.totalQuestions} (${stats.bestPercentage}%)
+                                    </span>
+                                    ${stats.bestPercentage === 100 ? '<span class="topic-badge">🏆</span>' : ''}
+                                ` : '<span class="topic-score">Not Started</span>'}
+                            </div>
+                        </div>
                         ${stats.bestScore !== null ? `
-                            <span class="topic-score ${statusInfo.scoreClass}">
-                                ${stats.bestScore}/${stats.totalQuestions} (${stats.bestPercentage}%)
-                            </span>
-                            ${stats.bestPercentage === 100 ? '<span class="topic-badge">🏆</span>' : ''}
-                        ` : '<span class="topic-score">Not Started</span>'}
+                            <div class="topic-progress-bar">
+                                <div class="topic-progress-fill" style="width: ${progressPercent}%; background: ${progressPercent === 100 ? '#28a745' : progressPercent >= 70 ? '#ffc107' : '#dc3545'}"></div>
+                            </div>
+                        ` : ''}
                     </div>
                 </div>
             `;
@@ -4377,20 +4730,110 @@
         function startQuiz(difficulty, subcategory) {
             currentDifficulty = difficulty;
             currentSubcategory = subcategory;
-            userAnswers = {};
-            quizStartTime = Date.now();
 
-            // Shuffle questions and options
+            // Prepare questions (shuffle them)
             currentQuestions = shuffleArray([...quizData[currentDifficulty][currentSubcategory]])
                 .map(q => ({
                     ...q,
                     options: shuffleOptionsWithCorrect(q.options, q.correct)
                 }));
 
+            // Show preview instead of starting immediately
+            showQuizPreview();
+        }
+
+        function showQuizPreview() {
+            const difficultyLabels = {
+                beginner: '🌱 Beginner',
+                intermediate: '📚 Intermediate',
+                advanced: '🎓 Advanced',
+                expert: '🏆 Expert'
+            };
+            const subcatInfo = subcategories[currentDifficulty]?.[currentSubcategory];
+            const topicName = subcatInfo ? subcatInfo.name : currentSubcategory;
+
+            // Count question types
+            const questionTypes = {};
+            currentQuestions.forEach(q => {
+                const type = q.type || 'multiple-choice';
+                questionTypes[type] = (questionTypes[type] || 0) + 1;
+            });
+
+            const typeLabels = {
+                'multiple-choice': 'Multiple Choice',
+                'true-false': 'True/False',
+                'multiple-select': 'Multiple Select',
+                'fill-blank': 'Fill in the Blank'
+            };
+
+            const typesBreakdown = Object.entries(questionTypes)
+                .map(([type, count]) => `${typeLabels[type] || type}: ${count}`)
+                .join(', ');
+
+            // Calculate estimated time
+            const timerDurations = { beginner: 600, intermediate: 480, advanced: 420, expert: 360 };
+            const timeInMinutes = timerEnabled ? Math.floor(timerDurations[currentDifficulty] / 60) : 'Untimed';
+            const timeDisplay = timerEnabled ? `${timeInMinutes} minutes` : 'No time limit';
+
+            document.getElementById('previewContent').innerHTML = `
+                <div class="preview-info-item">
+                    <div class="icon">📊</div>
+                    <div class="info">
+                        <div class="label">Difficulty Level</div>
+                        <div class="value">${difficultyLabels[currentDifficulty]}</div>
+                    </div>
+                </div>
+                <div class="preview-info-item">
+                    <div class="icon">📚</div>
+                    <div class="info">
+                        <div class="label">Topic</div>
+                        <div class="value">${topicName}</div>
+                    </div>
+                </div>
+                <div class="preview-info-item">
+                    <div class="icon">📝</div>
+                    <div class="info">
+                        <div class="label">Number of Questions</div>
+                        <div class="value">${currentQuestions.length} questions</div>
+                    </div>
+                </div>
+                <div class="preview-info-item">
+                    <div class="icon">🎯</div>
+                    <div class="info">
+                        <div class="label">Question Types</div>
+                        <div class="value">${typesBreakdown}</div>
+                    </div>
+                </div>
+                <div class="preview-info-item">
+                    <div class="icon">⏱️</div>
+                    <div class="info">
+                        <div class="label">Time Limit</div>
+                        <div class="value">${timeDisplay}</div>
+                    </div>
+                </div>
+                <div class="preview-info-item">
+                    <div class="icon">💡</div>
+                    <div class="info">
+                        <div class="label">Features</div>
+                        <div class="value">Auto-save progress, explanations after submission, bookmark difficult questions</div>
+                    </div>
+                </div>
+            `;
+
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
             document.getElementById('viewSubmissionsSection').classList.add('hidden');
+            document.getElementById('quizPreview').classList.add('active');
+            document.getElementById('quizContainer').classList.remove('active');
+            document.getElementById('results').classList.remove('active');
+        }
+
+        function beginQuizFromPreview() {
+            userAnswers = {};
+            quizStartTime = Date.now();
+
+            document.getElementById('quizPreview').classList.remove('active');
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
 
@@ -4461,11 +4904,11 @@
                             <input type="text" id="fillblank${index}" placeholder="Type your answer here..."
                                    oninput="selectFillBlank(${index}, this.value)"
                                    value="${userAnswers[index] || ''}"
-                                   style="width:100%;padding:15px;border:2px solid var(--border-color);border-radius:8px;font-size:1em;background:var(--card-bg);color:var(--text-color)">
+                                   style="width:100%;padding:15px;border:2px solid #e0e0e0;border-radius:8px;font-size:1em;background:#ffffff;color:#333333">
                         </div>
                     `;
                 } else if (questionType === 'multiple-select') {
-                    q.options.options.forEach((option, optIndex) => {
+                    q.options.forEach((option, optIndex) => {
                         const isChecked = userAnswers[index] && userAnswers[index].includes(optIndex);
                         optionsHTML += `
                             <div class="option ${isChecked ? 'selected' : ''}" onclick="selectMultiple(${index}, ${optIndex})" tabindex="0" role="checkbox" aria-checked="${isChecked}">
@@ -4476,7 +4919,7 @@
                     });
                 } else {
                     // multiple-choice or true-false (both use radio buttons)
-                    q.options.options.forEach((option, optIndex) => {
+                    q.options.forEach((option, optIndex) => {
                         optionsHTML += `
                             <div class="option" onclick="selectOption(${index}, ${optIndex})" tabindex="0" role="radio" aria-checked="false">
                                 <input type="radio" name="question${index}" value="${optIndex}" id="q${index}o${optIndex}" aria-label="Option ${optIndex + 1}: ${option}">
@@ -4489,10 +4932,19 @@
                 const typeLabel = questionType === 'multiple-select' ? ' <span style="font-size:0.85em;color:#032a56">(Select all that apply)</span>' :
                                  questionType === 'fill-blank' ? ' <span style="font-size:0.85em;color:#032a56">(Fill in the blank)</span>' : '';
 
+                const isBookmarked = bookmarkedQuestions.includes(index);
                 questionCard.innerHTML = `
-                    <div class="question-number">
-                        <span>Question ${index + 1} of ${currentQuestions.length}</span>
-                        ${userAnswers[index] !== undefined && userAnswers[index] !== '' ? '<span style="color: #28a745;">✓</span>' : ''}
+                    <div class="question-header-row">
+                        <div class="question-number">
+                            <span>Question ${index + 1} of ${currentQuestions.length}</span>
+                            ${userAnswers[index] !== undefined && userAnswers[index] !== '' ? '<span style="color: #28a745;">✓</span>' : ''}
+                        </div>
+                        <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}"
+                                onclick="toggleBookmark(${index})"
+                                title="${isBookmarked ? 'Remove bookmark' : 'Bookmark for review'}"
+                                aria-label="${isBookmarked ? 'Remove bookmark' : 'Bookmark this question'}">
+                            ${isBookmarked ? '🔖' : '🏷️'}
+                        </button>
                     </div>
                     <div class="question-text">${q.question}${typeLabel}</div>
                     <div class="options" role="${questionType === 'multiple-select' ? 'group' : 'radiogroup'}" aria-label="Answer options">
@@ -4631,6 +5083,29 @@
             }
         }
 
+        function toggleBookmark(questionIndex) {
+            const bookmarkBtn = document.querySelector(`#question-${questionIndex} .bookmark-btn`);
+
+            if (bookmarkedQuestions.includes(questionIndex)) {
+                // Remove bookmark
+                bookmarkedQuestions = bookmarkedQuestions.filter(i => i !== questionIndex);
+                bookmarkBtn.classList.remove('bookmarked');
+                bookmarkBtn.innerHTML = '🏷️';
+                bookmarkBtn.title = 'Bookmark for review';
+                bookmarkBtn.setAttribute('aria-label', 'Bookmark this question');
+            } else {
+                // Add bookmark
+                bookmarkedQuestions.push(questionIndex);
+                bookmarkBtn.classList.add('bookmarked');
+                bookmarkBtn.innerHTML = '🔖';
+                bookmarkBtn.title = 'Remove bookmark';
+                bookmarkBtn.setAttribute('aria-label', 'Remove bookmark');
+            }
+
+            // Save bookmarks to quiz progress
+            saveQuizProgress();
+        }
+
         function updateSubmitButton() {
             const submitBtn = document.getElementById('submitBtn');
             const totalQuestions = currentQuestions.length;
@@ -4684,7 +5159,8 @@
                 answers: userAnswers,
                 questions: currentQuestions,
                 startTime: quizStartTime,
-                timeRemaining: timeRemaining
+                timeRemaining: timeRemaining,
+                bookmarks: bookmarkedQuestions
             };
             localStorage.setItem('tandaQuizInProgress', JSON.stringify(quizState));
         }
@@ -4698,6 +5174,7 @@
             currentQuestions = savedState.questions;
             quizStartTime = savedState.startTime;
             timeRemaining = savedState.timeRemaining;
+            bookmarkedQuestions = savedState.bookmarks || [];
 
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
@@ -4859,10 +5336,10 @@
                     const isCorrect = acceptableAnswers.some(ans => ans.toLowerCase().trim() === userAnswerLower);
 
                     optionsHTML = `
-                        <div class="option ${isCorrect ? 'correct' : 'incorrect'}" style="background:var(--question-bg);padding:15px;border-radius:8px;margin:10px 0">
+                        <div class="option ${isCorrect ? 'correct' : 'incorrect'}" style="background:#f8f9fa;padding:15px;border-radius:8px;margin:10px 0">
                             <label><strong>Your answer:</strong> ${userAnswer || '(No answer provided)'}</label>
                         </div>
-                        <div class="option correct-answer" style="background:var(--question-bg);padding:15px;border-radius:8px;border-left:4px solid #28a745">
+                        <div class="option correct-answer" style="background:#f8f9fa;padding:15px;border-radius:8px;border-left:4px solid #28a745">
                             <label><strong>Correct answer${acceptableAnswers.length > 1 ? 's' : ''}:</strong> ${acceptableAnswers.join(' / ')}</label>
                         </div>
                     `;
@@ -5007,6 +5484,7 @@
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
             document.getElementById('viewSubmissionsSection').classList.remove('hidden');
+            document.getElementById('quizPreview').classList.remove('active');
             document.getElementById('quizContainer').classList.remove('active');
             document.getElementById('results').classList.remove('active');
             document.getElementById('progressFill').style.width = '0%';
@@ -5017,6 +5495,107 @@
             renderAccordion();
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Flashcard Mode Functions
+        function startFlashcardMode() {
+            // Show selection modal to choose topic
+            const difficulty = prompt("Enter difficulty (beginner/intermediate/advanced/expert):");
+            if (!difficulty || !quizData[difficulty]) {
+                alert("Invalid difficulty level!");
+                return;
+            }
+
+            const topics = Object.keys(quizData[difficulty]);
+            const topicNames = topics.map((t, i) => `${i + 1}. ${subcategories[difficulty][t].name}`).join('\n');
+            const topicIndex = prompt(`Select a topic:\n${topicNames}\n\nEnter number (1-${topics.length}):`);
+
+            if (!topicIndex || topicIndex < 1 || topicIndex > topics.length) {
+                alert("Invalid topic selection!");
+                return;
+            }
+
+            const selectedTopic = topics[topicIndex - 1];
+            flashcardQuestions = [...quizData[difficulty][selectedTopic]];
+            currentFlashcardIndex = 0;
+
+            // Hide other sections
+            document.getElementById('difficultySelection').classList.add('hidden');
+            document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('viewSubmissionsSection').classList.add('hidden');
+            document.getElementById('flashcardContainer').classList.add('active');
+
+            loadFlashcard();
+        }
+
+        function loadFlashcard() {
+            if (flashcardQuestions.length === 0) return;
+
+            const card = flashcardQuestions[currentFlashcardIndex];
+            const flashcardEl = document.getElementById('flashcard');
+
+            // Reset flip state
+            flashcardEl.classList.remove('flipped');
+
+            // Update content
+            document.getElementById('flashcardQuestion').textContent = card.question;
+
+            // Get the correct answer text
+            let answerText = '';
+            if (card.type === 'true-false' || !card.type) {
+                answerText = card.options[card.correct];
+            } else if (card.type === 'multiple-select') {
+                answerText = card.correct.map(i => card.options[i]).join(', ');
+            } else if (card.type === 'fill-blank') {
+                answerText = card.correct;
+            } else {
+                answerText = card.options[card.correct];
+            }
+
+            document.getElementById('flashcardAnswer').textContent = answerText;
+            document.getElementById('flashcardExplanation').textContent = card.explanation || '';
+
+            // Update progress
+            document.getElementById('flashcardProgress').textContent =
+                `Card ${currentFlashcardIndex + 1} of ${flashcardQuestions.length}`;
+
+            // Update button states
+            document.getElementById('prevFlashcard').disabled = currentFlashcardIndex === 0;
+            document.getElementById('nextFlashcard').disabled = currentFlashcardIndex === flashcardQuestions.length - 1;
+        }
+
+        function flipFlashcard() {
+            const flashcard = document.getElementById('flashcard');
+            flashcard.classList.toggle('flipped');
+        }
+
+        function nextFlashcard() {
+            if (currentFlashcardIndex < flashcardQuestions.length - 1) {
+                currentFlashcardIndex++;
+                loadFlashcard();
+            }
+        }
+
+        function previousFlashcard() {
+            if (currentFlashcardIndex > 0) {
+                currentFlashcardIndex--;
+                loadFlashcard();
+            }
+        }
+
+        function shuffleFlashcards() {
+            flashcardQuestions = shuffleArray(flashcardQuestions);
+            currentFlashcardIndex = 0;
+            loadFlashcard();
+        }
+
+        function exitFlashcardMode() {
+            document.getElementById('flashcardContainer').classList.remove('active');
+            document.getElementById('difficultySelection').classList.remove('hidden');
+            document.getElementById('submitQuestionSection').classList.remove('hidden');
+            document.getElementById('viewSubmissionsSection').classList.remove('hidden');
+            flashcardQuestions = [];
+            currentFlashcardIndex = 0;
         }
 
         // Enhanced Statistics & Gamification Management
@@ -5291,7 +5870,7 @@
 
             const achievementsList = stats.achievements.map(id => {
                 const ach = achievements.find(a => a.id === id);
-                return ach ? `<div style="display:inline-block;margin:5px;padding:10px;background:var(--question-bg);border-radius:8px;text-align:center"><div style="font-size:2em">${ach.icon}</div><div style="font-size:0.8em;margin-top:5px">${ach.name}</div></div>` : '';
+                return ach ? `<div style="display:inline-block;margin:5px;padding:10px;background:#f8f9fa;border-radius:8px;text-align:center"><div style="font-size:2em">${ach.icon}</div><div style="font-size:0.8em;margin-top:5px">${ach.name}</div></div>` : '';
             }).join('');
 
             container.innerHTML = `
@@ -5370,7 +5949,7 @@
             const difficultyChart = `
                 <div class="chart-bar">
                     <div class="chart-label">🌱 Beginner</div>
-                    <div style="flex:1;background:var(--border-color);border-radius:4px;height:25px;position:relative">
+                    <div style="flex:1;background:#e0e0e0;border-radius:4px;height:25px;position:relative">
                         <div class="chart-bar-fill" style="width:${stats.byDifficulty.beginner.avgScore || 0}%">
                             <span class="chart-bar-value">${stats.byDifficulty.beginner.avgScore || 0}%</span>
                         </div>
@@ -5378,7 +5957,7 @@
                 </div>
                 <div class="chart-bar">
                     <div class="chart-label">📚 Intermediate</div>
-                    <div style="flex:1;background:var(--border-color);border-radius:4px;height:25px;position:relative">
+                    <div style="flex:1;background:#e0e0e0;border-radius:4px;height:25px;position:relative">
                         <div class="chart-bar-fill" style="width:${stats.byDifficulty.intermediate.avgScore || 0}%">
                             <span class="chart-bar-value">${stats.byDifficulty.intermediate.avgScore || 0}%</span>
                         </div>
@@ -5386,7 +5965,7 @@
                 </div>
                 <div class="chart-bar">
                     <div class="chart-label">🎓 Advanced</div>
-                    <div style="flex:1;background:var(--border-color);border-radius:4px;height:25px;position:relative">
+                    <div style="flex:1;background:#e0e0e0;border-radius:4px;height:25px;position:relative">
                         <div class="chart-bar-fill" style="width:${stats.byDifficulty.advanced.avgScore || 0}%">
                             <span class="chart-bar-value">${stats.byDifficulty.advanced.avgScore || 0}%</span>
                         </div>
@@ -5394,7 +5973,7 @@
                 </div>
                 <div class="chart-bar">
                     <div class="chart-label">🏆 Expert</div>
-                    <div style="flex:1;background:var(--border-color);border-radius:4px;height:25px;position:relative">
+                    <div style="flex:1;background:#e0e0e0;border-radius:4px;height:25px;position:relative">
                         <div class="chart-bar-fill" style="width:${stats.byDifficulty.expert.avgScore || 0}%">
                             <span class="chart-bar-value">${stats.byDifficulty.expert.avgScore || 0}%</span>
                         </div>
@@ -5734,7 +6313,7 @@
                     </div>
                 </div>
 
-                <div style="text-align:center;padding:30px;background:var(--card-bg)">
+                <div style="text-align:center;padding:30px;background:#ffffff">
                     <button onclick="printCertificate()" style="padding:15px 30px;background:linear-gradient(135deg,#032a56,#0a4d8f);color:white;border:none;border-radius:8px;font-size:1.1em;font-weight:bold;cursor:pointer;margin-right:10px">
                         🖨️ Print Certificate
                     </button>
@@ -5825,7 +6404,7 @@
 
                 submissions.reverse().forEach((sub, idx) => {
                     submissionsHTML += `
-                        <div style="background:var(--question-bg);padding:20px;border-radius:12px;margin-bottom:15px;border-left:4px solid #032a56">
+                        <div style="background:#f8f9fa;padding:20px;border-radius:12px;margin-bottom:15px;border-left:4px solid #032a56">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
                                 <div style="font-weight:bold;font-size:1.1em">Submission #${submissions.length - idx}</div>
                                 <div style="font-size:0.85em;opacity:0.7">${new Date(sub.submittedAt).toLocaleString()}</div>
@@ -5834,19 +6413,19 @@
                                 <span style="display:inline-block;background:linear-gradient(135deg,#032a56,#0a4d8f);color:white;padding:4px 10px;border-radius:6px;font-size:0.85em;margin-right:8px">
                                     ${sub.difficulty}
                                 </span>
-                                <span style="display:inline-block;background:var(--border-color);padding:4px 10px;border-radius:6px;font-size:0.85em">
+                                <span style="display:inline-block;background:#e0e0e0;padding:4px 10px;border-radius:6px;font-size:0.85em">
                                     ${subcategories[sub.difficulty]?.[sub.subcategory]?.name || sub.subcategory}
                                 </span>
                             </div>
                             <div style="font-weight:600;margin-bottom:10px;font-size:1.05em">${sub.question}</div>
                             <div style="margin-bottom:10px">
                                 ${sub.options.map((opt, i) => `
-                                    <div style="padding:8px;margin:5px 0;background:var(--card-bg);border-radius:6px;${i === sub.correct ? 'border-left:3px solid #28a745;font-weight:600' : ''}">
+                                    <div style="padding:8px;margin:5px 0;background:#ffffff;border-radius:6px;${i === sub.correct ? 'border-left:3px solid #28a745;font-weight:600' : ''}">
                                         ${i + 1}. ${opt} ${i === sub.correct ? '✓' : ''}
                                     </div>
                                 `).join('')}
                             </div>
-                            <div style="background:var(--card-bg);padding:12px;border-radius:8px;margin-bottom:10px">
+                            <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
                                 <div style="font-weight:600;margin-bottom:5px">Explanation:</div>
                                 <div>${sub.explanation}</div>
                             </div>
