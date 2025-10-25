@@ -4908,10 +4908,27 @@
         }
 
         function renderOverallStats(difficulty, stats) {
-            // Calculate total questions: use attempted topics if any, otherwise show all available topics
-            const totalAvailableTopics = Object.keys(subcategories[difficulty]).length;
-            const topicsToShow = stats.topicsAttempted > 0 ? stats.topicsAttempted : totalAvailableTopics;
-            const totalQuestions = topicsToShow * 20; // 20 questions per quiz
+            // Calculate total questions: general quiz has 20, all others have 10
+            const topics = Object.keys(subcategories[difficulty]);
+            let totalQuestions = 0;
+
+            // Calculate based on topics attempted, or all available topics
+            if (stats.topicsAttempted > 0) {
+                // Count questions from attempted topics
+                topics.forEach(topic => {
+                    const subKey = `${difficulty}_${topic}`;
+                    const subStats = stats.bySubcategory?.[subKey];
+                    if (subStats && subStats.taken > 0) {
+                        totalQuestions += topic === 'general' ? 20 : 10;
+                    }
+                });
+            } else {
+                // Count all available topics
+                topics.forEach(topic => {
+                    totalQuestions += topic === 'general' ? 20 : 10;
+                });
+            }
+
             const progress = totalQuestions > 0 ? (stats.totalCompleted / totalQuestions * 100).toFixed(0) : 0;
 
             return `
@@ -4977,13 +4994,16 @@
             const subKey = `${difficulty}_${subcategory}`;
             const subStats = stats.bySubcategory[subKey];
 
+            // General quizzes have 20 questions, all other subcategories have 10 questions
+            const totalQuestions = subcategory === 'general' ? 20 : 10;
+
             if (!subStats || subStats.taken === 0) {
                 return {
                     taken: 0,
                     bestScore: null,
                     avgScore: 0,
                     bestPercentage: 0,
-                    totalQuestions: 20,
+                    totalQuestions: totalQuestions,
                     lastAttempt: null,
                     completed: false
                 };
@@ -4994,7 +5014,7 @@
                 bestScore: subStats.bestScore || 0,
                 avgScore: subStats.avgScore || 0,
                 bestPercentage: subStats.bestPercentage || 0,
-                totalQuestions: 20,
+                totalQuestions: totalQuestions,
                 lastAttempt: subStats.lastAttempt || null,
                 completed: subStats.completed || false
             };
