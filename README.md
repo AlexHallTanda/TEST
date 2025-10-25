@@ -109,15 +109,14 @@ If you host the quiz online, generate a QR code for the URL:
 - 📚 **Subcategories**: Focus on specific topics within each difficulty
 - 🎲 **General Quiz**: 20-question mixed quiz for comprehensive testing
 - 🎲 **Randomized Questions**: Different questions each time
-- 💡 **Explanations with Help Links**: Learn from detailed explanations with links to Tanda Help Guide
-- 💾 **Auto-Save Progress**: Resume unfinished quizzes
-- ⏱️ **Optional Timer**: Timed mode for extra challenge
-- 📊 **Statistics & Progress Bars**: Track your performance over time with visual progress indicators
-- 💡 **Submit Questions**: Contribute your own quiz questions
-- 📱 **Mobile Friendly**: Works on all devices
-- 🔖 **Bookmark Questions**: Flag difficult questions for later review
-- 🃏 **Flashcard Study Mode**: Study questions in flashcard format with flip animations and dropdown topic selection
+- 💡 **Explanations**: Learn from detailed explanations with links to Tanda Help Guide
+- 💾 **Auto-Save Progress**: Resume unfinished quizzes anytime
+- ⏱️ **Optional Timer**: Challenge yourself with timed mode
+- 📊 **Statistics**: Track your performance and progress over time
+- 🃏 **Flashcard Mode**: Study questions in flashcard format
 - ✅ **Multiple Question Types**: True/False, Multiple Choice, Multiple Select, Fill-in-the-Blank
+- 📱 **Mobile Friendly**: Fully responsive design works on all devices
+- 💡 **Submit Questions**: Contribute your own quiz questions
 
 ## Quiz Difficulty Levels & Subcategories
 

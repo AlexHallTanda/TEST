@@ -894,34 +894,6 @@
             gap: 8px;
         }
 
-        .bookmark-btn {
-            background: none;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 1.2em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .bookmark-btn:hover {
-            border-color: #032a56;
-            background: #e8f1f8;
-            transform: scale(1.1);
-        }
-
-        .bookmark-btn.bookmarked {
-            border-color: #ffc107;
-            background: #fff3cd;
-        }
-
-        .bookmark-btn.bookmarked:hover {
-            border-color: #ff9800;
-            background: #ffe082;
-        }
 
         .question-text {
             font-size: 1.25em;
@@ -1978,10 +1950,6 @@
                     <span>🃏</span>
                     <span>Flashcards</span>
                 </button>
-                <button class="stats-btn" onclick="showBookmarkedQuestions()" aria-label="View bookmarked questions">
-                    <span>🔖</span>
-                    <span>Bookmarks</span>
-                </button>
                 <button class="stats-btn" onclick="showDashboard()" aria-label="View dashboard">
                     <span>📈</span>
                     <span>Dashboard</span>
@@ -2030,14 +1998,24 @@
                 </div>
 
                 <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Answer Options * (enter 4 options)</label>
-                    <input type="text" id="option1" required placeholder="Option 1" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
-                    <input type="text" id="option2" required placeholder="Option 2" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
-                    <input type="text" id="option3" required placeholder="Option 3" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
-                    <input type="text" id="option4" required placeholder="Option 4" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                    <label for="questionType" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Question Type *</label>
+                    <select id="questionType" required onchange="updateQuestionTypeOptions()" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                        <option value="">-- Select question type --</option>
+                        <option value="multiple-choice">Multiple Choice (one correct answer)</option>
+                        <option value="true-false">True or False</option>
+                        <option value="multiple-select">Select All That Apply (multiple correct answers)</option>
+                    </select>
                 </div>
 
-                <div>
+                <div id="optionsContainer">
+                    <label id="optionsLabel" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Answer Options * (enter 4 options)</label>
+                    <input type="text" id="option1" required placeholder="Option 1" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                    <input type="text" id="option2" required placeholder="Option 2" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                    <input type="text" id="option3" placeholder="Option 3" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                    <input type="text" id="option4" placeholder="Option 4" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                </div>
+
+                <div id="correctAnswerContainer">
                     <label for="correctAnswer" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Correct Answer *</label>
                     <select id="correctAnswer" required style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
                         <option value="">-- Select the correct option --</option>
@@ -2046,6 +2024,24 @@
                         <option value="2">Option 3</option>
                         <option value="3">Option 4</option>
                     </select>
+                </div>
+
+                <div id="multipleCorrectContainer" class="hidden">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Correct Answers * (select all that apply)</label>
+                    <div style="background: #ffffff; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        <label style="display: block; margin-bottom: 8px; cursor: pointer;">
+                            <input type="checkbox" id="correct1" style="margin-right: 8px;"> Option 1
+                        </label>
+                        <label style="display: block; margin-bottom: 8px; cursor: pointer;">
+                            <input type="checkbox" id="correct2" style="margin-right: 8px;"> Option 2
+                        </label>
+                        <label style="display: block; margin-bottom: 8px; cursor: pointer;">
+                            <input type="checkbox" id="correct3" style="margin-right: 8px;"> Option 3
+                        </label>
+                        <label style="display: block; cursor: pointer;">
+                            <input type="checkbox" id="correct4" style="margin-right: 8px;"> Option 4
+                        </label>
+                    </div>
                 </div>
 
                 <div>
@@ -2083,17 +2079,79 @@
             </form>
 
             <div id="submissionSuccess" class="hidden" style="margin-top: 20px; padding: 15px; background: #d4edda; border: 2px solid #28a745; border-radius: 8px; color: #155724;">
-                <strong>✅ Thank you!</strong> Your question has been saved locally. In a full implementation, this would be sent to a server for review.
+                <strong>✅ Thank you!</strong> Your question has been saved successfully.
             </div>
             </div><!-- End questionFormContent -->
         </div>
 
-        <!-- View Submissions Section (Password Protected) -->
-        <div id="viewSubmissionsSection" style="margin-top: 20px; text-align: center;">
-            <button class="stats-btn" onclick="showSubmissionsWithPassword()" aria-label="View submitted questions" style="background:linear-gradient(135deg,#f093fb,#f5576c); padding: 12px 24px; font-size: 1em;">
-                <span>📝</span>
-                <span>View Submissions</span>
-            </button>
+        <!-- Bug Report Section -->
+        <div id="bugReportSection" style="margin-top: 30px; padding: 25px; background: #fff3cd; border-radius: 12px; border-left: 5px solid #ffc107;">
+            <h2 onclick="toggleBugForm()" style="color: #856404; margin-bottom: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; transition: all 0.3s ease;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                <span id="bugFormToggleIcon">▶</span>
+                <span>🐛</span>
+                <span>Report a Bug</span>
+                <small style="margin-left: auto; font-size: 0.6em; opacity: 0.7; font-weight: normal;">Click to expand</small>
+            </h2>
+
+            <div id="bugFormContent" class="hidden">
+                <p style="margin: 20px 0; color: #333333; line-height: 1.6;">
+                    Found something that's not working correctly? Let us know so we can fix it!
+                </p>
+
+                <form id="submitBugForm" style="display: flex; flex-direction: column; gap: 15px;">
+                <div>
+                    <label for="bugTitle" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Bug Title *</label>
+                    <input type="text" id="bugTitle" required placeholder="Brief description of the issue..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                </div>
+
+                <div>
+                    <label for="bugDescription" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Description *</label>
+                    <textarea id="bugDescription" required rows="4" placeholder="What happened? What did you expect to happen?" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label for="bugSteps" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Steps to Reproduce (optional)</label>
+                    <textarea id="bugSteps" rows="3" placeholder="1. Go to...&#10;2. Click on...&#10;3. See error..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label for="bugDevice" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Device/Browser *</label>
+                    <input type="text" id="bugDevice" required placeholder="e.g., Chrome on Windows, Safari on iPhone..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                </div>
+
+                <button type="submit" style="padding: 15px; background: linear-gradient(135deg, #ffc107, #ff9800); color: #333; border: none; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(255, 193, 7, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                    Submit Bug Report
+                </button>
+            </form>
+
+            <div id="bugSubmissionSuccess" class="hidden" style="margin-top: 20px; padding: 15px; background: #d4edda; border: 2px solid #28a745; border-radius: 8px; color: #155724;">
+                <strong>✅ Thank you!</strong> Your bug report has been saved. We'll look into it!
+            </div>
+            </div><!-- End bugFormContent -->
+        </div>
+
+        <!-- View Sections (Password Protected) -->
+        <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <div id="viewSubmissionsSection">
+                <button class="stats-btn" onclick="showSubmissionsWithPassword()" aria-label="View submitted questions" style="background:linear-gradient(135deg,#f093fb,#f5576c); padding: 12px 24px; font-size: 1em;">
+                    <span>📝</span>
+                    <span>View Submissions</span>
+                </button>
+            </div>
+
+            <div id="viewBugReportsSection">
+                <button class="stats-btn" onclick="showBugReportsWithPassword()" aria-label="View submitted bug reports" style="background:linear-gradient(135deg,#ffc107,#ff9800); padding: 12px 24px; font-size: 1em;">
+                    <span>🐛</span>
+                    <span>View Bug Reports</span>
+                </button>
+            </div>
+
+            <div id="viewIncorrectAnswersSection">
+                <button class="stats-btn" onclick="showIncorrectAnswersWithPassword()" aria-label="View incorrect answer reports" style="background:linear-gradient(135deg,#dc3545,#c82333); padding: 12px 24px; font-size: 1em;">
+                    <span>❌</span>
+                    <span>View Incorrect Answers</span>
+                </button>
+            </div>
         </div>
 
         <!-- Quiz Preview Section -->
@@ -2178,25 +2236,6 @@
             </div>
         </div>
 
-        <!-- Bookmarks Viewer -->
-        <div id="bookmarksViewer" class="flashcard-container hidden">
-            <div class="flashcard-header">
-                <h2>🔖 Your Bookmarked Questions</h2>
-                <p class="flashcard-subtitle">Review questions you've saved for later study</p>
-            </div>
-
-            <div id="bookmarksContent" class="bookmarks-content">
-                <!-- Bookmarks will be dynamically rendered here -->
-            </div>
-
-            <div class="flashcard-actions" style="margin-top: 20px;">
-                <button class="back-btn" onclick="closeBookmarksViewer()">← Back to Main Menu</button>
-                <button class="flashcard-btn primary" onclick="startFlashcardsFromBookmarks()" id="bookmarkFlashcardBtn">
-                    🃏 Study as Flashcards
-                </button>
-            </div>
-        </div>
-
         <div id="quizContainer" class="quiz-container" role="main">
             <div id="quizTitle" class="quiz-title"></div>
             <div class="quiz-header">
@@ -2222,7 +2261,10 @@
                 <p class="score-percentage" id="scorePercentage"></p>
             </div>
             <div id="answersReview"></div>
-            <button class="restart-btn" onclick="restartQuiz()">Take Another Quiz</button>
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                <button class="restart-btn" onclick="retryQuiz()">Retry This Quiz</button>
+                <button class="restart-btn" onclick="restartQuiz()">Take Another Quiz</button>
+            </div>
         </div>
     </div>
 
@@ -2276,11 +2318,85 @@
         </div>
     </div>
 
+    <!-- Bug Reports Modal -->
+    <div id="bugReportsModal" class="stats-modal" role="dialog" aria-labelledby="bugReportsTitle" aria-modal="true">
+        <div class="stats-content" style="max-width: 1000px; max-height: 90vh; overflow-y: auto;">
+            <div class="stats-header">
+                <h2 id="bugReportsTitle">🐛 Bug Reports</h2>
+                <button class="close-btn" onclick="closeBugReports()" aria-label="Close bug reports">&times;</button>
+            </div>
+            <div id="bugReportsContainer"></div>
+        </div>
+    </div>
+
+    <!-- Incorrect Answers Modal -->
+    <div id="incorrectAnswersModal" class="stats-modal" role="dialog" aria-labelledby="incorrectAnswersTitle" aria-modal="true">
+        <div class="stats-content" style="max-width: 1000px; max-height: 90vh; overflow-y: auto;">
+            <div class="stats-header">
+                <h2 id="incorrectAnswersTitle">❌ Incorrect Answer Reports</h2>
+                <button class="close-btn" onclick="closeIncorrectAnswers()" aria-label="Close incorrect answer reports">&times;</button>
+            </div>
+            <div id="incorrectAnswersContainer"></div>
+        </div>
+    </div>
+
+    <!-- Quick Incorrect Answer Report Modal -->
+    <div id="quickIncorrectAnswerModal" class="stats-modal" role="dialog" aria-labelledby="quickIncorrectAnswerTitle" aria-modal="true">
+        <div class="stats-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
+            <div class="stats-header">
+                <h2 id="quickIncorrectAnswerTitle">❌ Report Incorrect Answer</h2>
+                <button class="close-btn" onclick="closeQuickIncorrectAnswerReport()" aria-label="Close report">&times;</button>
+            </div>
+            <div id="quickIncorrectAnswerContent" style="padding: 20px;">
+                <form id="quickIncorrectAnswerForm" onsubmit="submitQuickIncorrectAnswerReport(event)" style="display: flex; flex-direction: column; gap: 20px;">
+                    <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border-left: 4px solid #dc3545;">
+                        <div style="font-weight: 600; margin-bottom: 8px;">Question:</div>
+                        <div id="quickReportQuestion" style="margin-bottom: 12px;"></div>
+                        <div style="font-weight: 600; margin-bottom: 8px;">Current Answer:</div>
+                        <div id="quickReportCurrentAnswer"></div>
+                    </div>
+
+                    <div>
+                        <label for="quickSuggestedAnswer" style="display: block; font-weight: 600; margin-bottom: 8px;">
+                            Suggested Correct Answer <span style="color: #dc3545;">*</span>
+                        </label>
+                        <input type="text" id="quickSuggestedAnswer" required
+                               placeholder="What should be the correct answer?"
+                               style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                    </div>
+
+                    <div>
+                        <label for="quickReason" style="display: block; font-weight: 600; margin-bottom: 8px;">
+                            Reason/Explanation <span style="color: #dc3545;">*</span>
+                        </label>
+                        <textarea id="quickReason" rows="4" required
+                                  placeholder="Why do you think this answer is incorrect? Include links to Tanda documentation if possible..."
+                                  style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; resize: vertical;"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="quickReference" style="display: block; font-weight: 600; margin-bottom: 8px;">
+                            Reference Link (optional)
+                        </label>
+                        <input type="url" id="quickReference"
+                               placeholder="https://help.tanda.com/..."
+                               style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                    </div>
+
+                    <button type="submit"
+                            style="padding: 15px; background: linear-gradient(135deg, #dc3545, #c82333); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1em; cursor: pointer;">
+                        Submit Report
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Subcategory metadata
         const subcategories = {
             beginner: {
-                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
+                'general': { name: 'General Quiz', icon: '🎯', description: '20 mixed questions' },
                 'time-attendance': { name: 'Time & Attendance Basics', icon: '' },
                 'rostering': { name: 'Rostering Fundamentals', icon: '' },
                 'leave': { name: 'Leave Management', icon: '' },
@@ -2289,7 +2405,7 @@
                 'payroll-basics': { name: 'Payroll Basics', icon: '💰', description: 'Payroll setup and processing fundamentals' }
             },
             intermediate: {
-                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
+                'general': { name: 'General Quiz', icon: '🎯', description: '20 mixed questions' },
                 'advanced-rostering': { name: 'Advanced Rostering', icon: '' },
                 'timesheets': { name: 'Timesheet Management', icon: '' },
                 'awards': { name: 'Awards & Pay Rules', icon: '' },
@@ -2298,7 +2414,7 @@
                 'payroll-processing': { name: 'Payroll Processing', icon: '💰', description: 'Payroll runs and troubleshooting' }
             },
             advanced: {
-                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
+                'general': { name: 'General Quiz', icon: '🎯', description: '20 mixed questions' },
                 'compliance': { name: 'Compliance & Awards', icon: '' },
                 'cost-management': { name: 'Cost Management', icon: '' },
                 'integrations': { name: 'Integrations', icon: '' },
@@ -2307,7 +2423,7 @@
                 'payroll-advanced': { name: 'Advanced Payroll', icon: '💰', description: 'Complex payroll scenarios and troubleshooting' }
             },
             expert: {
-                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
+                'general': { name: 'General Quiz', icon: '🎯', description: '20 mixed questions' },
                 'api': { name: 'API & Automation', icon: '' },
                 'enterprise': { name: 'Enterprise Configuration', icon: '' },
                 'workflows': { name: 'Custom Workflows', icon: '' },
@@ -2431,6 +2547,105 @@
                     ],
                     correct: 1,
                     explanation: "Tanda supports multiple notification channels including push notifications, email, and SMS to ensure employees are promptly informed of schedule changes."
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda can track both rostered shifts and actual hours worked.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda tracks both planned schedules (rosters) and actual time worked (timesheets), allowing managers to compare scheduled vs actual hours for better workforce planning."
+                },
+                {
+                    question: "What is the main purpose of timesheet approval in Tanda?",
+                    options: [
+                        "To delete employee records",
+                        "To verify hours worked before payroll processing",
+                        "To create new shifts",
+                        "To send marketing emails"
+                    ],
+                    correct: 1,
+                    explanation: "Timesheet approval ensures that all hours worked are reviewed and confirmed by managers before being sent to payroll, maintaining accuracy in wage calculations."
+                },
+                {
+                    question: "Can employees set their preferred working hours in Tanda?",
+                    options: [
+                        "No, only managers can set schedules",
+                        "Yes, through availability settings",
+                        "Only for full-time employees",
+                        "Preferences cannot be recorded"
+                    ],
+                    correct: 1,
+                    explanation: "Employees can set their availability preferences in Tanda, helping managers create schedules that accommodate employee needs while meeting business requirements."
+                },
+                {
+                    type: 'true-false',
+                    question: "Managers can export timesheet data from Tanda for payroll processing.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda allows managers to export timesheet data in various formats or integrate directly with payroll systems for seamless processing.",
+                    helpLink: "https://help.tanda.co/en/collections/31866-timesheets"
+                },
+                {
+                    question: "What happens to leave balances when employees take approved time off?",
+                    options: [
+                        "They remain unchanged",
+                        "They decrease by the amount of leave taken",
+                        "They increase automatically",
+                        "Leave balances are not tracked"
+                    ],
+                    correct: 1,
+                    explanation: "When employees take approved leave, their leave balance automatically decreases by the corresponding amount, keeping accurate records of remaining entitlements."
+                },
+                {
+                    question: "Which feature helps employees remember to clock in for their shifts?",
+                    options: [
+                        "Alarm clocks at home",
+                        "Shift reminder notifications",
+                        "Physical mail",
+                        "No reminder feature exists"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda sends shift reminder notifications via push notifications, email, or SMS to help employees remember their upcoming shifts and clock in on time."
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda allows businesses to set up multiple locations with different settings.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda supports multi-location businesses, allowing each location to have customized settings, teams, and rosters while maintaining centralized oversight.",
+                    helpLink: "https://help.tanda.co/en/collections/31632-settings"
+                },
+                {
+                    question: "What is a common use for Tanda's reporting features?",
+                    options: [
+                        "Ordering office supplies",
+                        "Analyzing labor costs and attendance patterns",
+                        "Booking travel",
+                        "Managing customer orders"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda's reporting features provide insights into labor costs, attendance patterns, overtime, and other workforce metrics to support data-driven business decisions.",
+                    helpLink: "https://help.tanda.co/en/collections/31849-reports"
+                },
+                {
+                    type: 'true-false',
+                    question: "Employees can view their timesheets before they are approved by managers.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Employees have access to view their own timesheets in real-time, allowing them to verify accuracy before manager approval.",
+                    helpLink: "https://help.tanda.co/en/collections/31866-timesheets"
+                },
+                {
+                    question: "What is the main benefit of using roster templates in Tanda?",
+                    options: [
+                        "They make rosters look prettier",
+                        "They save time by reusing common scheduling patterns",
+                        "They are required by law",
+                        "Templates cost extra money"
+                    ],
+                    correct: 1,
+                    explanation: "Roster templates allow managers to save and reuse recurring schedule patterns, significantly reducing the time needed to create weekly rosters.",
+                    helpLink: "https://help.tanda.co/en/collections/31535-rosters"
                 }
                 ],
                 'time-attendance': [
@@ -3231,6 +3446,118 @@
                     ],
                     correct: 1,
                     explanation: "Open shifts are unassigned shifts that qualified employees can claim on a first-come-first-served basis, increasing flexibility and employee engagement."
+                },
+                {
+                    type: 'true-false',
+                    question: "Award rules in Tanda can automatically apply penalty rates for weekend and night shifts.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda's award engine automatically calculates and applies penalty rates, allowances, and loadings based on configured award rules and shift times.",
+                    helpLink: "https://help.tanda.co/en/collections/31881-pay-rates-awards"
+                },
+                {
+                    question: "What is the benefit of integrating Tanda with payroll software?",
+                    options: [
+                        "It's not possible to integrate",
+                        "Eliminates manual data entry and reduces payroll errors",
+                        "Only for tracking employee birthdays",
+                        "No real benefits"
+                    ],
+                    correct: 1,
+                    explanation: "Payroll integration seamlessly transfers approved timesheet data directly to payroll systems, eliminating double entry and minimizing errors.",
+                    helpLink: "https://help.tanda.co/en/collections/31922-integrations"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "Which of these reports can Tanda generate? (Select all that apply)",
+                    options: [
+                        "Labor cost reports",
+                        "Attendance summaries",
+                        "Leave balance reports",
+                        "Weather forecasts",
+                        "Overtime reports"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Tanda provides comprehensive workforce reporting including labor costs, attendance, leave balances, and overtime. Weather forecasting is not a feature.",
+                    helpLink: "https://help.tanda.co/en/collections/31849-reports"
+                },
+                {
+                    question: "What is 'timesheet locking' in Tanda?",
+                    options: [
+                        "Preventing employees from clocking in",
+                        "Finalizing timesheets to prevent further edits before payroll",
+                        "A security feature for the app",
+                        "Locking employees out of the system"
+                    ],
+                    correct: 1,
+                    explanation: "Timesheet locking freezes approved timesheets to prevent accidental changes after they've been finalized for payroll processing.",
+                    helpLink: "https://help.tanda.co/en/collections/31866-timesheets"
+                },
+                {
+                    question: "Can Tanda send alerts when employees are approaching overtime thresholds?",
+                    options: [
+                        "No, overtime must be tracked manually",
+                        "Yes, it can alert managers proactively",
+                        "Only at the end of the pay period",
+                        "Overtime tracking doesn't exist"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda can send real-time alerts when employees approach or exceed overtime thresholds, helping managers control labor costs.",
+                    helpLink: "https://help.tanda.co/en/collections/31849-reports"
+                },
+                {
+                    type: 'true-false',
+                    question: "Managers can bulk-approve multiple timesheets at once in Tanda.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda supports bulk timesheet approval, allowing managers to efficiently review and approve multiple employee timesheets simultaneously.",
+                    helpLink: "https://help.tanda.co/en/collections/31866-timesheets"
+                },
+                {
+                    question: "What are 'shift tags' or 'qualifications' used for in rostering?",
+                    options: [
+                        "To identify parking spaces",
+                        "To match employees with appropriate skills to specific shifts",
+                        "To track employee hobbies",
+                        "They serve no purpose"
+                    ],
+                    correct: 1,
+                    explanation: "Shift tags and qualifications ensure that only employees with required skills, certifications, or training are assigned to specific shifts.",
+                    helpLink: "https://help.tanda.co/en/collections/31526-workforce"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "What can cause a timesheet to require manager attention? (Select all that apply)",
+                    options: [
+                        "Missing clock out",
+                        "Overtime hours",
+                        "Late clock in",
+                        "Employee's favorite color",
+                        "Unscheduled shift"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Timesheets may flag for issues like missing clock outs, overtime, late arrivals, or unscheduled work. Personal preferences are not tracked.",
+                    helpLink: "https://help.tanda.co/en/collections/31866-timesheets"
+                },
+                {
+                    question: "What is a 'roster cost' in Tanda?",
+                    options: [
+                        "The price of the software",
+                        "The total projected labor cost for scheduled shifts",
+                        "Equipment expenses",
+                        "Travel costs"
+                    ],
+                    correct: 1,
+                    explanation: "Roster cost shows the projected total labor expense based on scheduled shifts and employee pay rates, helping managers stay within budget.",
+                    helpLink: "https://help.tanda.co/en/collections/31849-reports"
+                },
+                {
+                    type: 'true-false',
+                    question: "Managers can view a comparison of rostered hours versus actual worked hours in Tanda.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda provides reports and dashboards comparing scheduled hours (from rosters) against actual hours worked (from timesheets), helping identify scheduling efficiency and labor variance.",
+                    helpLink: "https://help.tanda.co/en/collections/31849-reports"
                 }
                 ],
                 'advanced-rostering': [
@@ -4039,6 +4366,118 @@
                     ],
                     correct: 1,
                     explanation: "Tanda offers comprehensive reporting including custom report builder, real-time dashboards, scheduled reports, and CSV/Excel exports for detailed analysis."
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda can integrate with accounting software like Xero and MYOB for seamless payroll export.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda offers direct integrations with major accounting and payroll platforms, automatically exporting approved timesheets and pay data.",
+                    helpLink: "https://help.tanda.co/en/collections/31922-integrations"
+                },
+                {
+                    question: "What is 'geofencing' in the context of Tanda's time tracking?",
+                    options: [
+                        "A type of fence for office buildings",
+                        "Location-based restrictions on where employees can clock in",
+                        "Employee parking management",
+                        "Geofencing is not available"
+                    ],
+                    correct: 1,
+                    explanation: "Geofencing uses GPS to create virtual boundaries, ensuring employees can only clock in when physically present at designated work locations.",
+                    helpLink: "https://help.tanda.co/en/collections/31588-time-clock-timesheets-leave"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "Which data sources can Tanda use for demand forecasting? (Select all that apply)",
+                    options: [
+                        "Historical sales data",
+                        "Foot traffic patterns",
+                        "Weather predictions",
+                        "Social media likes",
+                        "Seasonal trends"
+                    ],
+                    correct: [0, 1, 4],
+                    explanation: "Tanda uses historical sales, foot traffic, and seasonal patterns for demand forecasting. Weather and social media are not standard data sources.",
+                    helpLink: "https://help.tanda.co/en/collections/31535-rosters"
+                },
+                {
+                    question: "What is the purpose of 'Award Templates' in Tanda?",
+                    options: [
+                        "To give employees awards",
+                        "Pre-configured pay rules matching modern awards and agreements",
+                        "Template emails",
+                        "Award templates don't exist"
+                    ],
+                    correct: 1,
+                    explanation: "Award templates are pre-built configurations that match modern awards and enterprise agreements, ensuring compliant pay calculations without manual setup.",
+                    helpLink: "https://help.tanda.co/en/collections/31881-pay-rates-awards"
+                },
+                {
+                    question: "Can Tanda track multiple employment types (casual, part-time, full-time)?",
+                    options: [
+                        "No, only one type per organization",
+                        "Yes, with different rules and entitlements for each",
+                        "Only full-time employees",
+                        "Employment types are not tracked"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda supports different employment types with type-specific pay rules, leave entitlements, and compliance requirements for each classification.",
+                    helpLink: "https://help.tanda.co/en/collections/31526-workforce"
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda's API allows businesses to build custom integrations with other software systems.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda provides a comprehensive API that enables custom integrations, data synchronization, and automation with third-party systems.",
+                    helpLink: "https://my.tanda.co/api/v2/documentation"
+                },
+                {
+                    question: "What is 'Tanda Payroll' and how does it differ from integrations?",
+                    options: [
+                        "It's the same as integrations",
+                        "A built-in payroll processing system within Tanda",
+                        "Only for Australian businesses",
+                        "Tanda Payroll doesn't exist"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda Payroll is an integrated payroll solution that processes pay runs directly within Tanda, eliminating the need for external payroll software.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "What advanced features can help reduce labor costs? (Select all that apply)",
+                    options: [
+                        "Overtime alerts",
+                        "Budget tracking",
+                        "Demand-based scheduling",
+                        "Employee birthday reminders",
+                        "Shift optimization suggestions"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Cost reduction features include overtime monitoring, budget tracking, demand forecasting, and shift optimization. Birthday reminders don't affect labor costs.",
+                    helpLink: "https://help.tanda.co/en/collections/31849-reports"
+                },
+                {
+                    question: "How does Tanda handle leave loading for annual leave payouts?",
+                    options: [
+                        "Leave loading is not supported",
+                        "Automatically calculates based on award rules (e.g., 17.5%)",
+                        "Must be calculated manually outside Tanda",
+                        "Only for managers"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda automatically applies leave loading percentages when processing annual leave payouts, as specified by the employee's award or agreement.",
+                    helpLink: "https://help.tanda.co/en/collections/31906-leave"
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda can automatically calculate superannuation contributions based on Australian legislation.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda automatically calculates superannuation at the legislated rate, factoring in Ordinary Time Earnings and other relevant components.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
                 }
                 ],
                 'compliance': [
@@ -4881,6 +5320,118 @@
                     ],
                     correct: 1,
                     explanation: "Enterprise customers can customize branding elements like logos, color schemes, and domain names, though complete white-labeling has limitations to maintain platform consistency."
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda supports webhooks for real-time event notifications to external systems.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Webhooks enable Tanda to push real-time notifications to external systems when events occur, such as timesheet approvals or roster changes.",
+                    helpLink: "https://my.tanda.co/api/v2/documentation"
+                },
+                {
+                    question: "What is the purpose of 'Data Streaming' in Tanda?",
+                    options: [
+                        "Streaming music to employees",
+                        "Real-time continuous export of data to data warehouses and BI tools",
+                        "Video conferencing",
+                        "Data streaming is not available"
+                    ],
+                    correct: 1,
+                    explanation: "Data Streaming provides continuous, real-time export of Tanda data to external data warehouses for advanced analytics and business intelligence.",
+                    helpLink: "https://my.tanda.co/api/v2/documentation"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "Which enterprise configuration options are available in Tanda? (Select all that apply)",
+                    options: [
+                        "Single Sign-On (SSO/SAML)",
+                        "Custom approval workflows",
+                        "Multi-location hierarchies",
+                        "Telepathy integration",
+                        "Advanced permission groups"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Enterprise features include SSO, custom workflows, multi-location support, and granular permissions. Telepathy is not a real integration.",
+                    helpLink: "https://help.tanda.co/en/collections/31632-settings"
+                },
+                {
+                    question: "How does Tanda handle complex award interpretations with multiple penalty rate stacking?",
+                    options: [
+                        "Only one penalty rate can apply at a time",
+                        "Award engine evaluates and stacks applicable penalties in correct order",
+                        "Manual calculation required",
+                        "Penalty stacking is not supported"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda's award engine can evaluate multiple penalty conditions (weekend, overtime, late night) and apply them in the correct order per award rules.",
+                    helpLink: "https://help.tanda.co/en/collections/31881-pay-rates-awards"
+                },
+                {
+                    question: "What is 'Custom Field' functionality in Tanda used for?",
+                    options: [
+                        "Customizing the background color",
+                        "Adding business-specific data fields to employees, shifts, or timesheets",
+                        "Custom fields are not available",
+                        "Only for storing notes"
+                    ],
+                    correct: 1,
+                    explanation: "Custom fields allow businesses to capture and track additional data specific to their needs, such as project codes, cost centers, or custom attributes.",
+                    helpLink: "https://help.tanda.co/en/collections/31526-workforce"
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda can enforce complex compliance rules like maximum consecutive days worked or minimum hours between shifts.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Compliance rules can be configured to enforce various regulations including consecutive work limits, rest periods, and other award-mandated requirements.",
+                    helpLink: "https://help.tanda.co/en/collections/1870893-compliance"
+                },
+                {
+                    question: "What is the purpose of 'Org Units' or organizational hierarchies in Tanda?",
+                    options: [
+                        "They have no purpose",
+                        "To structure multi-location businesses with centralized reporting and distributed management",
+                        "Only for storing contact information",
+                        "Organizational units are not supported"
+                    ],
+                    correct: 1,
+                    explanation: "Organizational hierarchies allow structuring of multi-location enterprises with regional management, consolidated reporting, and granular access control.",
+                    helpLink: "https://help.tanda.co/en/collections/31526-workforce"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "Which data export and reporting capabilities does Tanda provide? (Select all that apply)",
+                    options: [
+                        "Scheduled automated reports",
+                        "Custom report builder",
+                        "API data extraction",
+                        "Mind reading",
+                        "Data streaming to BI tools"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Tanda offers scheduled reports, custom report building, API access, and data streaming capabilities. Mind reading is not a feature.",
+                    helpLink: "https://help.tanda.co/en/collections/31849-reports"
+                },
+                {
+                    question: "How does Tanda support different pay cycle periods (weekly, fortnightly, monthly)?",
+                    options: [
+                        "Only weekly pay cycles",
+                        "Configurable pay cycles with appropriate date calculations and accruals",
+                        "Pay cycles must be set manually each time",
+                        "Pay cycles are not supported"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda supports multiple pay cycle configurations, automatically handling date ranges, leave accruals, and reporting periods appropriate to each cycle.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda can calculate and track long service leave accruals based on Australian state legislation.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda tracks long service leave accruals based on state-specific rules and employment duration, ensuring compliance with varying state legislation.",
+                    helpLink: "https://help.tanda.co/en/collections/31906-leave"
                 }
                 ],
                 'api': [
@@ -5351,41 +5902,9 @@
         let timeRemaining = 0;
         let timerEnabled = false;
         let quizStartTime = null;
-        let bookmarkedQuestions = {}; // Changed to object: { "difficulty-subcategory": [questionIndexes] }
         let flashcardMode = false;
         let flashcardQuestions = [];
         let currentFlashcardIndex = 0;
-
-        // Load global bookmarks from localStorage
-        function loadGlobalBookmarks() {
-            const saved = localStorage.getItem('tandaQuizBookmarks');
-            if (saved) {
-                try {
-                    bookmarkedQuestions = JSON.parse(saved);
-                } catch (e) {
-                    bookmarkedQuestions = {};
-                }
-            }
-        }
-
-        // Save global bookmarks to localStorage
-        function saveGlobalBookmarks() {
-            localStorage.setItem('tandaQuizBookmarks', JSON.stringify(bookmarkedQuestions));
-        }
-
-        // Get bookmark key for current quiz
-        function getBookmarkKey() {
-            return `${currentDifficulty}-${currentSubcategory}`;
-        }
-
-        // Get bookmarks for current quiz
-        function getCurrentQuizBookmarks() {
-            const key = getBookmarkKey();
-            return bookmarkedQuestions[key] || [];
-        }
-
-        // Load bookmarks on page load
-        loadGlobalBookmarks();
 
         // Timer durations in seconds for each difficulty
         const timerDurations = {
@@ -5476,10 +5995,27 @@
         }
 
         function renderOverallStats(difficulty, stats) {
-            // Calculate total questions: use attempted topics if any, otherwise show all available topics
-            const totalAvailableTopics = Object.keys(subcategories[difficulty]).length;
-            const topicsToShow = stats.topicsAttempted > 0 ? stats.topicsAttempted : totalAvailableTopics;
-            const totalQuestions = topicsToShow * 10; // 10 questions per quiz
+            // Calculate total questions by getting actual count from quiz data
+            const topics = Object.keys(subcategories[difficulty]);
+            let totalQuestions = 0;
+
+            // Calculate based on topics attempted, or all available topics
+            if (stats.topicsAttempted > 0) {
+                // Count questions from attempted topics
+                topics.forEach(topic => {
+                    const subKey = `${difficulty}_${topic}`;
+                    const subStats = stats.bySubcategory?.[subKey];
+                    if (subStats && subStats.taken > 0) {
+                        totalQuestions += quizData[difficulty]?.[topic]?.length || 10;
+                    }
+                });
+            } else {
+                // Count all available topics
+                topics.forEach(topic => {
+                    totalQuestions += quizData[difficulty]?.[topic]?.length || 10;
+                });
+            }
+
             const progress = totalQuestions > 0 ? (stats.totalCompleted / totalQuestions * 100).toFixed(0) : 0;
 
             return `
@@ -5545,13 +6081,16 @@
             const subKey = `${difficulty}_${subcategory}`;
             const subStats = stats.bySubcategory[subKey];
 
+            // Get actual question count from quiz data
+            const totalQuestions = quizData[difficulty]?.[subcategory]?.length || 10;
+
             if (!subStats || subStats.taken === 0) {
                 return {
                     taken: 0,
                     bestScore: null,
                     avgScore: 0,
                     bestPercentage: 0,
-                    totalQuestions: 10,
+                    totalQuestions: totalQuestions,
                     lastAttempt: null,
                     completed: false
                 };
@@ -5562,7 +6101,7 @@
                 bestScore: subStats.bestScore || 0,
                 avgScore: subStats.avgScore || 0,
                 bestPercentage: subStats.bestPercentage || 0,
-                totalQuestions: 10,
+                totalQuestions: totalQuestions,
                 lastAttempt: subStats.lastAttempt || null,
                 completed: subStats.completed || false
             };
@@ -5619,7 +6158,8 @@
                 totalTime,
                 perfectScores,
                 weakestTopic,
-                nextTopic
+                nextTopic,
+                bySubcategory: stats.bySubcategory
             };
         }
 
@@ -5751,6 +6291,10 @@
             // Hide difficulty selection and show subcategory selection
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('bugReportSection').classList.add('hidden');
+            document.getElementById('viewSubmissionsSection').classList.add('hidden');
+            document.getElementById('viewBugReportsSection').classList.add('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.remove('hidden');
 
             // Update header
@@ -5805,6 +6349,10 @@
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('difficultySelection').classList.remove('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
+            document.getElementById('bugReportSection').classList.remove('hidden');
+            document.getElementById('viewSubmissionsSection').classList.remove('hidden');
+            document.getElementById('viewBugReportsSection').classList.remove('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.remove('hidden');
             currentDifficulty = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -5902,7 +6450,7 @@
                     <div class="icon">💡</div>
                     <div class="info">
                         <div class="label">Features</div>
-                        <div class="value">Auto-save progress, explanations after submission, bookmark difficult questions</div>
+                        <div class="value">Auto-save progress, explanations after submission</div>
                     </div>
                 </div>
             `;
@@ -5910,7 +6458,10 @@
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('bugReportSection').classList.add('hidden');
             document.getElementById('viewSubmissionsSection').classList.add('hidden');
+            document.getElementById('viewBugReportsSection').classList.add('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.add('hidden');
             document.getElementById('quizPreview').classList.remove('hidden');
             document.getElementById('quizPreview').classList.add('active');
             document.getElementById('quizContainer').classList.remove('active');
@@ -5962,10 +6513,22 @@
         }
 
         function shuffleOptionsWithCorrect(options, correctIndex) {
-            const correctAnswer = options[correctIndex];
             const shuffled = shuffleArray(options);
 
-            // Update the correct index to match new position
+            // Handle multiple-select questions (correctIndex is an array)
+            if (Array.isArray(correctIndex)) {
+                const newCorrectIndices = correctIndex.map(idx => {
+                    const correctAnswer = options[idx];
+                    return shuffled.indexOf(correctAnswer);
+                });
+                return {
+                    options: shuffled,
+                    correct: newCorrectIndices
+                };
+            }
+
+            // Handle multiple-choice/true-false questions (correctIndex is a number)
+            const correctAnswer = options[correctIndex];
             const newCorrectIndex = shuffled.indexOf(correctAnswer);
 
             return {
@@ -6067,20 +6630,12 @@
                 const typeLabel = questionType === 'multiple-select' && !questionBadge ? ' <span style="font-size:0.85em;color:#032a56">(Select all that apply)</span>' :
                                  questionType === 'fill-blank' ? ' <span style="font-size:0.85em;color:#032a56">(Fill in the blank)</span>' : '';
 
-                const currentBookmarks = getCurrentQuizBookmarks();
-                const isBookmarked = currentBookmarks.includes(index);
                 questionCard.innerHTML = `
                     <div class="question-header-row">
                         <div class="question-number">
                             <span>Question ${index + 1} of ${currentQuestions.length}</span>
                             ${userAnswers[index] !== undefined && userAnswers[index] !== '' ? '<span style="color: #28a745;">✓</span>' : ''}
                         </div>
-                        <button type="button" class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}"
-                                onclick="toggleBookmark(${index}); return false;"
-                                title="${isBookmarked ? 'Remove bookmark' : 'Bookmark for review'}"
-                                aria-label="${isBookmarked ? 'Remove bookmark' : 'Bookmark this question'}">
-                            ${isBookmarked ? '🔖' : '🏷️'}
-                        </button>
                     </div>
                     <div class="question-text">${questionBadge}${q.question}${typeLabel}</div>
                     <div class="options" role="${questionType === 'multiple-select' ? 'group' : 'radiogroup'}" aria-label="Answer options">
@@ -6491,35 +7046,6 @@
             }
         }
 
-        function toggleBookmark(questionIndex) {
-            const bookmarkBtn = document.querySelector(`#question-${questionIndex} .bookmark-btn`);
-            const key = getBookmarkKey();
-
-            // Initialize array for this quiz if it doesn't exist
-            if (!bookmarkedQuestions[key]) {
-                bookmarkedQuestions[key] = [];
-            }
-
-            if (bookmarkedQuestions[key].includes(questionIndex)) {
-                // Remove bookmark
-                bookmarkedQuestions[key] = bookmarkedQuestions[key].filter(i => i !== questionIndex);
-                bookmarkBtn.classList.remove('bookmarked');
-                bookmarkBtn.innerHTML = '🏷️';
-                bookmarkBtn.title = 'Bookmark for review';
-                bookmarkBtn.setAttribute('aria-label', 'Bookmark this question');
-            } else {
-                // Add bookmark with full question data
-                bookmarkedQuestions[key].push(questionIndex);
-                bookmarkBtn.classList.add('bookmarked');
-                bookmarkBtn.innerHTML = '🔖';
-                bookmarkBtn.title = 'Remove bookmark';
-                bookmarkBtn.setAttribute('aria-label', 'Remove bookmark');
-            }
-
-            // Save to global bookmarks
-            saveGlobalBookmarks();
-        }
-
         function updateSubmitButton() {
             const submitBtn = document.getElementById('submitBtn');
             const totalQuestions = currentQuestions.length;
@@ -6591,7 +7117,10 @@
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('bugReportSection').classList.add('hidden');
             document.getElementById('viewSubmissionsSection').classList.add('hidden');
+            document.getElementById('viewBugReportsSection').classList.add('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.add('hidden');
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
 
@@ -6915,6 +7444,18 @@
                     });
                 }
 
+                // Prepare correct answer text for display
+                let correctAnswerText = '';
+                if (questionType === 'fill-blank') {
+                    const acceptableAnswers = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
+                    correctAnswerText = acceptableAnswers.join(' / ');
+                } else if (questionType === 'multiple-select') {
+                    const correctIndices = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
+                    correctAnswerText = correctIndices.map(idx => q.options[idx]).join(', ');
+                } else {
+                    correctAnswerText = q.options[correctAnswer];
+                }
+
                 const explanationHTML = q.explanation ? `
                     <div class="explanation">
                         <div class="explanation-title">💡 Explanation:</div>
@@ -6936,6 +7477,12 @@
                         ${optionsHTML}
                     </div>
                     ${explanationHTML}
+                    <div style="margin-top: 15px; text-align: center;">
+                        <button onclick="openQuickIncorrectAnswerReport(\`${q.question.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, \`${correctAnswerText.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)"
+                                style="padding: 10px 20px; background: linear-gradient(135deg, #dc3545, #c82333); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9em;">
+                            ❌ Report Incorrect Answer
+                        </button>
+                    </div>
                 `;
 
                 container.appendChild(questionCard);
@@ -6951,6 +7498,26 @@
             restartQuiz();
         }
 
+        function retryQuiz() {
+            // Save current difficulty and subcategory
+            const difficulty = currentDifficulty;
+            const subcategory = currentSubcategory;
+
+            // Clear results
+            stopTimer();
+            userAnswers = {};
+            currentQuestions = [];
+
+            // Hide results, show quiz
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('quizContainer').classList.add('active');
+
+            // Restart the same quiz
+            startQuiz(difficulty, subcategory);
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         function restartQuiz() {
             stopTimer();
             currentDifficulty = '';
@@ -6961,9 +7528,14 @@
             document.getElementById('difficultySelection').classList.remove('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
+            document.getElementById('bugReportSection').classList.remove('hidden');
             document.getElementById('viewSubmissionsSection').classList.remove('hidden');
+            document.getElementById('viewBugReportsSection').classList.remove('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.remove('hidden');
             document.getElementById('quizContainer').classList.remove('active');
             document.getElementById('results').classList.remove('active');
+            document.getElementById('quizPreview').classList.remove('active');
+            document.getElementById('quizPreview').classList.add('hidden');
             document.getElementById('progressFill').style.width = '0%';
             document.getElementById('timerDisplay').classList.add('hidden');
             document.getElementById('timerDisplay').classList.remove('warning');
@@ -6998,15 +7570,25 @@
                 document.getElementById('results').classList.remove('active');
             }
 
+            // Hide quiz preview if it's showing
+            document.getElementById('quizPreview').classList.remove('active');
+            document.getElementById('quizPreview').classList.add('hidden');
+
             // Show main page first
             document.getElementById('difficultySelection').classList.remove('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
+            document.getElementById('bugReportSection').classList.remove('hidden');
             document.getElementById('viewSubmissionsSection').classList.remove('hidden');
+            document.getElementById('viewBugReportsSection').classList.remove('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.remove('hidden');
 
             // Then hide main page and show flashcard container
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('bugReportSection').classList.add('hidden');
             document.getElementById('viewSubmissionsSection').classList.add('hidden');
+            document.getElementById('viewBugReportsSection').classList.add('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.add('hidden');
             document.getElementById('flashcardContainer').classList.add('active');
 
             // Reset dropdowns
@@ -7145,213 +7727,16 @@
             document.getElementById('flashcardContainer').classList.remove('active');
             document.getElementById('flashcardSelection').style.display = 'block';
             document.getElementById('flashcardDisplay').classList.remove('active');
+            document.getElementById('quizPreview').classList.remove('active');
+            document.getElementById('quizPreview').classList.add('hidden');
             document.getElementById('difficultySelection').classList.remove('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
+            document.getElementById('bugReportSection').classList.remove('hidden');
             document.getElementById('viewSubmissionsSection').classList.remove('hidden');
+            document.getElementById('viewBugReportsSection').classList.remove('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.remove('hidden');
             flashcardQuestions = [];
             currentFlashcardIndex = 0;
-        }
-
-        // Bookmarks Viewer Functions
-        function showBookmarkedQuestions() {
-            // Check if user is in an active quiz
-            const quizActive = document.getElementById('quizContainer').classList.contains('active');
-
-            if (quizActive) {
-                const confirmed = confirm('You are currently in a quiz. Viewing bookmarks will exit your current quiz and you will lose your progress. Continue?');
-                if (!confirmed) {
-                    return;
-                }
-
-                // Exit the quiz
-                stopTimer();
-                currentDifficulty = '';
-                currentSubcategory = '';
-                userAnswers = {};
-                currentQuestions = [];
-                localStorage.removeItem('tandaQuizInProgress');
-
-                document.getElementById('quizContainer').classList.remove('active');
-                document.getElementById('results').classList.remove('active');
-            }
-
-            // Load bookmarks
-            loadGlobalBookmarks();
-
-            // Check if there are any bookmarks
-            const hasBookmarks = Object.keys(bookmarkedQuestions).some(key =>
-                bookmarkedQuestions[key] && bookmarkedQuestions[key].length > 0
-            );
-
-            const bookmarksContent = document.getElementById('bookmarksContent');
-
-            if (!hasBookmarks) {
-                bookmarksContent.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #666;">
-                        <div style="font-size: 4em; margin-bottom: 20px;">📚</div>
-                        <h3 style="color: #032a56; margin-bottom: 10px;">No Bookmarks Yet</h3>
-                        <p>You haven't bookmarked any questions yet. While taking a quiz, click the 🏷️ button on any question to bookmark it for later review.</p>
-                    </div>
-                `;
-                document.getElementById('bookmarkFlashcardBtn').disabled = true;
-            } else {
-                // Render bookmarked questions organized by difficulty and subcategory
-                let html = '';
-                let totalBookmarks = 0;
-
-                Object.keys(bookmarkedQuestions).forEach(key => {
-                    const bookmarks = bookmarkedQuestions[key];
-                    if (!bookmarks || bookmarks.length === 0) return;
-
-                    const [difficulty, subcategory] = key.split('-');
-                    const difficultyIcons = {
-                        'beginner': '🌱',
-                        'intermediate': '📚',
-                        'advanced': '🎓',
-                        'expert': '🏆'
-                    };
-
-                    const subcategoryName = subcategories[difficulty]?.[subcategory]?.name || subcategory;
-
-                    html += `
-                        <div class="bookmark-section" style="margin-bottom: 30px; border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px; background: #f8f9fa;">
-                            <h3 style="color: #032a56; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                                <span>${difficultyIcons[difficulty]}</span>
-                                <span>${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}</span>
-                                <span style="color: #666; font-size: 0.9em;">→</span>
-                                <span style="font-weight: normal; color: #555;">${subcategoryName}</span>
-                                <span style="margin-left: auto; font-size: 0.8em; background: #032a56; color: white; padding: 4px 12px; border-radius: 20px;">${bookmarks.length} question${bookmarks.length > 1 ? 's' : ''}</span>
-                            </h3>
-                            <div class="bookmark-questions">
-                    `;
-
-                    // Get the actual questions
-                    const questions = quizData[difficulty]?.[subcategory] || [];
-
-                    bookmarks.forEach((qIndex, i) => {
-                        if (qIndex < questions.length) {
-                            const q = questions[qIndex];
-                            totalBookmarks++;
-
-                            html += `
-                                <div style="background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid #032a56;">
-                                    <div style="display: flex; justify-content: space-between; align-items: start; gap: 10px;">
-                                        <div style="flex: 1;">
-                                            <strong style="color: #032a56;">Q${i + 1}:</strong> ${q.question}
-                                        </div>
-                                        <button type="button" class="bookmark-btn bookmarked"
-                                                onclick="removeBookmarkFromViewer('${key}', ${qIndex}); return false;"
-                                                style="flex-shrink: 0; padding: 5px 10px; cursor: pointer; border: none; background: transparent; font-size: 1.2em;"
-                                                title="Remove bookmark">
-                                            🔖
-                                        </button>
-                                    </div>
-                                    ${q.options ? `
-                                        <div style="margin-top: 10px; padding-left: 20px; font-size: 0.9em; color: #666;">
-                                            ${q.options.map((opt, idx) =>
-                                                `<div style="margin: 5px 0; ${idx === q.correct || (Array.isArray(q.correct) && q.correct.includes(idx)) ? 'color: #28a745; font-weight: 600;' : ''}">
-                                                    ${idx === q.correct || (Array.isArray(q.correct) && q.correct.includes(idx)) ? '✓' : '○'} ${opt}
-                                                </div>`
-                                            ).join('')}
-                                        </div>
-                                    ` : ''}
-                                    ${q.explanation ? `
-                                        <div style="margin-top: 10px; padding: 10px; background: #e8f4f8; border-radius: 6px; font-size: 0.9em; color: #333;">
-                                            <strong>💡 Explanation:</strong> ${q.explanation}
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            `;
-                        }
-                    });
-
-                    html += `
-                            </div>
-                        </div>
-                    `;
-                });
-
-                html = `
-                    <div style="text-align: center; margin-bottom: 20px; padding: 15px; background: #e8f4f8; border-radius: 8px;">
-                        <h3 style="color: #032a56; margin: 0;">Total Bookmarked Questions: ${totalBookmarks}</h3>
-                    </div>
-                    ${html}
-                `;
-
-                bookmarksContent.innerHTML = html;
-                document.getElementById('bookmarkFlashcardBtn').disabled = false;
-            }
-
-            // Hide main page and show bookmarks viewer
-            document.getElementById('difficultySelection').classList.add('hidden');
-            document.getElementById('submitQuestionSection').classList.add('hidden');
-            document.getElementById('viewSubmissionsSection').classList.add('hidden');
-            document.getElementById('flashcardContainer').classList.remove('active');
-            document.getElementById('bookmarksViewer').classList.remove('hidden');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function closeBookmarksViewer() {
-            document.getElementById('bookmarksViewer').classList.add('hidden');
-            document.getElementById('difficultySelection').classList.remove('hidden');
-            document.getElementById('submitQuestionSection').classList.remove('hidden');
-            document.getElementById('viewSubmissionsSection').classList.remove('hidden');
-        }
-
-        function removeBookmarkFromViewer(key, questionIndex) {
-            if (bookmarkedQuestions[key]) {
-                bookmarkedQuestions[key] = bookmarkedQuestions[key].filter(i => i !== questionIndex);
-
-                // Remove the key if no bookmarks left
-                if (bookmarkedQuestions[key].length === 0) {
-                    delete bookmarkedQuestions[key];
-                }
-
-                saveGlobalBookmarks();
-                showBookmarkedQuestions(); // Refresh the display
-            }
-        }
-
-        function startFlashcardsFromBookmarks() {
-            loadGlobalBookmarks();
-
-            // Collect all bookmarked questions from all quizzes
-            let allBookmarkedQuestions = [];
-
-            Object.keys(bookmarkedQuestions).forEach(key => {
-                const bookmarks = bookmarkedQuestions[key];
-                if (!bookmarks || bookmarks.length === 0) return;
-
-                const [difficulty, subcategory] = key.split('-');
-                const questions = quizData[difficulty]?.[subcategory] || [];
-
-                bookmarks.forEach(qIndex => {
-                    if (qIndex < questions.length) {
-                        allBookmarkedQuestions.push(questions[qIndex]);
-                    }
-                });
-            });
-
-            if (allBookmarkedQuestions.length === 0) {
-                alert('No bookmarked questions available!');
-                return;
-            }
-
-            // Start flashcard mode with bookmarked questions
-            flashcardQuestions = shuffleArray(allBookmarkedQuestions);
-            currentFlashcardIndex = 0;
-
-            // Hide bookmarks viewer
-            document.getElementById('bookmarksViewer').classList.add('hidden');
-
-            // Show flashcard container and display
-            document.getElementById('flashcardContainer').classList.add('active');
-            document.getElementById('flashcardSelection').style.display = 'none';
-            document.getElementById('flashcardDisplay').classList.add('active');
-
-            loadFlashcard();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // Enhanced Statistics & Gamification Management
@@ -7380,7 +7765,6 @@
                 achievements: [],
                 // Features
                 flaggedQuestions: [],
-                bookmarkedQuestions: [],
                 wrongAnswers: [],
                 quizHistory: []
             };
@@ -8159,27 +8543,48 @@
                 `;
 
                 submissions.reverse().forEach((sub, idx) => {
+                    const originalIndex = submissions.length - 1 - idx; // Calculate original array index
+                    const questionTypeLabel = {
+                        'multiple-choice': 'Multiple Choice',
+                        'true-false': 'True/False',
+                        'multiple-select': 'Select All That Apply'
+                    }[sub.type] || 'Multiple Choice';
+
+                    // Determine correct answers
+                    const correctIndices = Array.isArray(sub.correct) ? sub.correct : [sub.correct];
+
                     submissionsHTML += `
                         <div style="background:#f8f9fa;padding:20px;border-radius:12px;margin-bottom:15px;border-left:4px solid #032a56">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
                                 <div style="font-weight:bold;font-size:1.1em">Submission #${submissions.length - idx}</div>
-                                <div style="font-size:0.85em;opacity:0.7">${new Date(sub.submittedAt).toLocaleString()}</div>
+                                <div style="display:flex;align-items:center;gap:10px">
+                                    <div style="font-size:0.85em;opacity:0.7">${new Date(sub.submittedAt).toLocaleString()}</div>
+                                    <button onclick="deleteSubmission(${originalIndex})" style="padding:6px 12px;background:#dc3545;color:white;border:none;border-radius:6px;font-size:0.85em;font-weight:600;cursor:pointer;" onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                                        🗑️ Delete
+                                    </button>
+                                </div>
                             </div>
                             <div style="margin-bottom:10px">
                                 <span style="display:inline-block;background:linear-gradient(135deg,#032a56,#0a4d8f);color:white;padding:4px 10px;border-radius:6px;font-size:0.85em;margin-right:8px">
                                     ${sub.difficulty}
                                 </span>
-                                <span style="display:inline-block;background:#e0e0e0;padding:4px 10px;border-radius:6px;font-size:0.85em">
+                                <span style="display:inline-block;background:#e0e0e0;padding:4px 10px;border-radius:6px;font-size:0.85em;margin-right:8px">
                                     ${subcategories[sub.difficulty]?.[sub.subcategory]?.name || sub.subcategory}
+                                </span>
+                                <span style="display:inline-block;background:#6dd5ed;color:white;padding:4px 10px;border-radius:6px;font-size:0.85em">
+                                    ${questionTypeLabel}
                                 </span>
                             </div>
                             <div style="font-weight:600;margin-bottom:10px;font-size:1.05em">${sub.question}</div>
                             <div style="margin-bottom:10px">
-                                ${sub.options.map((opt, i) => `
-                                    <div style="padding:8px;margin:5px 0;background:#ffffff;border-radius:6px;${i === sub.correct ? 'border-left:3px solid #28a745;font-weight:600' : ''}">
-                                        ${i + 1}. ${opt} ${i === sub.correct ? '✓' : ''}
-                                    </div>
-                                `).join('')}
+                                ${sub.options.map((opt, i) => {
+                                    const isCorrect = correctIndices.includes(i);
+                                    return `
+                                        <div style="padding:8px;margin:5px 0;background:#ffffff;border-radius:6px;${isCorrect ? 'border-left:3px solid #28a745;font-weight:600' : ''}">
+                                            ${i + 1}. ${opt} ${isCorrect ? '✓' : ''}
+                                        </div>
+                                    `;
+                                }).join('')}
                             </div>
                             <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
                                 <div style="font-weight:600;margin-bottom:5px">Explanation:</div>
@@ -8204,6 +8609,18 @@
 
         function closeSubmissions() {
             document.getElementById('submissionsModal').classList.remove('active');
+        }
+
+        function deleteSubmission(index) {
+            const confirmDelete = confirm('Are you sure you want to delete this submission? This cannot be undone.');
+            if (!confirmDelete) return;
+
+            const submissions = JSON.parse(localStorage.getItem('tandaSubmittedQuestions') || '[]');
+            submissions.splice(index, 1);
+            localStorage.setItem('tandaSubmittedQuestions', JSON.stringify(submissions));
+
+            // Refresh the display
+            showSubmissions();
         }
 
         function exportSubmissions(format) {
@@ -8273,6 +8690,323 @@ if (typeof window !== 'undefined') {
             }
         });
 
+        // Bug Reports Functions
+        function showBugReportsWithPassword() {
+            const password = prompt('Enter password to view bug reports:');
+            if (password === 'abc123') {
+                showBugReports();
+            } else if (password !== null) {
+                alert('Incorrect password. Access denied.');
+            }
+        }
+
+        function showBugReports() {
+            const bugReports = JSON.parse(localStorage.getItem('tandaBugReports') || '[]');
+            const container = document.getElementById('bugReportsContainer');
+
+            if (bugReports.length === 0) {
+                container.innerHTML = `
+                    <p style="text-align:center;opacity:0.6;padding:40px">
+                        No bug reports have been submitted yet.
+                    </p>
+                `;
+            } else {
+                let reportsHTML = `
+                    <div style="margin-bottom:20px;text-align:center">
+                        <button onclick="exportBugReports('json')" style="padding:12px 25px;background:linear-gradient(135deg,#ffc107,#ff9800);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-right:10px">
+                            💾 Export as JSON
+                        </button>
+                        <button onclick="clearBugReports()" style="padding:12px 25px;background:linear-gradient(135deg,#dc3545,#c82333);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer">
+                            🗑️ Clear All
+                        </button>
+                    </div>
+                    <div style="font-size:0.9em;text-align:center;margin-bottom:20px;opacity:0.8">
+                        Total Bug Reports: ${bugReports.length}
+                    </div>
+                `;
+
+                bugReports.reverse().forEach((bug, idx) => {
+                    const originalIndex = bugReports.length - 1 - idx; // Calculate original array index
+                    reportsHTML += `
+                        <div style="background:#fff3cd;padding:20px;border-radius:12px;margin-bottom:15px;border-left:4px solid #ffc107">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                                <div style="font-weight:bold;font-size:1.1em">Bug Report #${bugReports.length - idx}</div>
+                                <div style="display:flex;align-items:center;gap:10px">
+                                    <div style="font-size:0.85em;opacity:0.7">${new Date(bug.submittedAt).toLocaleString()}</div>
+                                    <button onclick="deleteBugReport(${originalIndex})" style="padding:6px 12px;background:#dc3545;color:white;border:none;border-radius:6px;font-size:0.85em;font-weight:600;cursor:pointer;" onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                                        🗑️ Delete
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="font-weight:600;margin-bottom:10px;font-size:1.05em;color:#856404">
+                                ${bug.title}
+                            </div>
+                            <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
+                                <div style="font-weight:600;margin-bottom:5px">Description:</div>
+                                <div>${bug.description}</div>
+                            </div>
+                            ${bug.steps ? `
+                                <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
+                                    <div style="font-weight:600;margin-bottom:5px">Steps to Reproduce:</div>
+                                    <div>${bug.steps}</div>
+                                </div>
+                            ` : ''}
+                            <div style="background:#ffffff;padding:12px;border-radius:8px">
+                                <div style="font-weight:600;margin-bottom:5px">Device/Browser:</div>
+                                <div>${bug.device}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = reportsHTML;
+            }
+
+            document.getElementById('bugReportsModal').classList.add('active');
+        }
+
+        function closeBugReports() {
+            document.getElementById('bugReportsModal').classList.remove('active');
+        }
+
+        function deleteBugReport(index) {
+            const confirmDelete = confirm('Are you sure you want to delete this bug report? This cannot be undone.');
+            if (!confirmDelete) return;
+
+            const bugReports = JSON.parse(localStorage.getItem('tandaBugReports') || '[]');
+            bugReports.splice(index, 1);
+            localStorage.setItem('tandaBugReports', JSON.stringify(bugReports));
+
+            // Refresh the display
+            showBugReports();
+        }
+
+        function exportBugReports(format) {
+            const bugReports = JSON.parse(localStorage.getItem('tandaBugReports') || '[]');
+
+            if (bugReports.length === 0) {
+                alert('No bug reports to export.');
+                return;
+            }
+
+            const content = JSON.stringify(bugReports, null, 2);
+            const filename = `tanda-bug-reports-${new Date().toISOString().split('T')[0]}.json`;
+            const mimeType = 'application/json';
+
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert(`Exported ${bugReports.length} bug report(s) as ${filename}`);
+        }
+
+        function clearBugReports() {
+            const confirmClear = confirm('Are you sure you want to clear all bug reports? This cannot be undone.');
+            if (!confirmClear) return;
+
+            localStorage.removeItem('tandaBugReports');
+            closeBugReports();
+            alert('All bug reports cleared successfully!');
+        }
+
+        // Close bug reports when clicking outside
+        document.getElementById('bugReportsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBugReports();
+            }
+        });
+
+        // Incorrect Answers Functions
+        function showIncorrectAnswersWithPassword() {
+            const password = prompt('Enter password to view incorrect answer reports:');
+            if (password === 'abc123') {
+                showIncorrectAnswers();
+            } else if (password !== null) {
+                alert('Incorrect password. Access denied.');
+            }
+        }
+
+        function showIncorrectAnswers() {
+            const reports = JSON.parse(localStorage.getItem('tandaIncorrectAnswerReports') || '[]');
+            const container = document.getElementById('incorrectAnswersContainer');
+
+            if (reports.length === 0) {
+                container.innerHTML = `
+                    <p style="text-align:center;opacity:0.6;padding:40px">
+                        No incorrect answer reports have been submitted yet.
+                    </p>
+                `;
+            } else {
+                let reportsHTML = `
+                    <div style="margin-bottom:20px;text-align:center">
+                        <button onclick="exportIncorrectAnswers('json')" style="padding:12px 25px;background:linear-gradient(135deg,#dc3545,#c82333);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-right:10px">
+                            💾 Export as JSON
+                        </button>
+                        <button onclick="clearIncorrectAnswers()" style="padding:12px 25px;background:linear-gradient(135deg,#6c757d,#5a6268);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer">
+                            🗑️ Clear All
+                        </button>
+                    </div>
+                    <div style="font-size:0.9em;text-align:center;margin-bottom:20px;opacity:0.8">
+                        Total Reports: ${reports.length}
+                    </div>
+                `;
+
+                reports.reverse().forEach((report, idx) => {
+                    const originalIndex = reports.length - 1 - idx; // Calculate original array index
+                    reportsHTML += `
+                        <div style="background:#f8d7da;padding:20px;border-radius:12px;margin-bottom:15px;border-left:4px solid #dc3545">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                                <div style="font-weight:bold;font-size:1.1em">Report #${reports.length - idx}</div>
+                                <div style="display:flex;align-items:center;gap:10px">
+                                    <div style="font-size:0.85em;opacity:0.7">${new Date(report.submittedAt).toLocaleString()}</div>
+                                    <button onclick="deleteIncorrectAnswerReport(${originalIndex})" style="padding:6px 12px;background:#dc3545;color:white;border:none;border-radius:6px;font-size:0.85em;font-weight:600;cursor:pointer;" onmouseover="this.style.background='#c82333'" onmouseout="this.style.background='#dc3545'">
+                                        🗑️ Delete
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
+                                <div style="font-weight:600;margin-bottom:5px">Question:</div>
+                                <div>${report.incorrectQuestion}</div>
+                            </div>
+                            <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
+                                <div style="font-weight:600;margin-bottom:5px;color:#dc3545">Current Answer:</div>
+                                <div>${report.incorrectCurrentAnswer}</div>
+                            </div>
+                            <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
+                                <div style="font-weight:600;margin-bottom:5px;color:#28a745">Suggested Correct Answer:</div>
+                                <div>${report.incorrectSuggestedAnswer}</div>
+                            </div>
+                            <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
+                                <div style="font-weight:600;margin-bottom:5px">Reason for Change:</div>
+                                <div>${report.incorrectReason}</div>
+                            </div>
+                            ${report.incorrectReference ? `
+                                <div style="margin-top:10px">
+                                    <a href="${report.incorrectReference}" target="_blank" style="color:#dc3545;text-decoration:none;font-weight:600">
+                                        📚 Reference Link →
+                                    </a>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = reportsHTML;
+            }
+
+            document.getElementById('incorrectAnswersModal').classList.add('active');
+        }
+
+        function closeIncorrectAnswers() {
+            document.getElementById('incorrectAnswersModal').classList.remove('active');
+        }
+
+        function deleteIncorrectAnswerReport(index) {
+            const confirmDelete = confirm('Are you sure you want to delete this incorrect answer report? This cannot be undone.');
+            if (!confirmDelete) return;
+
+            const reports = JSON.parse(localStorage.getItem('tandaIncorrectAnswerReports') || '[]');
+            reports.splice(index, 1);
+            localStorage.setItem('tandaIncorrectAnswerReports', JSON.stringify(reports));
+
+            // Refresh the display
+            showIncorrectAnswers();
+        }
+
+        function exportIncorrectAnswers(format) {
+            const reports = JSON.parse(localStorage.getItem('tandaIncorrectAnswerReports') || '[]');
+
+            if (reports.length === 0) {
+                alert('No incorrect answer reports to export.');
+                return;
+            }
+
+            const content = JSON.stringify(reports, null, 2);
+            const filename = `tanda-incorrect-answer-reports-${new Date().toISOString().split('T')[0]}.json`;
+            const mimeType = 'application/json';
+
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert(`Exported ${reports.length} incorrect answer report(s) as ${filename}`);
+        }
+
+        function clearIncorrectAnswers() {
+            const confirmClear = confirm('Are you sure you want to clear all incorrect answer reports? This cannot be undone.');
+            if (!confirmClear) return;
+
+            localStorage.removeItem('tandaIncorrectAnswerReports');
+            closeIncorrectAnswers();
+            alert('All incorrect answer reports cleared successfully!');
+        }
+
+        // Close incorrect answers when clicking outside
+        document.getElementById('incorrectAnswersModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeIncorrectAnswers();
+            }
+        });
+
+        // Quick Incorrect Answer Report Functions (from results page)
+        function openQuickIncorrectAnswerReport(question, currentAnswer) {
+            document.getElementById('quickReportQuestion').textContent = question;
+            document.getElementById('quickReportCurrentAnswer').textContent = currentAnswer;
+            document.getElementById('quickIncorrectAnswerForm').reset();
+            document.getElementById('quickIncorrectAnswerModal').classList.add('active');
+        }
+
+        function closeQuickIncorrectAnswerReport() {
+            document.getElementById('quickIncorrectAnswerModal').classList.remove('active');
+            document.getElementById('quickIncorrectAnswerForm').reset();
+        }
+
+        function submitQuickIncorrectAnswerReport(event) {
+            event.preventDefault();
+
+            const question = document.getElementById('quickReportQuestion').textContent;
+            const currentAnswer = document.getElementById('quickReportCurrentAnswer').textContent;
+            const suggestedAnswer = document.getElementById('quickSuggestedAnswer').value;
+            const reason = document.getElementById('quickReason').value;
+            const reference = document.getElementById('quickReference').value;
+
+            const report = {
+                incorrectQuestion: question,
+                incorrectCurrentAnswer: currentAnswer,
+                incorrectSuggestedAnswer: suggestedAnswer,
+                incorrectReason: reason,
+                incorrectReference: reference,
+                submittedAt: new Date().toISOString()
+            };
+
+            // Save to localStorage
+            const reports = JSON.parse(localStorage.getItem('tandaIncorrectAnswerReports') || '[]');
+            reports.push(report);
+            localStorage.setItem('tandaIncorrectAnswerReports', JSON.stringify(reports));
+
+            closeQuickIncorrectAnswerReport();
+            alert('Thank you! Your incorrect answer report has been submitted successfully.');
+        }
+
+        // Close quick report when clicking outside
+        document.getElementById('quickIncorrectAnswerModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeQuickIncorrectAnswerReport();
+            }
+        });
+
         // Toggle question submission form visibility
         function toggleQuestionForm() {
             const content = document.getElementById('questionFormContent');
@@ -8288,6 +9022,76 @@ if (typeof window !== 'undefined') {
         }
 
         // Show subcategory select when difficulty is chosen in question submission form
+        function updateQuestionTypeOptions() {
+            const questionType = document.getElementById('questionType').value;
+            const option3 = document.getElementById('option3');
+            const option4 = document.getElementById('option4');
+            const optionsLabel = document.getElementById('optionsLabel');
+            const correctAnswerContainer = document.getElementById('correctAnswerContainer');
+            const multipleCorrectContainer = document.getElementById('multipleCorrectContainer');
+
+            if (questionType === 'true-false') {
+                // True/False: Show only 2 options
+                option3.style.display = 'none';
+                option4.style.display = 'none';
+                option3.required = false;
+                option4.required = false;
+                option3.value = '';
+                option4.value = '';
+                optionsLabel.textContent = 'Answer Options * (True and False)';
+                document.getElementById('option1').placeholder = 'True';
+                document.getElementById('option2').placeholder = 'False';
+                document.getElementById('option1').value = 'True';
+                document.getElementById('option2').value = 'False';
+                correctAnswerContainer.style.display = 'block';
+                multipleCorrectContainer.classList.add('hidden');
+                // Update correct answer dropdown
+                document.getElementById('correctAnswer').innerHTML = `
+                    <option value="">-- Select the correct option --</option>
+                    <option value="0">True</option>
+                    <option value="1">False</option>
+                `;
+            } else if (questionType === 'multiple-select') {
+                // Multiple Select: Show 4 options, use checkboxes
+                option3.style.display = 'block';
+                option4.style.display = 'block';
+                option3.required = true;
+                option4.required = true;
+                optionsLabel.textContent = 'Answer Options * (enter 4 options)';
+                document.getElementById('option1').placeholder = 'Option 1';
+                document.getElementById('option2').placeholder = 'Option 2';
+                document.getElementById('option3').placeholder = 'Option 3';
+                document.getElementById('option4').placeholder = 'Option 4';
+                document.getElementById('option1').value = '';
+                document.getElementById('option2').value = '';
+                correctAnswerContainer.style.display = 'none';
+                multipleCorrectContainer.classList.remove('hidden');
+            } else if (questionType === 'multiple-choice') {
+                // Multiple Choice: Show 4 options, one correct answer
+                option3.style.display = 'block';
+                option4.style.display = 'block';
+                option3.required = true;
+                option4.required = true;
+                optionsLabel.textContent = 'Answer Options * (enter 4 options)';
+                document.getElementById('option1').placeholder = 'Option 1';
+                document.getElementById('option2').placeholder = 'Option 2';
+                document.getElementById('option3').placeholder = 'Option 3';
+                document.getElementById('option4').placeholder = 'Option 4';
+                document.getElementById('option1').value = '';
+                document.getElementById('option2').value = '';
+                correctAnswerContainer.style.display = 'block';
+                multipleCorrectContainer.classList.add('hidden');
+                // Update correct answer dropdown
+                document.getElementById('correctAnswer').innerHTML = `
+                    <option value="">-- Select the correct option --</option>
+                    <option value="0">Option 1</option>
+                    <option value="1">Option 2</option>
+                    <option value="2">Option 3</option>
+                    <option value="3">Option 4</option>
+                `;
+            }
+        }
+
         function showSubcategorySelect() {
             const difficulty = document.getElementById('questionDifficulty').value;
             const container = document.getElementById('subcategorySelectContainer');
@@ -8317,15 +9121,52 @@ if (typeof window !== 'undefined') {
         document.getElementById('submitQuestionForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const submittedQuestion = {
-                question: document.getElementById('questionText').value,
-                options: [
+            const questionType = document.getElementById('questionType').value;
+            let options = [];
+            let correct;
+
+            // Build options array based on question type
+            if (questionType === 'true-false') {
+                options = [
+                    document.getElementById('option1').value,
+                    document.getElementById('option2').value
+                ];
+                correct = parseInt(document.getElementById('correctAnswer').value);
+            } else if (questionType === 'multiple-select') {
+                options = [
                     document.getElementById('option1').value,
                     document.getElementById('option2').value,
                     document.getElementById('option3').value,
                     document.getElementById('option4').value
-                ],
-                correct: parseInt(document.getElementById('correctAnswer').value),
+                ];
+                // Get all checked checkboxes
+                const correctIndices = [];
+                if (document.getElementById('correct1').checked) correctIndices.push(0);
+                if (document.getElementById('correct2').checked) correctIndices.push(1);
+                if (document.getElementById('correct3').checked) correctIndices.push(2);
+                if (document.getElementById('correct4').checked) correctIndices.push(3);
+
+                if (correctIndices.length === 0) {
+                    alert('Please select at least one correct answer for "Select All That Apply" questions.');
+                    return;
+                }
+                correct = correctIndices;
+            } else {
+                // multiple-choice
+                options = [
+                    document.getElementById('option1').value,
+                    document.getElementById('option2').value,
+                    document.getElementById('option3').value,
+                    document.getElementById('option4').value
+                ];
+                correct = parseInt(document.getElementById('correctAnswer').value);
+            }
+
+            const submittedQuestion = {
+                question: document.getElementById('questionText').value,
+                type: questionType,
+                options: options,
+                correct: correct,
                 explanation: document.getElementById('explanation').value,
                 helpLink: document.getElementById('helpGuideLink').value,
                 difficulty: document.getElementById('questionDifficulty').value,
@@ -8339,74 +9180,30 @@ if (typeof window !== 'undefined') {
             submittedQuestions.push(submittedQuestion);
             localStorage.setItem('tandaSubmittedQuestions', JSON.stringify(submittedQuestions));
 
-            // Send email notification to alex.hall@tanda.com.au
-            try {
-                const emailBody = `
-New Question Submission - Tanda Knowledge Quiz
-=============================================
-
-Question: ${submittedQuestion.question}
-
-Options:
-1. ${submittedQuestion.options[0]}
-2. ${submittedQuestion.options[1]}
-3. ${submittedQuestion.options[2]}
-4. ${submittedQuestion.options[3]}
-
-Correct Answer: Option ${submittedQuestion.correct + 1} - ${submittedQuestion.options[submittedQuestion.correct]}
-
-Explanation: ${submittedQuestion.explanation}
-
-Help Link: ${submittedQuestion.helpLink || 'Not provided'}
-
-Difficulty: ${submittedQuestion.difficulty}
-Subcategory: ${submittedQuestion.subcategory}
-
-Submitted At: ${new Date(submittedQuestion.submittedAt).toLocaleString()}
-
----
-This question was submitted via the Tanda Knowledge Quiz platform.
-To export all submissions, use the "Export Submissions" feature in the admin panel.
-                `.trim();
-
-                // Use FormSubmit.co free service (no signup required)
-                const formData = new FormData();
-                formData.append('_subject', 'New Tanda Quiz Question Submission');
-                formData.append('_template', 'box');
-                formData.append('_captcha', 'false');
-                formData.append('Question', submittedQuestion.question);
-                formData.append('Options', submittedQuestion.options.join(' | '));
-                formData.append('Correct_Answer', `Option ${submittedQuestion.correct + 1}`);
-                formData.append('Explanation', submittedQuestion.explanation);
-                formData.append('Help_Link', submittedQuestion.helpLink || 'Not provided');
-                formData.append('Difficulty', submittedQuestion.difficulty);
-                formData.append('Subcategory', submittedQuestion.subcategory);
-                formData.append('Submitted_At', new Date(submittedQuestion.submittedAt).toLocaleString());
-                formData.append('Full_Details', emailBody);
-
-                // Send to FormSubmit (will send to alex.hall@tanda.com.au)
-                await fetch('https://formsubmit.co/alex.hall@tanda.com.au', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
-
-                console.log('Question submitted and email sent successfully');
-            } catch (error) {
-                console.error('Error sending email:', error);
-                // Continue even if email fails - question is still saved locally
-            }
-
             // Show success message
             document.getElementById('submissionSuccess').classList.remove('hidden');
 
             // Reset form
             this.reset();
 
+            // Reset checkboxes
+            document.getElementById('correct1').checked = false;
+            document.getElementById('correct2').checked = false;
+            document.getElementById('correct3').checked = false;
+            document.getElementById('correct4').checked = false;
+
             // Hide subcategory select on reset
             document.getElementById('subcategorySelectContainer').classList.add('hidden');
+
+            // Hide multiple correct container
+            document.getElementById('multipleCorrectContainer').classList.add('hidden');
+
+            // Reset option display
+            document.getElementById('option3').style.display = 'block';
+            document.getElementById('option4').style.display = 'block';
+            document.getElementById('option3').required = false;
+            document.getElementById('option4').required = false;
+            document.getElementById('correctAnswerContainer').style.display = 'block';
 
             // Hide success message after 5 seconds
             setTimeout(() => {
@@ -8415,6 +9212,53 @@ To export all submissions, use the "Export Submissions" feature in the admin pan
 
             // Scroll to success message
             document.getElementById('submissionSuccess').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        // Toggle Bug Report Form
+        function toggleBugForm() {
+            const content = document.getElementById('bugFormContent');
+            const icon = document.getElementById('bugFormToggleIcon');
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('hidden');
+                icon.textContent = '▶';
+            }
+        }
+
+        // Handle bug report submission
+        document.getElementById('submitBugForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const bugReport = {
+                title: document.getElementById('bugTitle').value,
+                description: document.getElementById('bugDescription').value,
+                steps: document.getElementById('bugSteps').value,
+                device: document.getElementById('bugDevice').value,
+                submittedAt: new Date().toISOString(),
+                userAgent: navigator.userAgent
+            };
+
+            // Save to localStorage
+            const bugReports = JSON.parse(localStorage.getItem('tandaBugReports') || '[]');
+            bugReports.push(bugReport);
+            localStorage.setItem('tandaBugReports', JSON.stringify(bugReports));
+
+            // Show success message
+            document.getElementById('bugSubmissionSuccess').classList.remove('hidden');
+
+            // Reset form
+            this.reset();
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                document.getElementById('bugSubmissionSuccess').classList.add('hidden');
+            }, 5000);
+
+            // Scroll to success message
+            document.getElementById('bugSubmissionSuccess').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
 
         // Initialize app when DOM is loaded
