@@ -2,6 +2,22 @@
 
 An interactive quiz application to test your knowledge of Tanda's workforce management features with targeted subcategories for focused learning.
 
+## Live Demo
+
+Once GitHub Pages is enabled for this repository, the quiz will be available at:
+**https://alexhalltanda.github.io/TEST/**
+
+To enable GitHub Pages:
+1. Go to your repository on GitHub
+2. Click **Settings** > **Pages** (in the left sidebar)
+3. Under "Build and deployment", set:
+   - **Source**: Deploy from a branch
+   - **Branch**: `claude/mobile-app-strategy-011CUSLzHCB2yR25mDRd4FFt`
+   - **Folder**: `/ (root)`
+4. Click **Save**
+5. Wait a few minutes for deployment
+6. Visit the URL above to access your quiz online!
+
 ## How to Open the Quiz
 
 ### Method 1: Double-Click (Easiest)
