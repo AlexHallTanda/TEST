@@ -6109,6 +6109,18 @@
                     });
                 }
 
+                // Prepare correct answer text for display
+                let correctAnswerText = '';
+                if (questionType === 'fill-blank') {
+                    const acceptableAnswers = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
+                    correctAnswerText = acceptableAnswers.join(' / ');
+                } else if (questionType === 'multiple-select') {
+                    const correctIndices = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
+                    correctAnswerText = correctIndices.map(idx => q.options[idx]).join(', ');
+                } else {
+                    correctAnswerText = q.options[correctAnswer];
+                }
+
                 const explanationHTML = q.explanation ? `
                     <div class="explanation">
                         <div class="explanation-title">💡 Explanation:</div>
@@ -6123,18 +6135,6 @@
                     </div>
                 ` : '';
 
-                // Prepare correct answer text for display
-                let correctAnswerText = '';
-                if (questionType === 'fill-blank') {
-                    const acceptableAnswers = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
-                    correctAnswerText = acceptableAnswers.join(' / ');
-                } else if (questionType === 'multiple-select') {
-                    const correctIndices = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
-                    correctAnswerText = correctIndices.map(idx => q.options[idx]).join(', ');
-                } else {
-                    correctAnswerText = q.options[correctAnswer];
-                }
-
                 questionCard.innerHTML = `
                     <div class="question-number">Question ${index + 1}</div>
                     <div class="question-text">${q.question}</div>
@@ -6143,7 +6143,7 @@
                     </div>
                     ${explanationHTML}
                     <div style="margin-top: 15px; text-align: center;">
-                        <button onclick='openQuickIncorrectAnswerReport(${JSON.stringify(q.question)}, ${JSON.stringify(correctAnswerText)})'
+                        <button onclick="openQuickIncorrectAnswerReport(\`${q.question.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`, \`${correctAnswerText.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)"
                                 style="padding: 10px 20px; background: linear-gradient(135deg, #dc3545, #c82333); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9em;">
                             ❌ Report Incorrect Answer
                         </button>
