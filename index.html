@@ -894,34 +894,6 @@
             gap: 8px;
         }
 
-        .bookmark-btn {
-            background: none;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 1.2em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .bookmark-btn:hover {
-            border-color: #032a56;
-            background: #e8f1f8;
-            transform: scale(1.1);
-        }
-
-        .bookmark-btn.bookmarked {
-            border-color: #ffc107;
-            background: #fff3cd;
-        }
-
-        .bookmark-btn.bookmarked:hover {
-            border-color: #ff9800;
-            background: #ffe082;
-        }
 
         .question-text {
             font-size: 1.25em;
@@ -1801,10 +1773,6 @@
                     <span>🃏</span>
                     <span>Flashcards</span>
                 </button>
-                <button class="stats-btn" onclick="showBookmarkedQuestions()" aria-label="View bookmarked questions">
-                    <span>🔖</span>
-                    <span>Bookmarks</span>
-                </button>
                 <button class="stats-btn" onclick="showDashboard()" aria-label="View dashboard">
                     <span>📈</span>
                     <span>Dashboard</span>
@@ -1998,25 +1966,6 @@
                     <button class="back-btn" onclick="exitFlashcardMode()">← Back to Quizzes</button>
                     <button class="flashcard-btn" onclick="shuffleFlashcards()">🔀 Shuffle</button>
                 </div>
-            </div>
-        </div>
-
-        <!-- Bookmarks Viewer -->
-        <div id="bookmarksViewer" class="flashcard-container hidden">
-            <div class="flashcard-header">
-                <h2>🔖 Your Bookmarked Questions</h2>
-                <p class="flashcard-subtitle">Review questions you've saved for later study</p>
-            </div>
-
-            <div id="bookmarksContent" class="bookmarks-content">
-                <!-- Bookmarks will be dynamically rendered here -->
-            </div>
-
-            <div class="flashcard-actions" style="margin-top: 20px;">
-                <button class="back-btn" onclick="closeBookmarksViewer()">← Back to Main Menu</button>
-                <button class="flashcard-btn primary" onclick="startFlashcardsFromBookmarks()" id="bookmarkFlashcardBtn">
-                    🃏 Study as Flashcards
-                </button>
             </div>
         </div>
 
@@ -4428,41 +4377,9 @@
         let timeRemaining = 0;
         let timerEnabled = false;
         let quizStartTime = null;
-        let bookmarkedQuestions = {}; // Changed to object: { "difficulty-subcategory": [questionIndexes] }
         let flashcardMode = false;
         let flashcardQuestions = [];
         let currentFlashcardIndex = 0;
-
-        // Load global bookmarks from localStorage
-        function loadGlobalBookmarks() {
-            const saved = localStorage.getItem('tandaQuizBookmarks');
-            if (saved) {
-                try {
-                    bookmarkedQuestions = JSON.parse(saved);
-                } catch (e) {
-                    bookmarkedQuestions = {};
-                }
-            }
-        }
-
-        // Save global bookmarks to localStorage
-        function saveGlobalBookmarks() {
-            localStorage.setItem('tandaQuizBookmarks', JSON.stringify(bookmarkedQuestions));
-        }
-
-        // Get bookmark key for current quiz
-        function getBookmarkKey() {
-            return `${currentDifficulty}-${currentSubcategory}`;
-        }
-
-        // Get bookmarks for current quiz
-        function getCurrentQuizBookmarks() {
-            const key = getBookmarkKey();
-            return bookmarkedQuestions[key] || [];
-        }
-
-        // Load bookmarks on page load
-        loadGlobalBookmarks();
 
         // Timer durations in seconds for each difficulty
         const timerDurations = {
@@ -4979,7 +4896,7 @@
                     <div class="icon">💡</div>
                     <div class="info">
                         <div class="label">Features</div>
-                        <div class="value">Auto-save progress, explanations after submission, bookmark difficult questions</div>
+                        <div class="value">Auto-save progress, explanations after submission</div>
                     </div>
                 </div>
             `;
@@ -5098,20 +5015,12 @@
                 const typeLabel = questionType === 'multiple-select' ? ' <span style="font-size:0.85em;color:#032a56">(Select all that apply)</span>' :
                                  questionType === 'fill-blank' ? ' <span style="font-size:0.85em;color:#032a56">(Fill in the blank)</span>' : '';
 
-                const currentBookmarks = getCurrentQuizBookmarks();
-                const isBookmarked = currentBookmarks.includes(index);
                 questionCard.innerHTML = `
                     <div class="question-header-row">
                         <div class="question-number">
                             <span>Question ${index + 1} of ${currentQuestions.length}</span>
                             ${userAnswers[index] !== undefined && userAnswers[index] !== '' ? '<span style="color: #28a745;">✓</span>' : ''}
                         </div>
-                        <button type="button" class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}"
-                                onclick="toggleBookmark(${index}); return false;"
-                                title="${isBookmarked ? 'Remove bookmark' : 'Bookmark for review'}"
-                                aria-label="${isBookmarked ? 'Remove bookmark' : 'Bookmark this question'}">
-                            ${isBookmarked ? '🔖' : '🏷️'}
-                        </button>
                     </div>
                     <div class="question-text">${q.question}${typeLabel}</div>
                     <div class="options" role="${questionType === 'multiple-select' ? 'group' : 'radiogroup'}" aria-label="Answer options">
@@ -5248,35 +5157,6 @@
             } else {
                 questionNumber.innerHTML = `<span>Question ${questionIndex + 1} of ${currentQuestions.length}</span>`;
             }
-        }
-
-        function toggleBookmark(questionIndex) {
-            const bookmarkBtn = document.querySelector(`#question-${questionIndex} .bookmark-btn`);
-            const key = getBookmarkKey();
-
-            // Initialize array for this quiz if it doesn't exist
-            if (!bookmarkedQuestions[key]) {
-                bookmarkedQuestions[key] = [];
-            }
-
-            if (bookmarkedQuestions[key].includes(questionIndex)) {
-                // Remove bookmark
-                bookmarkedQuestions[key] = bookmarkedQuestions[key].filter(i => i !== questionIndex);
-                bookmarkBtn.classList.remove('bookmarked');
-                bookmarkBtn.innerHTML = '🏷️';
-                bookmarkBtn.title = 'Bookmark for review';
-                bookmarkBtn.setAttribute('aria-label', 'Bookmark this question');
-            } else {
-                // Add bookmark with full question data
-                bookmarkedQuestions[key].push(questionIndex);
-                bookmarkBtn.classList.add('bookmarked');
-                bookmarkBtn.innerHTML = '🔖';
-                bookmarkBtn.title = 'Remove bookmark';
-                bookmarkBtn.setAttribute('aria-label', 'Remove bookmark');
-            }
-
-            // Save to global bookmarks
-            saveGlobalBookmarks();
         }
 
         function updateSubmitButton() {
@@ -5845,208 +5725,6 @@
             currentFlashcardIndex = 0;
         }
 
-        // Bookmarks Viewer Functions
-        function showBookmarkedQuestions() {
-            // Check if user is in an active quiz
-            const quizActive = document.getElementById('quizContainer').classList.contains('active');
-
-            if (quizActive) {
-                const confirmed = confirm('You are currently in a quiz. Viewing bookmarks will exit your current quiz and you will lose your progress. Continue?');
-                if (!confirmed) {
-                    return;
-                }
-
-                // Exit the quiz
-                stopTimer();
-                currentDifficulty = '';
-                currentSubcategory = '';
-                userAnswers = {};
-                currentQuestions = [];
-                localStorage.removeItem('tandaQuizInProgress');
-
-                document.getElementById('quizContainer').classList.remove('active');
-                document.getElementById('results').classList.remove('active');
-            }
-
-            // Load bookmarks
-            loadGlobalBookmarks();
-
-            // Check if there are any bookmarks
-            const hasBookmarks = Object.keys(bookmarkedQuestions).some(key =>
-                bookmarkedQuestions[key] && bookmarkedQuestions[key].length > 0
-            );
-
-            const bookmarksContent = document.getElementById('bookmarksContent');
-
-            if (!hasBookmarks) {
-                bookmarksContent.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #666;">
-                        <div style="font-size: 4em; margin-bottom: 20px;">📚</div>
-                        <h3 style="color: #032a56; margin-bottom: 10px;">No Bookmarks Yet</h3>
-                        <p>You haven't bookmarked any questions yet. While taking a quiz, click the 🏷️ button on any question to bookmark it for later review.</p>
-                    </div>
-                `;
-                document.getElementById('bookmarkFlashcardBtn').disabled = true;
-            } else {
-                // Render bookmarked questions organized by difficulty and subcategory
-                let html = '';
-                let totalBookmarks = 0;
-
-                Object.keys(bookmarkedQuestions).forEach(key => {
-                    const bookmarks = bookmarkedQuestions[key];
-                    if (!bookmarks || bookmarks.length === 0) return;
-
-                    const [difficulty, subcategory] = key.split('-');
-                    const difficultyIcons = {
-                        'beginner': '🌱',
-                        'intermediate': '📚',
-                        'advanced': '🎓',
-                        'expert': '🏆'
-                    };
-
-                    const subcategoryName = subcategories[difficulty]?.[subcategory]?.name || subcategory;
-
-                    html += `
-                        <div class="bookmark-section" style="margin-bottom: 30px; border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px; background: #f8f9fa;">
-                            <h3 style="color: #032a56; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                                <span>${difficultyIcons[difficulty]}</span>
-                                <span>${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}</span>
-                                <span style="color: #666; font-size: 0.9em;">→</span>
-                                <span style="font-weight: normal; color: #555;">${subcategoryName}</span>
-                                <span style="margin-left: auto; font-size: 0.8em; background: #032a56; color: white; padding: 4px 12px; border-radius: 20px;">${bookmarks.length} question${bookmarks.length > 1 ? 's' : ''}</span>
-                            </h3>
-                            <div class="bookmark-questions">
-                    `;
-
-                    // Get the actual questions
-                    const questions = quizData[difficulty]?.[subcategory] || [];
-
-                    bookmarks.forEach((qIndex, i) => {
-                        if (qIndex < questions.length) {
-                            const q = questions[qIndex];
-                            totalBookmarks++;
-
-                            html += `
-                                <div style="background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid #032a56;">
-                                    <div style="display: flex; justify-content: space-between; align-items: start; gap: 10px;">
-                                        <div style="flex: 1;">
-                                            <strong style="color: #032a56;">Q${i + 1}:</strong> ${q.question}
-                                        </div>
-                                        <button type="button" class="bookmark-btn bookmarked"
-                                                onclick="removeBookmarkFromViewer('${key}', ${qIndex}); return false;"
-                                                style="flex-shrink: 0; padding: 5px 10px; cursor: pointer; border: none; background: transparent; font-size: 1.2em;"
-                                                title="Remove bookmark">
-                                            🔖
-                                        </button>
-                                    </div>
-                                    ${q.options ? `
-                                        <div style="margin-top: 10px; padding-left: 20px; font-size: 0.9em; color: #666;">
-                                            ${q.options.map((opt, idx) =>
-                                                `<div style="margin: 5px 0; ${idx === q.correct || (Array.isArray(q.correct) && q.correct.includes(idx)) ? 'color: #28a745; font-weight: 600;' : ''}">
-                                                    ${idx === q.correct || (Array.isArray(q.correct) && q.correct.includes(idx)) ? '✓' : '○'} ${opt}
-                                                </div>`
-                                            ).join('')}
-                                        </div>
-                                    ` : ''}
-                                    ${q.explanation ? `
-                                        <div style="margin-top: 10px; padding: 10px; background: #e8f4f8; border-radius: 6px; font-size: 0.9em; color: #333;">
-                                            <strong>💡 Explanation:</strong> ${q.explanation}
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            `;
-                        }
-                    });
-
-                    html += `
-                            </div>
-                        </div>
-                    `;
-                });
-
-                html = `
-                    <div style="text-align: center; margin-bottom: 20px; padding: 15px; background: #e8f4f8; border-radius: 8px;">
-                        <h3 style="color: #032a56; margin: 0;">Total Bookmarked Questions: ${totalBookmarks}</h3>
-                    </div>
-                    ${html}
-                `;
-
-                bookmarksContent.innerHTML = html;
-                document.getElementById('bookmarkFlashcardBtn').disabled = false;
-            }
-
-            // Hide main page and show bookmarks viewer
-            document.getElementById('difficultySelection').classList.add('hidden');
-            document.getElementById('submitQuestionSection').classList.add('hidden');
-            document.getElementById('viewSubmissionsSection').classList.add('hidden');
-            document.getElementById('flashcardContainer').classList.remove('active');
-            document.getElementById('bookmarksViewer').classList.remove('hidden');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function closeBookmarksViewer() {
-            document.getElementById('bookmarksViewer').classList.add('hidden');
-            document.getElementById('difficultySelection').classList.remove('hidden');
-            document.getElementById('submitQuestionSection').classList.remove('hidden');
-            document.getElementById('viewSubmissionsSection').classList.remove('hidden');
-        }
-
-        function removeBookmarkFromViewer(key, questionIndex) {
-            if (bookmarkedQuestions[key]) {
-                bookmarkedQuestions[key] = bookmarkedQuestions[key].filter(i => i !== questionIndex);
-
-                // Remove the key if no bookmarks left
-                if (bookmarkedQuestions[key].length === 0) {
-                    delete bookmarkedQuestions[key];
-                }
-
-                saveGlobalBookmarks();
-                showBookmarkedQuestions(); // Refresh the display
-            }
-        }
-
-        function startFlashcardsFromBookmarks() {
-            loadGlobalBookmarks();
-
-            // Collect all bookmarked questions from all quizzes
-            let allBookmarkedQuestions = [];
-
-            Object.keys(bookmarkedQuestions).forEach(key => {
-                const bookmarks = bookmarkedQuestions[key];
-                if (!bookmarks || bookmarks.length === 0) return;
-
-                const [difficulty, subcategory] = key.split('-');
-                const questions = quizData[difficulty]?.[subcategory] || [];
-
-                bookmarks.forEach(qIndex => {
-                    if (qIndex < questions.length) {
-                        allBookmarkedQuestions.push(questions[qIndex]);
-                    }
-                });
-            });
-
-            if (allBookmarkedQuestions.length === 0) {
-                alert('No bookmarked questions available!');
-                return;
-            }
-
-            // Start flashcard mode with bookmarked questions
-            flashcardQuestions = shuffleArray(allBookmarkedQuestions);
-            currentFlashcardIndex = 0;
-
-            // Hide bookmarks viewer
-            document.getElementById('bookmarksViewer').classList.add('hidden');
-
-            // Show flashcard container and display
-            document.getElementById('flashcardContainer').classList.add('active');
-            document.getElementById('flashcardSelection').style.display = 'none';
-            document.getElementById('flashcardDisplay').classList.add('active');
-
-            loadFlashcard();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
         // Enhanced Statistics & Gamification Management
         function saveQuizStats(score, total, timeTaken, percentage) {
             const stats = JSON.parse(localStorage.getItem('tandaQuizStats')) || {
@@ -6073,7 +5751,6 @@
                 achievements: [],
                 // Features
                 flaggedQuestions: [],
-                bookmarkedQuestions: [],
                 wrongAnswers: [],
                 quizHistory: []
             };
