@@ -1879,6 +1879,104 @@
             </div><!-- End questionFormContent -->
         </div>
 
+        <!-- Bug Report Section -->
+        <div id="bugReportSection" style="margin-top: 30px; padding: 25px; background: #fff3cd; border-radius: 12px; border-left: 5px solid #ffc107;">
+            <h2 onclick="toggleBugForm()" style="color: #856404; margin-bottom: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; transition: all 0.3s ease;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                <span id="bugFormToggleIcon">▶</span>
+                <span>🐛</span>
+                <span>Report a Bug</span>
+                <small style="margin-left: auto; font-size: 0.6em; opacity: 0.7; font-weight: normal;">Click to expand</small>
+            </h2>
+
+            <div id="bugFormContent" class="hidden">
+                <p style="margin: 20px 0; color: #333333; line-height: 1.6;">
+                    Found something that's not working correctly? Let us know so we can fix it!
+                </p>
+
+                <form id="submitBugForm" style="display: flex; flex-direction: column; gap: 15px;">
+                <div>
+                    <label for="bugTitle" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Bug Title *</label>
+                    <input type="text" id="bugTitle" required placeholder="Brief description of the issue..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                </div>
+
+                <div>
+                    <label for="bugDescription" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Description *</label>
+                    <textarea id="bugDescription" required rows="4" placeholder="What happened? What did you expect to happen?" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label for="bugSteps" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Steps to Reproduce (optional)</label>
+                    <textarea id="bugSteps" rows="3" placeholder="1. Go to...&#10;2. Click on...&#10;3. See error..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label for="bugDevice" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Device/Browser *</label>
+                    <input type="text" id="bugDevice" required placeholder="e.g., Chrome on Windows, Safari on iPhone..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                </div>
+
+                <button type="submit" style="padding: 15px; background: linear-gradient(135deg, #ffc107, #ff9800); color: #333; border: none; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(255, 193, 7, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                    Submit Bug Report
+                </button>
+            </form>
+
+            <div id="bugSubmissionSuccess" class="hidden" style="margin-top: 20px; padding: 15px; background: #d4edda; border: 2px solid #28a745; border-radius: 8px; color: #155724;">
+                <strong>✅ Thank you!</strong> Your bug report has been saved. We'll look into it!
+            </div>
+            </div><!-- End bugFormContent -->
+        </div>
+
+        <!-- Incorrect Answer Report Section -->
+        <div id="incorrectAnswerSection" style="margin-top: 30px; padding: 25px; background: #f8d7da; border-radius: 12px; border-left: 5px solid #dc3545;">
+            <h2 onclick="toggleIncorrectAnswerForm()" style="color: #721c24; margin-bottom: 0; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; transition: all 0.3s ease;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                <span id="incorrectAnswerToggleIcon">▶</span>
+                <span>❌</span>
+                <span>Report Incorrect Answer</span>
+                <small style="margin-left: auto; font-size: 0.6em; opacity: 0.7; font-weight: normal;">Click to expand</small>
+            </h2>
+
+            <div id="incorrectAnswerFormContent" class="hidden">
+                <p style="margin: 20px 0; color: #333333; line-height: 1.6;">
+                    Think a question has the wrong answer or explanation? Help us improve the quiz accuracy!
+                </p>
+
+                <form id="submitIncorrectAnswerForm" style="display: flex; flex-direction: column; gap: 15px;">
+                <div>
+                    <label for="incorrectQuestion" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Question Text *</label>
+                    <textarea id="incorrectQuestion" required rows="3" placeholder="Copy/paste the question text here..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label for="incorrectCurrentAnswer" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Current Answer Shown *</label>
+                    <input type="text" id="incorrectCurrentAnswer" required placeholder="What answer is currently marked as correct?" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                </div>
+
+                <div>
+                    <label for="incorrectSuggestedAnswer" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Suggested Correct Answer *</label>
+                    <input type="text" id="incorrectSuggestedAnswer" required placeholder="What should be the correct answer?" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                </div>
+
+                <div>
+                    <label for="incorrectReason" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Reason/Explanation *</label>
+                    <textarea id="incorrectReason" required rows="4" placeholder="Why do you think this answer is incorrect? Include links to Tanda documentation if possible..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em; resize: vertical;"></textarea>
+                </div>
+
+                <div>
+                    <label for="incorrectReference" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Reference Link (optional)</label>
+                    <input type="url" id="incorrectReference" placeholder="https://help.tanda.co/..." style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                    <small style="color: #666; margin-top: 5px; display: block;">Link to documentation supporting your suggestion</small>
+                </div>
+
+                <button type="submit" style="padding: 15px; background: linear-gradient(135deg, #dc3545, #c82333); color: white; border: none; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(220, 53, 69, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                    Submit Report
+                </button>
+            </form>
+
+            <div id="incorrectAnswerSuccess" class="hidden" style="margin-top: 20px; padding: 15px; background: #d4edda; border: 2px solid #28a745; border-radius: 8px; color: #155724;">
+                <strong>✅ Thank you!</strong> Your report has been saved. We'll review the question!
+            </div>
+            </div><!-- End incorrectAnswerFormContent -->
+        </div>
+
         <!-- View Submissions Section (Password Protected) -->
         <div id="viewSubmissionsSection" style="margin-top: 20px; text-align: center;">
             <button class="stats-btn" onclick="showSubmissionsWithPassword()" aria-label="View submitted questions" style="background:linear-gradient(135deg,#f093fb,#f5576c); padding: 12px 24px; font-size: 1em;">
@@ -5204,6 +5302,8 @@
             // Hide difficulty selection and show subcategory selection
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('bugReportSection').classList.add('hidden');
+            document.getElementById('incorrectAnswerSection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.remove('hidden');
 
             // Update header
@@ -5258,6 +5358,8 @@
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('difficultySelection').classList.remove('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
+            document.getElementById('bugReportSection').classList.remove('hidden');
+            document.getElementById('incorrectAnswerSection').classList.remove('hidden');
             currentDifficulty = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -5363,6 +5465,8 @@
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('bugReportSection').classList.add('hidden');
+            document.getElementById('incorrectAnswerSection').classList.add('hidden');
             document.getElementById('viewSubmissionsSection').classList.add('hidden');
             document.getElementById('quizPreview').classList.remove('hidden');
             document.getElementById('quizPreview').classList.add('active');
@@ -5701,6 +5805,8 @@
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('bugReportSection').classList.add('hidden');
+            document.getElementById('incorrectAnswerSection').classList.add('hidden');
             document.getElementById('viewSubmissionsSection').classList.add('hidden');
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
@@ -6025,6 +6131,8 @@
             document.getElementById('difficultySelection').classList.remove('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
+            document.getElementById('bugReportSection').classList.remove('hidden');
+            document.getElementById('incorrectAnswerSection').classList.remove('hidden');
             document.getElementById('viewSubmissionsSection').classList.remove('hidden');
             document.getElementById('quizContainer').classList.remove('active');
             document.getElementById('results').classList.remove('active');
@@ -6071,11 +6179,15 @@
             // Show main page first
             document.getElementById('difficultySelection').classList.remove('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
+            document.getElementById('bugReportSection').classList.remove('hidden');
+            document.getElementById('incorrectAnswerSection').classList.remove('hidden');
             document.getElementById('viewSubmissionsSection').classList.remove('hidden');
 
             // Then hide main page and show flashcard container
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('bugReportSection').classList.add('hidden');
+            document.getElementById('incorrectAnswerSection').classList.add('hidden');
             document.getElementById('viewSubmissionsSection').classList.add('hidden');
             document.getElementById('flashcardContainer').classList.add('active');
 
@@ -6219,6 +6331,8 @@
             document.getElementById('quizPreview').classList.add('hidden');
             document.getElementById('difficultySelection').classList.remove('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
+            document.getElementById('bugReportSection').classList.remove('hidden');
+            document.getElementById('incorrectAnswerSection').classList.remove('hidden');
             document.getElementById('viewSubmissionsSection').classList.remove('hidden');
             flashcardQuestions = [];
             currentFlashcardIndex = 0;
@@ -7284,6 +7398,189 @@ To export all submissions, use the "Export Submissions" feature in the admin pan
 
             // Scroll to success message
             document.getElementById('submissionSuccess').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        // Toggle Bug Report Form
+        function toggleBugForm() {
+            const content = document.getElementById('bugFormContent');
+            const icon = document.getElementById('bugFormToggleIcon');
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('hidden');
+                icon.textContent = '▶';
+            }
+        }
+
+        // Handle bug report submission
+        document.getElementById('submitBugForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const bugReport = {
+                title: document.getElementById('bugTitle').value,
+                description: document.getElementById('bugDescription').value,
+                steps: document.getElementById('bugSteps').value,
+                device: document.getElementById('bugDevice').value,
+                submittedAt: new Date().toISOString(),
+                userAgent: navigator.userAgent
+            };
+
+            // Save to localStorage
+            const bugReports = JSON.parse(localStorage.getItem('tandaBugReports') || '[]');
+            bugReports.push(bugReport);
+            localStorage.setItem('tandaBugReports', JSON.stringify(bugReports));
+
+            // Send email notification
+            try {
+                const emailBody = `
+New Bug Report - Tanda Knowledge Quiz
+======================================
+
+Title: ${bugReport.title}
+
+Description:
+${bugReport.description}
+
+Steps to Reproduce:
+${bugReport.steps || 'Not provided'}
+
+Device/Browser: ${bugReport.device}
+
+User Agent: ${bugReport.userAgent}
+
+Submitted At: ${new Date(bugReport.submittedAt).toLocaleString()}
+
+---
+This bug report was submitted via the Tanda Knowledge Quiz platform.
+                `.trim();
+
+                const formData = new FormData();
+                formData.append('_subject', 'Bug Report - Tanda Knowledge Quiz');
+                formData.append('_template', 'box');
+                formData.append('_captcha', 'false');
+                formData.append('Title', bugReport.title);
+                formData.append('Description', bugReport.description);
+                formData.append('Steps', bugReport.steps || 'Not provided');
+                formData.append('Device', bugReport.device);
+                formData.append('Submitted_At', new Date(bugReport.submittedAt).toLocaleString());
+                formData.append('message', emailBody);
+
+                await fetch('https://formsubmit.co/alex.hall@tanda.com.au', {
+                    method: 'POST',
+                    body: formData
+                });
+            } catch (error) {
+                console.error('Failed to send bug report email:', error);
+            }
+
+            // Show success message
+            document.getElementById('bugSubmissionSuccess').classList.remove('hidden');
+
+            // Reset form
+            this.reset();
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                document.getElementById('bugSubmissionSuccess').classList.add('hidden');
+            }, 5000);
+
+            // Scroll to success message
+            document.getElementById('bugSubmissionSuccess').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        // Toggle Incorrect Answer Form
+        function toggleIncorrectAnswerForm() {
+            const content = document.getElementById('incorrectAnswerFormContent');
+            const icon = document.getElementById('incorrectAnswerToggleIcon');
+
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('hidden');
+                icon.textContent = '▶';
+            }
+        }
+
+        // Handle incorrect answer report submission
+        document.getElementById('submitIncorrectAnswerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const incorrectAnswerReport = {
+                question: document.getElementById('incorrectQuestion').value,
+                currentAnswer: document.getElementById('incorrectCurrentAnswer').value,
+                suggestedAnswer: document.getElementById('incorrectSuggestedAnswer').value,
+                reason: document.getElementById('incorrectReason').value,
+                reference: document.getElementById('incorrectReference').value,
+                submittedAt: new Date().toISOString()
+            };
+
+            // Save to localStorage
+            const incorrectAnswerReports = JSON.parse(localStorage.getItem('tandaIncorrectAnswerReports') || '[]');
+            incorrectAnswerReports.push(incorrectAnswerReport);
+            localStorage.setItem('tandaIncorrectAnswerReports', JSON.stringify(incorrectAnswerReports));
+
+            // Send email notification
+            try {
+                const emailBody = `
+New Incorrect Answer Report - Tanda Knowledge Quiz
+===================================================
+
+Question:
+${incorrectAnswerReport.question}
+
+Current Answer Shown:
+${incorrectAnswerReport.currentAnswer}
+
+Suggested Correct Answer:
+${incorrectAnswerReport.suggestedAnswer}
+
+Reason/Explanation:
+${incorrectAnswerReport.reason}
+
+Reference Link: ${incorrectAnswerReport.reference || 'Not provided'}
+
+Submitted At: ${new Date(incorrectAnswerReport.submittedAt).toLocaleString()}
+
+---
+This report was submitted via the Tanda Knowledge Quiz platform.
+                `.trim();
+
+                const formData = new FormData();
+                formData.append('_subject', 'Incorrect Answer Report - Tanda Knowledge Quiz');
+                formData.append('_template', 'box');
+                formData.append('_captcha', 'false');
+                formData.append('Question', incorrectAnswerReport.question);
+                formData.append('Current_Answer', incorrectAnswerReport.currentAnswer);
+                formData.append('Suggested_Answer', incorrectAnswerReport.suggestedAnswer);
+                formData.append('Reason', incorrectAnswerReport.reason);
+                formData.append('Reference', incorrectAnswerReport.reference || 'Not provided');
+                formData.append('Submitted_At', new Date(incorrectAnswerReport.submittedAt).toLocaleString());
+                formData.append('message', emailBody);
+
+                await fetch('https://formsubmit.co/alex.hall@tanda.com.au', {
+                    method: 'POST',
+                    body: formData
+                });
+            } catch (error) {
+                console.error('Failed to send incorrect answer report email:', error);
+            }
+
+            // Show success message
+            document.getElementById('incorrectAnswerSuccess').classList.remove('hidden');
+
+            // Reset form
+            this.reset();
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                document.getElementById('incorrectAnswerSuccess').classList.add('hidden');
+            }, 5000);
+
+            // Scroll to success message
+            document.getElementById('incorrectAnswerSuccess').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
 
         // Initialize app when DOM is loaded
