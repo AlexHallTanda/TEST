@@ -4908,7 +4908,7 @@
         }
 
         function renderOverallStats(difficulty, stats) {
-            // Calculate total questions: general quiz has 20, all others have 10
+            // Calculate total questions by getting actual count from quiz data
             const topics = Object.keys(subcategories[difficulty]);
             let totalQuestions = 0;
 
@@ -4919,13 +4919,13 @@
                     const subKey = `${difficulty}_${topic}`;
                     const subStats = stats.bySubcategory?.[subKey];
                     if (subStats && subStats.taken > 0) {
-                        totalQuestions += topic === 'general' ? 20 : 10;
+                        totalQuestions += quizData[difficulty]?.[topic]?.length || 10;
                     }
                 });
             } else {
                 // Count all available topics
                 topics.forEach(topic => {
-                    totalQuestions += topic === 'general' ? 20 : 10;
+                    totalQuestions += quizData[difficulty]?.[topic]?.length || 10;
                 });
             }
 
@@ -4994,8 +4994,8 @@
             const subKey = `${difficulty}_${subcategory}`;
             const subStats = stats.bySubcategory[subKey];
 
-            // General quizzes have 20 questions, all other subcategories have 10 questions
-            const totalQuestions = subcategory === 'general' ? 20 : 10;
+            // Get actual question count from quiz data
+            const totalQuestions = quizData[difficulty]?.[subcategory]?.length || 10;
 
             if (!subStats || subStats.taken === 0) {
                 return {
