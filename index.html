@@ -1985,6 +1985,22 @@
             </button>
         </div>
 
+        <!-- View Bug Reports Section (Password Protected) -->
+        <div id="viewBugReportsSection" style="margin-top: 20px; text-align: center;">
+            <button class="stats-btn" onclick="showBugReportsWithPassword()" aria-label="View submitted bug reports" style="background:linear-gradient(135deg,#ffc107,#ff9800); padding: 12px 24px; font-size: 1em;">
+                <span>🐛</span>
+                <span>View Bug Reports</span>
+            </button>
+        </div>
+
+        <!-- View Incorrect Answers Section (Password Protected) -->
+        <div id="viewIncorrectAnswersSection" style="margin-top: 20px; text-align: center;">
+            <button class="stats-btn" onclick="showIncorrectAnswersWithPassword()" aria-label="View incorrect answer reports" style="background:linear-gradient(135deg,#dc3545,#c82333); padding: 12px 24px; font-size: 1em;">
+                <span>❌</span>
+                <span>View Incorrect Answers</span>
+            </button>
+        </div>
+
         <!-- Quiz Preview Section -->
         <div id="quizPreview" class="quiz-preview hidden" role="region" aria-label="Quiz preview">
             <div class="preview-header">
@@ -2146,6 +2162,28 @@
                 <button class="close-btn" onclick="closeSubmissions()" aria-label="Close submissions">&times;</button>
             </div>
             <div id="submissionsContainer"></div>
+        </div>
+    </div>
+
+    <!-- Bug Reports Modal -->
+    <div id="bugReportsModal" class="stats-modal" role="dialog" aria-labelledby="bugReportsTitle" aria-modal="true">
+        <div class="stats-content" style="max-width: 1000px; max-height: 90vh; overflow-y: auto;">
+            <div class="stats-header">
+                <h2 id="bugReportsTitle">🐛 Bug Reports</h2>
+                <button class="close-btn" onclick="closeBugReports()" aria-label="Close bug reports">&times;</button>
+            </div>
+            <div id="bugReportsContainer"></div>
+        </div>
+    </div>
+
+    <!-- Incorrect Answers Modal -->
+    <div id="incorrectAnswersModal" class="stats-modal" role="dialog" aria-labelledby="incorrectAnswersTitle" aria-modal="true">
+        <div class="stats-content" style="max-width: 1000px; max-height: 90vh; overflow-y: auto;">
+            <div class="stats-header">
+                <h2 id="incorrectAnswersTitle">❌ Incorrect Answer Reports</h2>
+                <button class="close-btn" onclick="closeIncorrectAnswers()" aria-label="Close incorrect answer reports">&times;</button>
+            </div>
+            <div id="incorrectAnswersContainer"></div>
         </div>
     </div>
 
@@ -5304,6 +5342,9 @@
             document.getElementById('submitQuestionSection').classList.add('hidden');
             document.getElementById('bugReportSection').classList.add('hidden');
             document.getElementById('incorrectAnswerSection').classList.add('hidden');
+            document.getElementById('viewSubmissionsSection').classList.add('hidden');
+            document.getElementById('viewBugReportsSection').classList.add('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.remove('hidden');
 
             // Update header
@@ -5360,6 +5401,9 @@
             document.getElementById('submitQuestionSection').classList.remove('hidden');
             document.getElementById('bugReportSection').classList.remove('hidden');
             document.getElementById('incorrectAnswerSection').classList.remove('hidden');
+            document.getElementById('viewSubmissionsSection').classList.remove('hidden');
+            document.getElementById('viewBugReportsSection').classList.remove('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.remove('hidden');
             currentDifficulty = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -5468,6 +5512,8 @@
             document.getElementById('bugReportSection').classList.add('hidden');
             document.getElementById('incorrectAnswerSection').classList.add('hidden');
             document.getElementById('viewSubmissionsSection').classList.add('hidden');
+            document.getElementById('viewBugReportsSection').classList.add('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.add('hidden');
             document.getElementById('quizPreview').classList.remove('hidden');
             document.getElementById('quizPreview').classList.add('active');
             document.getElementById('quizContainer').classList.remove('active');
@@ -5808,6 +5854,8 @@
             document.getElementById('bugReportSection').classList.add('hidden');
             document.getElementById('incorrectAnswerSection').classList.add('hidden');
             document.getElementById('viewSubmissionsSection').classList.add('hidden');
+            document.getElementById('viewBugReportsSection').classList.add('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.add('hidden');
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
 
@@ -6134,6 +6182,8 @@
             document.getElementById('bugReportSection').classList.remove('hidden');
             document.getElementById('incorrectAnswerSection').classList.remove('hidden');
             document.getElementById('viewSubmissionsSection').classList.remove('hidden');
+            document.getElementById('viewBugReportsSection').classList.remove('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.remove('hidden');
             document.getElementById('quizContainer').classList.remove('active');
             document.getElementById('results').classList.remove('active');
             document.getElementById('quizPreview').classList.remove('active');
@@ -6182,6 +6232,8 @@
             document.getElementById('bugReportSection').classList.remove('hidden');
             document.getElementById('incorrectAnswerSection').classList.remove('hidden');
             document.getElementById('viewSubmissionsSection').classList.remove('hidden');
+            document.getElementById('viewBugReportsSection').classList.remove('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.remove('hidden');
 
             // Then hide main page and show flashcard container
             document.getElementById('difficultySelection').classList.add('hidden');
@@ -6189,6 +6241,8 @@
             document.getElementById('bugReportSection').classList.add('hidden');
             document.getElementById('incorrectAnswerSection').classList.add('hidden');
             document.getElementById('viewSubmissionsSection').classList.add('hidden');
+            document.getElementById('viewBugReportsSection').classList.add('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.add('hidden');
             document.getElementById('flashcardContainer').classList.add('active');
 
             // Reset dropdowns
@@ -6334,6 +6388,8 @@
             document.getElementById('bugReportSection').classList.remove('hidden');
             document.getElementById('incorrectAnswerSection').classList.remove('hidden');
             document.getElementById('viewSubmissionsSection').classList.remove('hidden');
+            document.getElementById('viewBugReportsSection').classList.remove('hidden');
+            document.getElementById('viewIncorrectAnswersSection').classList.remove('hidden');
             flashcardQuestions = [];
             currentFlashcardIndex = 0;
         }
@@ -7253,6 +7309,240 @@ if (typeof window !== 'undefined') {
         document.getElementById('submissionsModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeSubmissions();
+            }
+        });
+
+        // Bug Reports Functions
+        function showBugReportsWithPassword() {
+            const password = prompt('Enter password to view bug reports:');
+            if (password === 'abc123') {
+                showBugReports();
+            } else if (password !== null) {
+                alert('Incorrect password. Access denied.');
+            }
+        }
+
+        function showBugReports() {
+            const bugReports = JSON.parse(localStorage.getItem('tandaBugReports') || '[]');
+            const container = document.getElementById('bugReportsContainer');
+
+            if (bugReports.length === 0) {
+                container.innerHTML = `
+                    <p style="text-align:center;opacity:0.6;padding:40px">
+                        No bug reports have been submitted yet.
+                    </p>
+                `;
+            } else {
+                let reportsHTML = `
+                    <div style="margin-bottom:20px;text-align:center">
+                        <button onclick="exportBugReports('json')" style="padding:12px 25px;background:linear-gradient(135deg,#ffc107,#ff9800);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-right:10px">
+                            💾 Export as JSON
+                        </button>
+                        <button onclick="clearBugReports()" style="padding:12px 25px;background:linear-gradient(135deg,#dc3545,#c82333);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer">
+                            🗑️ Clear All
+                        </button>
+                    </div>
+                    <div style="font-size:0.9em;text-align:center;margin-bottom:20px;opacity:0.8">
+                        Total Bug Reports: ${bugReports.length}
+                    </div>
+                `;
+
+                bugReports.reverse().forEach((bug, idx) => {
+                    reportsHTML += `
+                        <div style="background:#fff3cd;padding:20px;border-radius:12px;margin-bottom:15px;border-left:4px solid #ffc107">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                                <div style="font-weight:bold;font-size:1.1em">Bug Report #${bugReports.length - idx}</div>
+                                <div style="font-size:0.85em;opacity:0.7">${new Date(bug.submittedAt).toLocaleString()}</div>
+                            </div>
+                            <div style="font-weight:600;margin-bottom:10px;font-size:1.05em;color:#856404">
+                                ${bug.bugTitle}
+                            </div>
+                            <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
+                                <div style="font-weight:600;margin-bottom:5px">Description:</div>
+                                <div>${bug.bugDescription}</div>
+                            </div>
+                            ${bug.bugSteps ? `
+                                <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
+                                    <div style="font-weight:600;margin-bottom:5px">Steps to Reproduce:</div>
+                                    <div>${bug.bugSteps}</div>
+                                </div>
+                            ` : ''}
+                            <div style="background:#ffffff;padding:12px;border-radius:8px">
+                                <div style="font-weight:600;margin-bottom:5px">Device/Browser:</div>
+                                <div>${bug.bugDevice}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = reportsHTML;
+            }
+
+            document.getElementById('bugReportsModal').classList.add('active');
+        }
+
+        function closeBugReports() {
+            document.getElementById('bugReportsModal').classList.remove('active');
+        }
+
+        function exportBugReports(format) {
+            const bugReports = JSON.parse(localStorage.getItem('tandaBugReports') || '[]');
+
+            if (bugReports.length === 0) {
+                alert('No bug reports to export.');
+                return;
+            }
+
+            const content = JSON.stringify(bugReports, null, 2);
+            const filename = `tanda-bug-reports-${new Date().toISOString().split('T')[0]}.json`;
+            const mimeType = 'application/json';
+
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert(`Exported ${bugReports.length} bug report(s) as ${filename}`);
+        }
+
+        function clearBugReports() {
+            const confirmClear = confirm('Are you sure you want to clear all bug reports? This cannot be undone.');
+            if (!confirmClear) return;
+
+            localStorage.removeItem('tandaBugReports');
+            closeBugReports();
+            alert('All bug reports cleared successfully!');
+        }
+
+        // Close bug reports when clicking outside
+        document.getElementById('bugReportsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeBugReports();
+            }
+        });
+
+        // Incorrect Answers Functions
+        function showIncorrectAnswersWithPassword() {
+            const password = prompt('Enter password to view incorrect answer reports:');
+            if (password === 'abc123') {
+                showIncorrectAnswers();
+            } else if (password !== null) {
+                alert('Incorrect password. Access denied.');
+            }
+        }
+
+        function showIncorrectAnswers() {
+            const reports = JSON.parse(localStorage.getItem('tandaIncorrectAnswerReports') || '[]');
+            const container = document.getElementById('incorrectAnswersContainer');
+
+            if (reports.length === 0) {
+                container.innerHTML = `
+                    <p style="text-align:center;opacity:0.6;padding:40px">
+                        No incorrect answer reports have been submitted yet.
+                    </p>
+                `;
+            } else {
+                let reportsHTML = `
+                    <div style="margin-bottom:20px;text-align:center">
+                        <button onclick="exportIncorrectAnswers('json')" style="padding:12px 25px;background:linear-gradient(135deg,#dc3545,#c82333);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer;margin-right:10px">
+                            💾 Export as JSON
+                        </button>
+                        <button onclick="clearIncorrectAnswers()" style="padding:12px 25px;background:linear-gradient(135deg,#6c757d,#5a6268);color:white;border:none;border-radius:8px;font-weight:bold;cursor:pointer">
+                            🗑️ Clear All
+                        </button>
+                    </div>
+                    <div style="font-size:0.9em;text-align:center;margin-bottom:20px;opacity:0.8">
+                        Total Reports: ${reports.length}
+                    </div>
+                `;
+
+                reports.reverse().forEach((report, idx) => {
+                    reportsHTML += `
+                        <div style="background:#f8d7da;padding:20px;border-radius:12px;margin-bottom:15px;border-left:4px solid #dc3545">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+                                <div style="font-weight:bold;font-size:1.1em">Report #${reports.length - idx}</div>
+                                <div style="font-size:0.85em;opacity:0.7">${new Date(report.submittedAt).toLocaleString()}</div>
+                            </div>
+                            <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
+                                <div style="font-weight:600;margin-bottom:5px">Question:</div>
+                                <div>${report.incorrectQuestion}</div>
+                            </div>
+                            <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
+                                <div style="font-weight:600;margin-bottom:5px;color:#dc3545">Current Answer:</div>
+                                <div>${report.incorrectCurrentAnswer}</div>
+                            </div>
+                            <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
+                                <div style="font-weight:600;margin-bottom:5px;color:#28a745">Suggested Correct Answer:</div>
+                                <div>${report.incorrectSuggestedAnswer}</div>
+                            </div>
+                            <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
+                                <div style="font-weight:600;margin-bottom:5px">Reason for Change:</div>
+                                <div>${report.incorrectReason}</div>
+                            </div>
+                            ${report.incorrectReference ? `
+                                <div style="margin-top:10px">
+                                    <a href="${report.incorrectReference}" target="_blank" style="color:#dc3545;text-decoration:none;font-weight:600">
+                                        📚 Reference Link →
+                                    </a>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = reportsHTML;
+            }
+
+            document.getElementById('incorrectAnswersModal').classList.add('active');
+        }
+
+        function closeIncorrectAnswers() {
+            document.getElementById('incorrectAnswersModal').classList.remove('active');
+        }
+
+        function exportIncorrectAnswers(format) {
+            const reports = JSON.parse(localStorage.getItem('tandaIncorrectAnswerReports') || '[]');
+
+            if (reports.length === 0) {
+                alert('No incorrect answer reports to export.');
+                return;
+            }
+
+            const content = JSON.stringify(reports, null, 2);
+            const filename = `tanda-incorrect-answer-reports-${new Date().toISOString().split('T')[0]}.json`;
+            const mimeType = 'application/json';
+
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            alert(`Exported ${reports.length} incorrect answer report(s) as ${filename}`);
+        }
+
+        function clearIncorrectAnswers() {
+            const confirmClear = confirm('Are you sure you want to clear all incorrect answer reports? This cannot be undone.');
+            if (!confirmClear) return;
+
+            localStorage.removeItem('tandaIncorrectAnswerReports');
+            closeIncorrectAnswers();
+            alert('All incorrect answer reports cleared successfully!');
+        }
+
+        // Close incorrect answers when clicking outside
+        document.getElementById('incorrectAnswersModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeIncorrectAnswers();
             }
         });
 
