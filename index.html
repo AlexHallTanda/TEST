@@ -4731,10 +4731,14 @@
 
             // Prepare questions (shuffle them)
             currentQuestions = shuffleArray([...quizData[currentDifficulty][currentSubcategory]])
-                .map(q => ({
-                    ...q,
-                    options: shuffleOptionsWithCorrect(q.options, q.correct)
-                }));
+                .map(q => {
+                    const shuffled = shuffleOptionsWithCorrect(q.options, q.correct);
+                    return {
+                        ...q,
+                        options: shuffled.options,
+                        correct: shuffled.correct
+                    };
+                });
 
             // Hide selection screens
             document.getElementById('difficultySelection').classList.add('hidden');
@@ -5405,7 +5409,34 @@
 
         // Flashcard Mode Functions
         function startFlashcardMode() {
-            // Show flashcard container with selection screen
+            // Check if user is in an active quiz
+            const quizActive = document.getElementById('quizContainer').classList.contains('active');
+
+            if (quizActive) {
+                const confirmed = confirm('You are currently in a quiz. Starting flashcard mode will exit your current quiz and you will lose your progress. Continue?');
+                if (!confirmed) {
+                    return; // User cancelled, stay in quiz
+                }
+
+                // User confirmed, exit the quiz
+                stopTimer();
+                currentDifficulty = '';
+                currentSubcategory = '';
+                userAnswers = {};
+                currentQuestions = [];
+                localStorage.removeItem('tandaQuizInProgress');
+
+                // Hide quiz container and results
+                document.getElementById('quizContainer').classList.remove('active');
+                document.getElementById('results').classList.remove('active');
+            }
+
+            // Show main page first
+            document.getElementById('difficultySelection').classList.remove('hidden');
+            document.getElementById('submitQuestionSection').classList.remove('hidden');
+            document.getElementById('viewSubmissionsSection').classList.remove('hidden');
+
+            // Then hide main page and show flashcard container
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
             document.getElementById('viewSubmissionsSection').classList.add('hidden');
@@ -5420,6 +5451,9 @@
             // Show selection screen
             document.getElementById('flashcardSelection').style.display = 'block';
             document.getElementById('flashcardDisplay').classList.remove('active');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function updateFlashcardSubcategories() {
