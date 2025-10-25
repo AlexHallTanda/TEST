@@ -21,24 +21,24 @@ To enable GitHub Pages:
 ## How to Open the Quiz
 
 ### Method 1: Double-Click (Easiest)
-1. Find the `tanda quiz.html` file in this folder
+1. Find the `index.html` file in this folder
 2. **Double-click** it
 3. The quiz will open in your default web browser
 
 ### Method 2: Drag & Drop
 1. Open your web browser (Chrome, Firefox, Safari, Edge, etc.)
-2. Drag the `tanda quiz.html` file into the browser window
+2. Drag the `index.html` file into the browser window
 3. The quiz will load automatically
 
 ### Method 3: Right-Click
-1. Right-click on `tanda quiz.html`
+1. Right-click on `index.html`
 2. Select "Open with"
 3. Choose your preferred web browser
 
 ### Method 4: From Browser Menu
 1. Open your web browser
 2. Press `Ctrl+O` (Windows/Linux) or `Cmd+O` (Mac)
-3. Navigate to this folder and select `tanda quiz.html`
+3. Navigate to this folder and select `index.html`
 4. Click "Open"
 
 ## How to Open on Mobile
@@ -69,7 +69,7 @@ If the quiz is hosted online (e.g., GitHub Pages, web server):
 6. Tap the icon to launch like a native app
 
 ### Option 3: Share File Directly
-1. Transfer the `tanda quiz.html` file to your phone (email, cloud storage, AirDrop, etc.)
+1. Transfer the `index.html` file to your phone (email, cloud storage, AirDrop, etc.)
 2. Open the file on your mobile device
 3. It will open in your default mobile browser
 4. Works offline once loaded!
