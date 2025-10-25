@@ -1001,6 +1001,85 @@
             opacity: 0.7;
         }
 
+        /* Ordering Question Styles */
+        .ordering-container {
+            min-height: 100px;
+        }
+
+        .ordering-item {
+            padding: 18px 22px;
+            padding-left: 60px;
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: move;
+            cursor: grab;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            position: relative;
+            margin-bottom: 12px;
+            user-select: none;
+        }
+
+        .ordering-item:hover {
+            border-color: #032a56;
+            background: #e8f1f8;
+            transform: translateX(5px);
+        }
+
+        .ordering-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(3, 42, 86, 0.3);
+        }
+
+        .ordering-item.drag-over {
+            border-color: #032a56;
+            border-style: dashed;
+            background: #d4e7fd;
+        }
+
+        .ordering-number {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .drag-handle {
+            margin-right: 12px;
+            color: #6c757d;
+            font-size: 1.3em;
+            cursor: grab;
+        }
+
+        .ordering-item.dragging .drag-handle {
+            cursor: grabbing;
+        }
+
+        .ordering-instruction {
+            padding: 12px 18px;
+            background: #e8f1f8;
+            border-left: 4px solid #032a56;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+            color: #032a56;
+            font-weight: 600;
+        }
+
         .submit-btn, .restart-btn, .back-btn {
             display: block;
             width: 100%;
@@ -2107,21 +2186,27 @@
                 'time-attendance': { name: 'Time & Attendance Basics', icon: '' },
                 'rostering': { name: 'Rostering Fundamentals', icon: '' },
                 'leave': { name: 'Leave Management', icon: '' },
-                'self-service': { name: 'Employee Self-Service', icon: '' }
+                'self-service': { name: 'Employee Self-Service', icon: '' },
+                'hr-basics': { name: 'HR Basics', icon: '👥', description: 'Employee onboarding and management fundamentals' },
+                'payroll-basics': { name: 'Payroll Basics', icon: '💰', description: 'Payroll setup and processing fundamentals' }
             },
             intermediate: {
                 'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
                 'advanced-rostering': { name: 'Advanced Rostering', icon: '' },
                 'timesheets': { name: 'Timesheet Management', icon: '' },
                 'awards': { name: 'Awards & Pay Rules', icon: '' },
-                'reporting': { name: 'Reporting & Analytics', icon: '' }
+                'reporting': { name: 'Reporting & Analytics', icon: '' },
+                'hr-workflows': { name: 'HR Workflows', icon: '👥', description: 'Employee lifecycle and performance management' },
+                'payroll-processing': { name: 'Payroll Processing', icon: '💰', description: 'Payroll runs and troubleshooting' }
             },
             advanced: {
                 'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
                 'compliance': { name: 'Compliance & Awards', icon: '' },
                 'cost-management': { name: 'Cost Management', icon: '' },
                 'integrations': { name: 'Integrations', icon: '' },
-                'advanced-features': { name: 'Advanced Features', icon: '' }
+                'advanced-features': { name: 'Advanced Features', icon: '' },
+                'hr-advanced': { name: 'Advanced HR', icon: '👥', description: 'Complex HR scenarios and troubleshooting' },
+                'payroll-advanced': { name: 'Advanced Payroll', icon: '💰', description: 'Complex payroll scenarios and troubleshooting' }
             },
             expert: {
                 'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
@@ -2705,6 +2790,236 @@
                     explanation: "Employees should notify their manager if they spot timesheet errors. Managers can then review and make necessary corrections to ensure accurate pay.",
                     helpLink: "https://help.tanda.co/en/collections/31866-timesheets"
                 }
+                ],
+                'hr-basics': [
+                {
+                    question: "What is Tanda HR primarily used for?",
+                    options: [
+                        "Only for recruitment",
+                        "Managing employee information, onboarding, and documents",
+                        "Customer relationship management",
+                        "Project tracking"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda HR is a comprehensive employee management system that handles employee profiles, onboarding workflows, document storage, and personnel data management.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    type: 'true-false',
+                    question: "Employee documents like contracts and certifications can be stored in Tanda HR.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda HR provides secure document storage for employee files including contracts, certifications, licenses, and other important personnel documents.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    question: "What is the purpose of employee onboarding in Tanda HR?",
+                    options: [
+                        "To terminate employees",
+                        "To guide new hires through setup and collect required information",
+                        "To schedule shifts only",
+                        "Onboarding is not available"
+                    ],
+                    correct: 1,
+                    explanation: "Onboarding workflows streamline the new hire process by guiding employees through completing their profile, uploading documents, and acknowledging policies.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "What information is typically stored in an employee's HR profile? (Select all that apply)",
+                    options: [
+                        "Contact information",
+                        "Emergency contacts",
+                        "Qualifications and certifications",
+                        "Social media passwords",
+                        "Employment contracts",
+                        "Tax file declaration"
+                    ],
+                    correct: [0, 1, 2, 4, 5],
+                    explanation: "Employee profiles store contact details, emergency contacts, qualifications, contracts, and tax information. Social media passwords should never be stored.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    question: "What happens when a new employee is added to Tanda?",
+                    options: [
+                        "Nothing, they must be manually set up elsewhere",
+                        "They receive an invitation to complete their profile and onboarding",
+                        "They are automatically deleted after 24 hours",
+                        "They can only be added by HR"
+                    ],
+                    correct: 1,
+                    explanation: "When added, new employees receive an invitation email to create their account, complete their profile, and work through any assigned onboarding tasks.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda HR can track employee qualifications and certifications with expiry dates.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda HR allows tracking of qualifications and certifications with expiry dates, sending reminders when renewals are due to maintain compliance.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    question: "What is the purpose of custom fields in employee profiles?",
+                    options: [
+                        "To store random data",
+                        "To capture business-specific information not covered by standard fields",
+                        "They serve no purpose",
+                        "Only for administrator notes"
+                    ],
+                    correct: 1,
+                    explanation: "Custom fields allow businesses to capture unique information relevant to their operations, such as uniform sizes, vehicle registration, or specific certifications.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "What documents might need to be collected during employee onboarding? (Select all that apply)",
+                    options: [
+                        "Tax file declaration",
+                        "Bank details for payroll",
+                        "Proof of identity",
+                        "Pet vaccination records",
+                        "Signed employment contract",
+                        "Superannuation choice form"
+                    ],
+                    correct: [0, 1, 2, 4, 5],
+                    explanation: "Essential onboarding documents include tax declaration, bank details, ID proof, signed contracts, and super choice forms. Pet records are not employment-related.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    question: "How can managers access employee information in Tanda?",
+                    options: [
+                        "Through the employee directory and profiles",
+                        "Only through printed reports",
+                        "Managers cannot access this information",
+                        "By emailing HR each time"
+                    ],
+                    correct: 0,
+                    explanation: "Managers can access employee information through the staff directory and individual employee profiles, with access controlled by role-based permissions.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    type: 'true-false',
+                    question: "Employee data in Tanda HR can be exported for reporting purposes.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Employee data can be exported to CSV or Excel formats for external reporting, analysis, or integration with other systems.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                }
+                ],
+                'payroll-basics': [
+                {
+                    question: "What is Tanda Payroll used for?",
+                    options: [
+                        "Only for scheduling",
+                        "Processing employee wages, tax, and superannuation",
+                        "Customer invoicing",
+                        "Inventory management"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda Payroll is a comprehensive payroll solution that calculates wages, processes tax withholding, manages superannuation, and generates payslips.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda Payroll automatically calculates tax withholding based on ATO tax tables.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda Payroll uses current ATO tax tables to automatically calculate PAYG withholding tax for each employee based on their tax file declaration.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    question: "What information is required to set up an employee for payroll?",
+                    options: [
+                        "Only their name",
+                        "Tax file declaration, bank details, and superannuation choice",
+                        "Just their address",
+                        "Payroll setup is automatic"
+                    ],
+                    correct: 1,
+                    explanation: "Essential payroll setup requires a tax file declaration (for tax calculation), bank account details (for payment), and superannuation choice (for super contributions).",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "What components make up an employee's pay in Tanda Payroll? (Select all that apply)",
+                    options: [
+                        "Base wages",
+                        "Penalty rates and allowances",
+                        "Superannuation",
+                        "Office supplies",
+                        "Tax withholding (deduction)"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Pay consists of base wages, penalties/allowances, and superannuation, with tax withheld. Office supplies are business expenses, not payroll components.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    question: "What is a payslip?",
+                    options: [
+                        "A schedule of shifts",
+                        "A detailed breakdown of an employee's pay and deductions",
+                        "A leave request form",
+                        "A time clock device"
+                    ],
+                    correct: 1,
+                    explanation: "A payslip is a document showing gross earnings, deductions (tax, etc.), superannuation, and net pay for a specific pay period.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'true-false',
+                    question: "Employees can access their payslips digitally through Tanda.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda provides employees with secure digital access to view and download their payslips through the staff portal or mobile app.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    question: "What is superannuation in Australian payroll?",
+                    options: [
+                        "A type of leave",
+                        "Mandatory employer retirement contributions",
+                        "A bonus payment",
+                        "Overtime pay"
+                    ],
+                    correct: 1,
+                    explanation: "Superannuation (super) is a mandatory employer contribution to an employee's retirement fund, currently set at a percentage of ordinary time earnings.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "What reports can typically be generated from Tanda Payroll? (Select all that apply)",
+                    options: [
+                        "Payment summary reports",
+                        "Superannuation reports",
+                        "Payroll tax reports",
+                        "Customer satisfaction surveys",
+                        "PAYG withholding summaries"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Payroll reports include payment summaries, super reports, payroll tax, and PAYG withholding summaries. Customer surveys are not payroll-related.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    question: "How often is payroll typically processed?",
+                    options: [
+                        "Only once per year",
+                        "Weekly, fortnightly, or monthly depending on business needs",
+                        "Every day automatically",
+                        "Payroll is never processed"
+                    ],
+                    correct: 1,
+                    explanation: "Payroll frequency varies by business and can be weekly, fortnightly (every 2 weeks), or monthly, aligned with employment agreements and business practices.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda Payroll can integrate with accounting software like Xero.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda Payroll integrates with major accounting platforms including Xero, MYOB, and QuickBooks to streamline financial reporting and reconciliation.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                }
                 ]
             },
             intermediate: {
@@ -3275,6 +3590,244 @@
                     explanation: "Leave liability reports calculate the total financial value of accrued leave across all employees, important for accounting and budgeting.",
                     helpLink: "https://help.tanda.co/en/collections/31906-leave"
                 }
+                ],
+                'hr-workflows': [
+                {
+                    question: "SCENARIO: A new employee's first day is Monday. When should you start their onboarding process?",
+                    options: [
+                        "On their first day",
+                        "At least a few days before to allow document completion",
+                        "After their first week",
+                        "Onboarding doesn't need advance planning"
+                    ],
+                    correct: 1,
+                    explanation: "Best practice is to send onboarding invitations before the start date, giving new hires time to complete paperwork and prepare, creating a smooth first-day experience.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "SCENARIO: An employee's driver's license expires next month. What should HR do? (Select all that apply)",
+                    options: [
+                        "Set up an expiry reminder notification",
+                        "Request updated documentation before expiry",
+                        "Ignore it until it expires",
+                        "Remove them from driving duties if needed",
+                        "Document the expiry date in their profile"
+                    ],
+                    correct: [0, 1, 3, 4],
+                    explanation: "Proactive management includes setting reminders, requesting renewal before expiry, adjusting duties if expired, and documenting in the profile. Ignoring expiries creates compliance risks.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    question: "SCENARIO: An employee wants to update their emergency contact. How should this be handled?",
+                    options: [
+                        "They must submit a written request to HR",
+                        "They can update it themselves through self-service",
+                        "Only managers can make this change",
+                        "Emergency contacts cannot be changed"
+                    ],
+                    correct: 1,
+                    explanation: "Employees can typically update their own emergency contact information through the self-service portal, reducing administrative burden on HR.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    type: 'true-false',
+                    question: "SCENARIO: An employee is transitioning to a new role. You should create a completely new employee record.",
+                    options: ["True", "False"],
+                    correct: 1,
+                    explanation: "False. You should update the existing employee record with the new role, pay rate, and details. Creating a new record would lose employment history and create data duplication.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    question: "What is the purpose of employee performance review tracking in Tanda HR?",
+                    options: [
+                        "To automatically fire underperforming employees",
+                        "To schedule and document performance discussions and outcomes",
+                        "Performance reviews are not supported",
+                        "Only for legal documentation"
+                    ],
+                    correct: 1,
+                    explanation: "Performance review tracking helps schedule regular check-ins, document discussions, set goals, and maintain a history of employee development conversations.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "SCENARIO: You're offboarding an employee leaving the company. What steps should you take? (Select all that apply)",
+                    options: [
+                        "Deactivate their Tanda account access",
+                        "Complete final pay calculations",
+                        "Retrieve any company documents they need",
+                        "Delete all their historical records",
+                        "Process final leave payouts",
+                        "Update their employment end date"
+                    ],
+                    correct: [0, 1, 2, 4, 5],
+                    explanation: "Offboarding includes deactivating access, final pay/leave calculations, document retrieval, and recording end date. Historical records must be retained, not deleted.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    question: "SCENARIO: Multiple employees need the same certification uploaded. What's the most efficient approach?",
+                    options: [
+                        "Upload individually to each profile",
+                        "Use bulk upload or automated workflows if available",
+                        "Don't upload, just keep paper copies",
+                        "Only upload for managers"
+                    ],
+                    correct: 1,
+                    explanation: "Bulk upload features and automated workflows save time when managing documents for multiple employees, while ensuring consistent record-keeping.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    type: 'true-false',
+                    question: "SCENARIO: An employee's work rights visa is expiring soon. Tanda HR can send automated reminders about this expiry.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "True. Document expiry tracking with automated reminders helps HR stay on top of critical compliance requirements like visa work rights.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    question: "What is the benefit of role-based permissions in HR management?",
+                    options: [
+                        "Everyone sees all employee information",
+                        "Restricts access to sensitive data based on job function",
+                        "Permissions don't affect HR",
+                        "Only the CEO can access HR"
+                    ],
+                    correct: 1,
+                    explanation: "Role-based permissions ensure employees only access information appropriate to their role, protecting privacy and sensitive data while allowing necessary access.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    question: "SCENARIO: You need to track employee training completion. What's the best approach?",
+                    options: [
+                        "Use spreadsheets outside Tanda",
+                        "Use qualifications/certifications features with completion dates",
+                        "Don't track training",
+                        "Only track for managers"
+                    ],
+                    correct: 1,
+                    explanation: "Using the qualifications/certifications system with completion and expiry dates creates a centralized, auditable record of employee training and compliance.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                }
+                ],
+                'payroll-processing': [
+                {
+                    question: "SCENARIO: It's the end of a pay period. What's the first step in processing payroll?",
+                    options: [
+                        "Pay employees immediately",
+                        "Review and approve all timesheets for accuracy",
+                        "Submit to the ATO",
+                        "Wait for next period"
+                    ],
+                    correct: 1,
+                    explanation: "The first critical step is reviewing and approving timesheets to ensure all hours are accurate before calculating pay, preventing costly errors and payment disputes.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "SCENARIO: Before finalizing a payroll run, what should you verify? (Select all that apply)",
+                    options: [
+                        "All timesheets are approved",
+                        "Leave requests are processed",
+                        "Award rules are correctly applied",
+                        "Weather forecast for next week",
+                        "Superannuation is calculated correctly",
+                        "Tax withholding appears accurate"
+                    ],
+                    correct: [0, 1, 2, 4, 5],
+                    explanation: "Pre-payroll checks include approved timesheets, processed leave, correct awards, super calculations, and tax withholding. Weather forecasts aren't relevant to payroll.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    question: "SCENARIO: An employee worked overtime. Why might their overtime rate be incorrect?",
+                    options: [
+                        "Overtime rates are always correct",
+                        "Their award or overtime rules may not be configured properly",
+                        "Tanda doesn't calculate overtime",
+                        "Overtime is always paid at base rate"
+                    ],
+                    correct: 1,
+                    explanation: "Incorrect overtime rates usually indicate misconfigured award rules, missing overtime triggers, or incorrect employee award assignment. These settings need review and correction.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'true-false',
+                    question: "SCENARIO: You can process a payroll run even if some employees are missing tax file declarations.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "True, but those employees will be taxed at the higher 'no TFN' rate as required by ATO regulations. It's better to collect TFNs before first pay.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    question: "SCENARIO: An employee reports their pay is lower than expected. What's your first troubleshooting step?",
+                    options: [
+                        "Tell them they're wrong",
+                        "Review their payslip and compare to their approved timesheet",
+                        "Ignore the complaint",
+                        "Pay them extra immediately"
+                    ],
+                    correct: 1,
+                    explanation: "Start by comparing the payslip breakdown to approved timesheets, checking hours worked, rates applied, and any deductions to identify where the discrepancy occurred.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "SCENARIO: What could cause superannuation to calculate incorrectly? (Select all that apply)",
+                    options: [
+                        "Wrong super guarantee percentage",
+                        "Incorrect ordinary time earnings calculation",
+                        "Employee age under 18",
+                        "Wrong day of the week",
+                        "Employee earning under the threshold"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Super calculation issues can stem from wrong percentage, incorrect OTE, age factors, or threshold earnings. The day of week doesn't affect super calculations.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    question: "SCENARIO: Quarter-end is approaching. What additional payroll task is required?",
+                    options: [
+                        "Nothing extra",
+                        "Prepare and submit superannuation payments and reports",
+                        "Close the business",
+                        "Delete all payroll records"
+                    ],
+                    correct: 1,
+                    explanation: "Quarterly superannuation payments must be made to employee super funds, and quarterly reports submitted to meet compliance obligations.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'true-false',
+                    question: "SCENARIO: After finalizing a payroll run, you can still make unlimited changes to pay amounts.",
+                    options: ["True", "False"],
+                    correct: 1,
+                    explanation: "False. Once finalized, payroll runs are typically locked. Corrections usually require adjustment/correction pays or reversals to maintain audit trails.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    question: "SCENARIO: An employee took unpaid leave. How does this affect their pay?",
+                    options: [
+                        "No effect, they're paid normally",
+                        "Their pay is reduced for the unpaid leave hours",
+                        "They must pay the company",
+                        "Unpaid leave cannot be processed"
+                    ],
+                    correct: 1,
+                    explanation: "Unpaid leave reduces the employee's pay by the hours/days not worked, and is deducted from their gross pay calculation for that period.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    question: "SCENARIO: You need to process a final pay for a terminating employee. What's unique about this?",
+                    options: [
+                        "It's processed exactly like a normal pay",
+                        "It must include accrued leave payouts and pro-rata calculations",
+                        "Final pays cannot be processed",
+                        "They receive no payment"
+                    ],
+                    correct: 1,
+                    explanation: "Final pays must include accrued annual leave payouts, pro-rata calculations for partial periods, and ensure all entitlements are correctly calculated and paid out.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                }
                 ]
             },
             advanced: {
@@ -3844,6 +4397,278 @@
                     correct: 1,
                     explanation: "Award interpretation is the configuration of how modern award rules are applied, including classification mapping, penalty rates, and special conditions.",
                     helpLink: "https://help.tanda.co/en/collections/1870893-compliance"
+                }
+                ],
+                'hr-advanced': [
+                {
+                    type: 'ordering',
+                    question: "ORDERING: Arrange the steps for onboarding a new employee in the correct order:",
+                    options: [
+                        "Send onboarding invitation with login details",
+                        "Create employee record in Tanda",
+                        "Employee completes profile and uploads documents",
+                        "HR reviews and approves documentation",
+                        "Employee gains full system access on start date"
+                    ],
+                    correct: [1, 0, 2, 3, 4],
+                    explanation: "Proper onboarding sequence: 1) Create record, 2) Send invitation, 3) Employee completes forms, 4) HR reviews/approves, 5) Grant access on start date.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    question: "TROUBLESHOOTING: An employee cannot access their Tanda account. What should you check FIRST?",
+                    options: [
+                        "Whether they've been sent an invitation email",
+                        "Delete and recreate their account",
+                        "Call the internet provider",
+                        "Wait and hope it resolves itself"
+                    ],
+                    correct: 0,
+                    explanation: "First verify the invitation was sent and not filtered to spam. Check activation status before more complex troubleshooting. Never delete accounts as this loses data.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    type: 'ordering',
+                    question: "ORDERING: Put these document management steps in the correct order:",
+                    options: [
+                        "Set expiry date and reminders",
+                        "Upload document to employee profile",
+                        "Categorize document type (e.g., license, certification)",
+                        "Verify document authenticity",
+                        "Update when renewal is received"
+                    ],
+                    correct: [3, 1, 2, 0, 4],
+                    explanation: "Best practice: 1) Verify authenticity, 2) Upload, 3) Categorize, 4) Set expiry/reminders, 5) Update upon renewal.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "TROUBLESHOOTING: Multiple employees report not receiving shift notifications. What could be causing this? (Select all that apply)",
+                    options: [
+                        "Notification settings disabled at organization level",
+                        "Individual user notification preferences turned off",
+                        "Email addresses or phone numbers are incorrect",
+                        "The moon phase",
+                        "Shifts are not published",
+                        "Notifications blocked by email spam filters"
+                    ],
+                    correct: [0, 1, 2, 4, 5],
+                    explanation: "Notification issues can stem from org/user settings, incorrect contact details, unpublished rosters, or spam filters. Moon phases don't affect notifications.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    question: "SCENARIO: An employee's certification expired yesterday but they're rostered for shifts requiring it today. What broke?",
+                    options: [
+                        "Nothing broke, certifications don't matter",
+                        "Expiry reminders weren't set up or were ignored",
+                        "Tanda should have auto-prevented this",
+                        "The employee is at fault"
+                    ],
+                    correct: 1,
+                    explanation: "This indicates expiry tracking/reminders weren't configured properly or reminder notifications were missed. Proactive expiry management prevents compliance issues.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    type: 'ordering',
+                    question: "ORDERING: Arrange the employee offboarding steps in the correct sequence:",
+                    options: [
+                        "Process final pay including leave payouts",
+                        "Receive resignation notice",
+                        "Deactivate system access",
+                        "Conduct exit interview and retrieve company property",
+                        "Update employee record with end date"
+                    ],
+                    correct: [1, 3, 4, 0, 2],
+                    explanation: "Proper offboarding: 1) Receive notice, 2) Exit interview/property return, 3) Record end date, 4) Process final pay, 5) Deactivate access.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    question: "TROUBLESHOOTING: Employee data is inconsistent between Tanda and your payroll system. How do you fix this?",
+                    options: [
+                        "Ignore the inconsistency",
+                        "Identify the source of truth and sync data, then fix integration settings",
+                        "Delete both systems",
+                        "Only use one system going forward"
+                    ],
+                    correct: 1,
+                    explanation: "Determine which system has correct data, sync to match, then investigate and fix integration settings to prevent future discrepancies.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "SCENARIO: What data should be audited regularly in HR systems? (Select all that apply)",
+                    options: [
+                        "Employee qualification expiry dates",
+                        "Emergency contact information currency",
+                        "Role and permission assignments",
+                        "Employee favorite colors",
+                        "Banking details accuracy",
+                        "Tax file declaration status"
+                    ],
+                    correct: [0, 1, 2, 4, 5],
+                    explanation: "Regular audits should cover qualifications, contacts, permissions, banking, and tax info. Personal preferences like favorite colors aren't critical HR data.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    question: "TROUBLESHOOTING: Bulk employee import failed. What's the most common cause?",
+                    options: [
+                        "File size too large",
+                        "Data formatting errors or missing required fields",
+                        "Network issues",
+                        "Too many employees"
+                    ],
+                    correct: 1,
+                    explanation: "Import failures typically result from formatting issues, missing required fields, invalid data values, or incorrect column mapping. Review error logs and sample data.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                },
+                {
+                    type: 'ordering',
+                    question: "ORDERING: Arrange these performance review process steps in order:",
+                    options: [
+                        "Manager prepares feedback and goals",
+                        "Schedule review meeting",
+                        "Conduct review discussion",
+                        "Employee completes self-assessment",
+                        "Document outcomes and action items in system"
+                    ],
+                    correct: [1, 3, 0, 2, 4],
+                    explanation: "Effective review process: 1) Schedule meeting, 2) Employee self-assessment, 3) Manager preparation, 4) Conduct discussion, 5) Document outcomes.",
+                    helpLink: "https://help.tanda.co/en/collections/8178627-tanda-hr"
+                }
+                ],
+                'payroll-advanced': [
+                {
+                    type: 'ordering',
+                    question: "ORDERING: Put the payroll processing steps in the correct sequence:",
+                    options: [
+                        "Generate and distribute payslips",
+                        "Review and approve all timesheets",
+                        "Process payments to employee bank accounts",
+                        "Run payroll calculations",
+                        "Final review of pay amounts and deductions"
+                    ],
+                    correct: [1, 3, 4, 0, 2],
+                    explanation: "Correct payroll sequence: 1) Approve timesheets, 2) Run calculations, 3) Final review, 4) Generate payslips, 5) Process payments.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    question: "TROUBLESHOOTING: An employee's pay is $500 higher than expected. What should you investigate FIRST?",
+                    options: [
+                        "Just pay it and move on",
+                        "Check for duplicate timesheets or incorrect shift assignments",
+                        "Blame the employee",
+                        "Ignore it"
+                    ],
+                    correct: 1,
+                    explanation: "Overpayment often results from duplicate timesheets, incorrect shift duplication, or double-entry. Check timesheet records and shift history first.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'ordering',
+                    question: "ORDERING: Arrange the year-end payroll tasks in the correct order:",
+                    options: [
+                        "Distribute payment summaries to employees",
+                        "Reconcile all payroll for the year",
+                        "Generate payment summaries (formerly group certificates)",
+                        "Submit annual PAYG summary to ATO",
+                        "Final superannuation payment and reporting"
+                    ],
+                    correct: [1, 4, 2, 3, 0],
+                    explanation: "Year-end sequence: 1) Reconcile payroll, 2) Final super payment, 3) Generate payment summaries, 4) Submit to ATO, 5) Distribute to employees.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "TROUBLESHOOTING: Superannuation is calculating at $0 for some employees. What could cause this? (Select all that apply)",
+                    options: [
+                        "Employee under 18 and earning below threshold",
+                        "Super guarantee percentage set to 0%",
+                        "Employee classified as contractor not employee",
+                        "Wrong day of the week",
+                        "Employee opted out (which they legally cannot do)",
+                        "Earnings below super threshold"
+                    ],
+                    correct: [0, 1, 2, 5],
+                    explanation: "Zero super can result from age/threshold issues, percentage errors, contractor classification, or low earnings. Day of week and opt-outs aren't valid reasons.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    question: "SCENARIO: Tax withheld seems too high for an employee's income. What likely broke?",
+                    options: [
+                        "Nothing, tax is always correct",
+                        "Tax file declaration settings or tax scale may be incorrect",
+                        "ATO is wrong",
+                        "Employee is lying about their pay"
+                    ],
+                    correct: 1,
+                    explanation: "Excessive withholding usually indicates wrong tax scale (no TFN rate instead of regular), incorrect tax-free threshold settings, or missing/incorrect TFD.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'ordering',
+                    question: "ORDERING: When an error is found AFTER payroll is finalized, arrange the correction steps:",
+                    options: [
+                        "Process adjustment pay (top-up or reversal)",
+                        "Document the error and correction in audit trail",
+                        "Identify the root cause of the error",
+                        "Notify affected employee of the correction",
+                        "Update settings/data to prevent recurrence"
+                    ],
+                    correct: [2, 3, 0, 1, 4],
+                    explanation: "Correction process: 1) Identify root cause, 2) Notify employee, 3) Process adjustment, 4) Document audit trail, 5) Prevent recurrence.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    question: "TROUBLESHOOTING: Payroll export to accounting system fails. What's your first check?",
+                    options: [
+                        "Reinstall everything",
+                        "Verify integration credentials and connection status",
+                        "Give up on integrations",
+                        "Manually enter everything forever"
+                    ],
+                    correct: 1,
+                    explanation: "Integration failures typically stem from expired credentials, changed API keys, or connectivity issues. Verify authentication and connection first.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "SCENARIO: What should be included in payroll audit procedures? (Select all that apply)",
+                    options: [
+                        "Verify award rules are up to date",
+                        "Reconcile tax withheld vs payments to ATO",
+                        "Confirm super payments match obligations",
+                        "Check employee horoscopes",
+                        "Review variance between rostered and actual costs",
+                        "Validate employee banking details"
+                    ],
+                    correct: [0, 1, 2, 4, 5],
+                    explanation: "Audits should cover award compliance, tax reconciliation, super verification, cost variance, and banking validation. Horoscopes aren't audit items.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    question: "TROUBLESHOOTING: An employee's leave payout on termination is incorrect. What should you check?",
+                    options: [
+                        "Their leave balance accrual settings and entitlements",
+                        "Nothing, it's always correct",
+                        "Just guess a number",
+                        "Don't pay leave on termination"
+                    ],
+                    correct: 0,
+                    explanation: "Verify leave accrual rates, check balance history, confirm entitlement rules, and review any manual adjustments. Incorrect settings or balances cause payout errors.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'ordering',
+                    question: "ORDERING: Arrange the quarterly superannuation compliance steps:",
+                    options: [
+                        "Submit super clearing house file",
+                        "Calculate total super liability for quarter",
+                        "Reconcile super payments with payroll records",
+                        "Make payment before quarterly deadline",
+                        "Verify all employee super fund details are current"
+                    ],
+                    correct: [4, 1, 2, 3, 0],
+                    explanation: "Quarterly super process: 1) Verify fund details, 2) Calculate liability, 3) Reconcile records, 4) Make payment by deadline, 5) Submit clearing house file.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
                 }
                 ]
             },
@@ -5064,7 +5889,29 @@
                 let optionsHTML = '';
 
                 // Render based on question type
-                if (questionType === 'fill-blank') {
+                if (questionType === 'ordering') {
+                    // For ordering questions, use the user's current order or default to original order
+                    let currentOrder = userAnswers[index] || q.options.map((_, i) => i);
+
+                    optionsHTML = `
+                        <div class="ordering-instruction">
+                            Drag and drop to arrange items in the correct order
+                        </div>
+                        <div class="ordering-container" id="ordering-container-${index}" data-question-index="${index}">
+                    `;
+
+                    currentOrder.forEach((optIndex, position) => {
+                        optionsHTML += `
+                            <div class="ordering-item" draggable="true" data-option-index="${optIndex}" data-position="${position}">
+                                <div class="ordering-number">${position + 1}</div>
+                                <div class="drag-handle">⋮⋮</div>
+                                <div style="flex: 1;">${q.options[optIndex]}</div>
+                            </div>
+                        `;
+                    });
+
+                    optionsHTML += `</div>`;
+                } else if (questionType === 'fill-blank') {
                     optionsHTML = `
                         <div class="fill-blank-input">
                             <input type="text" id="fillblank${index}" placeholder="Type your answer here..."
@@ -5096,7 +5943,8 @@
                 }
 
                 const typeLabel = questionType === 'multiple-select' ? ' <span style="font-size:0.85em;color:#032a56">(Select all that apply)</span>' :
-                                 questionType === 'fill-blank' ? ' <span style="font-size:0.85em;color:#032a56">(Fill in the blank)</span>' : '';
+                                 questionType === 'fill-blank' ? ' <span style="font-size:0.85em;color:#032a56">(Fill in the blank)</span>' :
+                                 questionType === 'ordering' ? ' <span style="font-size:0.85em;color:#032a56">(Drag to reorder)</span>' : '';
 
                 const currentBookmarks = getCurrentQuizBookmarks();
                 const isBookmarked = currentBookmarks.includes(index);
@@ -5148,6 +5996,124 @@
                     }
                 });
             });
+
+            // Initialize drag-and-drop for ordering questions
+            initializeOrderingQuestions();
+        }
+
+        // Drag and drop handlers for ordering questions
+        let draggedElement = null;
+        let draggedFromIndex = null;
+
+        function initializeOrderingQuestions() {
+            document.querySelectorAll('.ordering-item').forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragend', handleDragEnd);
+                item.addEventListener('dragover', handleDragOver);
+                item.addEventListener('drop', handleDrop);
+                item.addEventListener('dragenter', handleDragEnter);
+                item.addEventListener('dragleave', handleDragLeave);
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedElement = this;
+            draggedFromIndex = parseInt(this.dataset.position);
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+            document.querySelectorAll('.ordering-item').forEach(item => {
+                item.classList.remove('drag-over');
+            });
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function handleDragEnter(e) {
+            if (this !== draggedElement) {
+                this.classList.add('drag-over');
+            }
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+
+            if (draggedElement !== this) {
+                const container = this.closest('.ordering-container');
+                const questionIndex = parseInt(container.dataset.questionIndex);
+                const droppedOnIndex = parseInt(this.dataset.position);
+
+                // Get current order
+                let currentOrder = userAnswers[questionIndex] || currentQuestions[questionIndex].options.map((_, i) => i);
+
+                // Swap items
+                const temp = currentOrder[draggedFromIndex];
+                currentOrder[draggedFromIndex] = currentOrder[droppedOnIndex];
+                currentOrder[droppedOnIndex] = temp;
+
+                // Update user answers
+                userAnswers[questionIndex] = [...currentOrder];
+
+                // Re-render this question
+                const allItems = Array.from(container.querySelectorAll('.ordering-item'));
+                const optionIndexes = allItems.map(item => parseInt(item.dataset.optionIndex));
+
+                // Reorder the items
+                const newOrder = [];
+                allItems.forEach(item => {
+                    const optIndex = parseInt(item.dataset.optionIndex);
+                    const newPos = currentOrder.indexOf(optIndex);
+                    newOrder[newPos] = item;
+                });
+
+                // Update positions and numbers
+                newOrder.forEach((item, newPos) => {
+                    item.dataset.position = newPos;
+                    item.querySelector('.ordering-number').textContent = newPos + 1;
+                });
+
+                // Clear and re-append in new order
+                container.innerHTML = '';
+                newOrder.forEach(item => {
+                    container.appendChild(item);
+                });
+
+                // Re-initialize drag handlers
+                initializeOrderingQuestions();
+
+                // Update progress
+                updateProgressBar();
+                updateQuestionCounter();
+                updateSubmitButton();
+                saveQuizProgress();
+
+                // Update question counter checkmark
+                const questionNumber = document.querySelector(`#question-${questionIndex} .question-number`);
+                if (questionNumber && !questionNumber.querySelector('span[style*="color: #28a745"]')) {
+                    questionNumber.innerHTML = `
+                        <span>Question ${questionIndex + 1} of ${currentQuestions.length}</span>
+                        <span style="color: #28a745;">✓</span>
+                    `;
+                }
+            }
+
+            return false;
         }
 
         function selectOption(questionIndex, optionIndex) {
@@ -5440,6 +6406,12 @@
                         isCorrect = correctAnswer.toLowerCase().trim() === userAnswerLower;
                     }
                     if (isCorrect) score++;
+                } else if (questionType === 'ordering') {
+                    // Check if ordering is correct
+                    if (Array.isArray(userAnswer) && Array.isArray(correctAnswer)) {
+                        isCorrect = JSON.stringify(userAnswer) === JSON.stringify(correctAnswer);
+                        if (isCorrect) score++;
+                    }
                 } else {
                     // multiple-choice or true-false (number comparison)
                     isCorrect = userAnswer === correctAnswer;
@@ -5587,6 +6559,36 @@
                             </div>
                         `;
                     });
+                } else if (questionType === 'ordering') {
+                    // Show ordering question review
+                    const userOrder = Array.isArray(userAnswer) ? userAnswer : q.options.map((_, i) => i);
+                    const correctOrder = Array.isArray(correctAnswer) ? correctAnswer : [];
+                    const isCorrect = JSON.stringify(userOrder) === JSON.stringify(correctOrder);
+
+                    optionsHTML += `
+                        <div style="padding: 12px; background: ${isCorrect ? 'rgba(40, 167, 69, 0.1)' : 'rgba(220, 53, 69, 0.1)'}; border-left: 4px solid ${isCorrect ? '#28a745' : '#dc3545'}; border-radius: 8px; margin-bottom: 15px; font-weight: 600; color: ${isCorrect ? '#28a745' : '#dc3545'};">
+                            ${isCorrect ? '✓ Correct!' : '✗ Incorrect'} The correct order is shown below.
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <div style="font-weight: 600; margin-bottom: 10px; color: #dc3545;">Your Order:</div>
+                            ${userOrder.map((optIndex, position) => `
+                                <div style="padding: 12px 15px; padding-left: 50px; background: #f8f9fa; border: 2px solid ${correctOrder[position] === optIndex ? '#28a745' : '#dc3545'}; border-radius: 8px; margin-bottom: 8px; position: relative;">
+                                    <div style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; background: ${correctOrder[position] === optIndex ? '#28a745' : '#dc3545'}; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em;">${position + 1}</div>
+                                    ${q.options[optIndex]}
+                                    ${correctOrder[position] === optIndex ? ' <span style="color: #28a745; margin-left: 8px;">✓</span>' : ' <span style="color: #dc3545; margin-left: 8px;">✗</span>'}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <div style="font-weight: 600; margin-bottom: 10px; color: #28a745;">Correct Order:</div>
+                            ${correctOrder.map((optIndex, position) => `
+                                <div style="padding: 12px 15px; padding-left: 50px; background: rgba(40, 167, 69, 0.05); border: 2px solid #28a745; border-radius: 8px; margin-bottom: 8px; position: relative;">
+                                    <div style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 28px; height: 28px; background: #28a745; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em;">${position + 1}</div>
+                                    ${q.options[optIndex]}
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
                 } else {
                     // Show multiple-choice/true-false answers
                     q.options.forEach((option, optIndex) => {
