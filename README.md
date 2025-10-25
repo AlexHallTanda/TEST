@@ -2,10 +2,19 @@
 
 An interactive quiz application to test your knowledge of Tanda's workforce management features with targeted subcategories for focused learning.
 
-## Live Demo
+## File Structure
 
-Once GitHub Pages is enabled for this repository, the quiz will be available at:
-**https://alexhalltanda.github.io/TEST/**
+This repository contains two quiz files:
+
+- **`tanda quiz.html`** - Desktop/local version (basic responsive design)
+- **`tanda quiz mobile.html`** - Mobile-optimized version (includes app-like features for home screen installation)
+
+Both files contain the same quiz content, but the mobile version includes additional meta tags for enhanced mobile browser experience.
+
+## Live Demo (Mobile Access)
+
+Once GitHub Pages is enabled for this repository, the mobile-optimized quiz will be available at:
+**https://alexhalltanda.github.io/TEST/tanda%20quiz%20mobile.html**
 
 To enable GitHub Pages:
 1. Go to your repository on GitHub
@@ -16,7 +25,7 @@ To enable GitHub Pages:
    - **Folder**: `/ (root)`
 4. Click **Save**
 5. Wait a few minutes for deployment
-6. Visit the URL above to access your quiz online!
+6. Visit the URL above to access your mobile-optimized quiz online!
 
 ## How to Open the Quiz
 
@@ -43,16 +52,16 @@ To enable GitHub Pages:
 
 ## How to Open on Mobile
 
-### Option 1: Via URL (Hosted Version)
-If the quiz is hosted online (e.g., GitHub Pages, web server):
+### Option 1: Via URL (Hosted Version) - **RECOMMENDED**
+If the quiz is hosted online via GitHub Pages:
 1. Open any mobile browser (Safari, Chrome, Firefox, etc.)
-2. Navigate to the hosted URL
-3. The quiz will load and work fully on your mobile device
+2. Navigate to: **https://alexhalltanda.github.io/TEST/tanda%20quiz%20mobile.html**
+3. The mobile-optimized quiz will load with full app-like features
 
 ### Option 2: Add to Home Screen (App-Like Experience)
 
 **On iPhone/iPad (iOS):**
-1. Open the quiz in **Safari** browser
+1. Open the mobile quiz URL in **Safari** browser
 2. Tap the **Share** button (square with arrow pointing up)
 3. Scroll down and tap **"Add to Home Screen"**
 4. Enter a name (or keep "Tanda Quiz")
@@ -61,7 +70,7 @@ If the quiz is hosted online (e.g., GitHub Pages, web server):
 7. Tap the icon to launch in full-screen mode
 
 **On Android:**
-1. Open the quiz in **Chrome** browser
+1. Open the mobile quiz URL in **Chrome** browser
 2. Tap the **menu** (three dots in top-right corner)
 3. Tap **"Add to Home Screen"** or **"Install app"**
 4. Tap **"Add"** or **"Install"**
@@ -69,9 +78,9 @@ If the quiz is hosted online (e.g., GitHub Pages, web server):
 6. Tap the icon to launch like a native app
 
 ### Option 3: Share File Directly
-1. Transfer the `tanda quiz.html` file to your phone (email, cloud storage, AirDrop, etc.)
+1. Transfer the `tanda quiz mobile.html` file to your phone (email, cloud storage, AirDrop, etc.)
 2. Open the file on your mobile device
-3. It will open in your default mobile browser
+3. It will open in your default mobile browser with mobile optimizations
 4. Works offline once loaded!
 
 ### Option 4: QR Code Access
@@ -81,14 +90,17 @@ If you host the quiz online, generate a QR code for the URL:
 3. Tap the notification to open in browser
 4. Instant access!
 
-### Mobile Features
+### Mobile Features (tanda quiz mobile.html)
 - ✅ Fully responsive design optimized for phones and tablets
 - ✅ Touch-friendly buttons and interfaces
 - ✅ Works in portrait and landscape modes
 - ✅ Saves progress locally on your device
 - ✅ Works offline after initial load
-- ✅ Full-screen app mode when added to home screen
+- ✅ Full-screen app mode when added to home screen (iOS/Android)
+- ✅ Mobile-optimized meta tags for enhanced browser experience
 - ✅ No installation or app store required
+
+**Note:** Both files work on mobile devices, but `tanda quiz mobile.html` includes additional optimizations for the best mobile experience.
 
 ## Features
 
