@@ -4911,7 +4911,7 @@
             // Calculate total questions: use attempted topics if any, otherwise show all available topics
             const totalAvailableTopics = Object.keys(subcategories[difficulty]).length;
             const topicsToShow = stats.topicsAttempted > 0 ? stats.topicsAttempted : totalAvailableTopics;
-            const totalQuestions = topicsToShow * 10; // 10 questions per quiz
+            const totalQuestions = topicsToShow * 20; // 20 questions per quiz
             const progress = totalQuestions > 0 ? (stats.totalCompleted / totalQuestions * 100).toFixed(0) : 0;
 
             return `
@@ -4983,7 +4983,7 @@
                     bestScore: null,
                     avgScore: 0,
                     bestPercentage: 0,
-                    totalQuestions: 10,
+                    totalQuestions: 20,
                     lastAttempt: null,
                     completed: false
                 };
@@ -4994,7 +4994,7 @@
                 bestScore: subStats.bestScore || 0,
                 avgScore: subStats.avgScore || 0,
                 bestPercentage: subStats.bestPercentage || 0,
-                totalQuestions: 10,
+                totalQuestions: 20,
                 lastAttempt: subStats.lastAttempt || null,
                 completed: subStats.completed || false
             };
