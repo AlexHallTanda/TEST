@@ -1821,14 +1821,24 @@
                 </div>
 
                 <div>
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Answer Options * (enter 4 options)</label>
-                    <input type="text" id="option1" required placeholder="Option 1" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
-                    <input type="text" id="option2" required placeholder="Option 2" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
-                    <input type="text" id="option3" required placeholder="Option 3" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
-                    <input type="text" id="option4" required placeholder="Option 4" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                    <label for="questionType" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Question Type *</label>
+                    <select id="questionType" required onchange="updateQuestionTypeOptions()" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                        <option value="">-- Select question type --</option>
+                        <option value="multiple-choice">Multiple Choice (one correct answer)</option>
+                        <option value="true-false">True or False</option>
+                        <option value="multiple-select">Select All That Apply (multiple correct answers)</option>
+                    </select>
                 </div>
 
-                <div>
+                <div id="optionsContainer">
+                    <label id="optionsLabel" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Answer Options * (enter 4 options)</label>
+                    <input type="text" id="option1" required placeholder="Option 1" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                    <input type="text" id="option2" required placeholder="Option 2" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                    <input type="text" id="option3" placeholder="Option 3" style="width: 100%; padding: 12px; margin-bottom: 8px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                    <input type="text" id="option4" placeholder="Option 4" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
+                </div>
+
+                <div id="correctAnswerContainer">
                     <label for="correctAnswer" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Correct Answer *</label>
                     <select id="correctAnswer" required style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; background: #ffffff; color: #333333; font-family: inherit; font-size: 1em;">
                         <option value="">-- Select the correct option --</option>
@@ -1837,6 +1847,24 @@
                         <option value="2">Option 3</option>
                         <option value="3">Option 4</option>
                     </select>
+                </div>
+
+                <div id="multipleCorrectContainer" class="hidden">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333333;">Correct Answers * (select all that apply)</label>
+                    <div style="background: #ffffff; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        <label style="display: block; margin-bottom: 8px; cursor: pointer;">
+                            <input type="checkbox" id="correct1" style="margin-right: 8px;"> Option 1
+                        </label>
+                        <label style="display: block; margin-bottom: 8px; cursor: pointer;">
+                            <input type="checkbox" id="correct2" style="margin-right: 8px;"> Option 2
+                        </label>
+                        <label style="display: block; margin-bottom: 8px; cursor: pointer;">
+                            <input type="checkbox" id="correct3" style="margin-right: 8px;"> Option 3
+                        </label>
+                        <label style="display: block; cursor: pointer;">
+                            <input type="checkbox" id="correct4" style="margin-right: 8px;"> Option 4
+                        </label>
+                    </div>
                 </div>
 
                 <div>
@@ -7208,6 +7236,15 @@
                 `;
 
                 submissions.reverse().forEach((sub, idx) => {
+                    const questionTypeLabel = {
+                        'multiple-choice': 'Multiple Choice',
+                        'true-false': 'True/False',
+                        'multiple-select': 'Select All That Apply'
+                    }[sub.type] || 'Multiple Choice';
+
+                    // Determine correct answers
+                    const correctIndices = Array.isArray(sub.correct) ? sub.correct : [sub.correct];
+
                     submissionsHTML += `
                         <div style="background:#f8f9fa;padding:20px;border-radius:12px;margin-bottom:15px;border-left:4px solid #032a56">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
@@ -7218,17 +7255,23 @@
                                 <span style="display:inline-block;background:linear-gradient(135deg,#032a56,#0a4d8f);color:white;padding:4px 10px;border-radius:6px;font-size:0.85em;margin-right:8px">
                                     ${sub.difficulty}
                                 </span>
-                                <span style="display:inline-block;background:#e0e0e0;padding:4px 10px;border-radius:6px;font-size:0.85em">
+                                <span style="display:inline-block;background:#e0e0e0;padding:4px 10px;border-radius:6px;font-size:0.85em;margin-right:8px">
                                     ${subcategories[sub.difficulty]?.[sub.subcategory]?.name || sub.subcategory}
+                                </span>
+                                <span style="display:inline-block;background:#6dd5ed;color:white;padding:4px 10px;border-radius:6px;font-size:0.85em">
+                                    ${questionTypeLabel}
                                 </span>
                             </div>
                             <div style="font-weight:600;margin-bottom:10px;font-size:1.05em">${sub.question}</div>
                             <div style="margin-bottom:10px">
-                                ${sub.options.map((opt, i) => `
-                                    <div style="padding:8px;margin:5px 0;background:#ffffff;border-radius:6px;${i === sub.correct ? 'border-left:3px solid #28a745;font-weight:600' : ''}">
-                                        ${i + 1}. ${opt} ${i === sub.correct ? '✓' : ''}
-                                    </div>
-                                `).join('')}
+                                ${sub.options.map((opt, i) => {
+                                    const isCorrect = correctIndices.includes(i);
+                                    return `
+                                        <div style="padding:8px;margin:5px 0;background:#ffffff;border-radius:6px;${isCorrect ? 'border-left:3px solid #28a745;font-weight:600' : ''}">
+                                            ${i + 1}. ${opt} ${isCorrect ? '✓' : ''}
+                                        </div>
+                                    `;
+                                }).join('')}
                             </div>
                             <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
                                 <div style="font-weight:600;margin-bottom:5px">Explanation:</div>
@@ -7365,21 +7408,21 @@ if (typeof window !== 'undefined') {
                                 <div style="font-size:0.85em;opacity:0.7">${new Date(bug.submittedAt).toLocaleString()}</div>
                             </div>
                             <div style="font-weight:600;margin-bottom:10px;font-size:1.05em;color:#856404">
-                                ${bug.bugTitle}
+                                ${bug.title}
                             </div>
                             <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
                                 <div style="font-weight:600;margin-bottom:5px">Description:</div>
-                                <div>${bug.bugDescription}</div>
+                                <div>${bug.description}</div>
                             </div>
-                            ${bug.bugSteps ? `
+                            ${bug.steps ? `
                                 <div style="background:#ffffff;padding:12px;border-radius:8px;margin-bottom:10px">
                                     <div style="font-weight:600;margin-bottom:5px">Steps to Reproduce:</div>
-                                    <div>${bug.bugSteps}</div>
+                                    <div>${bug.steps}</div>
                                 </div>
                             ` : ''}
                             <div style="background:#ffffff;padding:12px;border-radius:8px">
                                 <div style="font-weight:600;margin-bottom:5px">Device/Browser:</div>
-                                <div>${bug.bugDevice}</div>
+                                <div>${bug.device}</div>
                             </div>
                         </div>
                     `;
@@ -7648,6 +7691,76 @@ if (typeof window !== 'undefined') {
         }
 
         // Show subcategory select when difficulty is chosen in question submission form
+        function updateQuestionTypeOptions() {
+            const questionType = document.getElementById('questionType').value;
+            const option3 = document.getElementById('option3');
+            const option4 = document.getElementById('option4');
+            const optionsLabel = document.getElementById('optionsLabel');
+            const correctAnswerContainer = document.getElementById('correctAnswerContainer');
+            const multipleCorrectContainer = document.getElementById('multipleCorrectContainer');
+
+            if (questionType === 'true-false') {
+                // True/False: Show only 2 options
+                option3.style.display = 'none';
+                option4.style.display = 'none';
+                option3.required = false;
+                option4.required = false;
+                option3.value = '';
+                option4.value = '';
+                optionsLabel.textContent = 'Answer Options * (True and False)';
+                document.getElementById('option1').placeholder = 'True';
+                document.getElementById('option2').placeholder = 'False';
+                document.getElementById('option1').value = 'True';
+                document.getElementById('option2').value = 'False';
+                correctAnswerContainer.style.display = 'block';
+                multipleCorrectContainer.classList.add('hidden');
+                // Update correct answer dropdown
+                document.getElementById('correctAnswer').innerHTML = `
+                    <option value="">-- Select the correct option --</option>
+                    <option value="0">True</option>
+                    <option value="1">False</option>
+                `;
+            } else if (questionType === 'multiple-select') {
+                // Multiple Select: Show 4 options, use checkboxes
+                option3.style.display = 'block';
+                option4.style.display = 'block';
+                option3.required = true;
+                option4.required = true;
+                optionsLabel.textContent = 'Answer Options * (enter 4 options)';
+                document.getElementById('option1').placeholder = 'Option 1';
+                document.getElementById('option2').placeholder = 'Option 2';
+                document.getElementById('option3').placeholder = 'Option 3';
+                document.getElementById('option4').placeholder = 'Option 4';
+                document.getElementById('option1').value = '';
+                document.getElementById('option2').value = '';
+                correctAnswerContainer.style.display = 'none';
+                multipleCorrectContainer.classList.remove('hidden');
+            } else if (questionType === 'multiple-choice') {
+                // Multiple Choice: Show 4 options, one correct answer
+                option3.style.display = 'block';
+                option4.style.display = 'block';
+                option3.required = true;
+                option4.required = true;
+                optionsLabel.textContent = 'Answer Options * (enter 4 options)';
+                document.getElementById('option1').placeholder = 'Option 1';
+                document.getElementById('option2').placeholder = 'Option 2';
+                document.getElementById('option3').placeholder = 'Option 3';
+                document.getElementById('option4').placeholder = 'Option 4';
+                document.getElementById('option1').value = '';
+                document.getElementById('option2').value = '';
+                correctAnswerContainer.style.display = 'block';
+                multipleCorrectContainer.classList.add('hidden');
+                // Update correct answer dropdown
+                document.getElementById('correctAnswer').innerHTML = `
+                    <option value="">-- Select the correct option --</option>
+                    <option value="0">Option 1</option>
+                    <option value="1">Option 2</option>
+                    <option value="2">Option 3</option>
+                    <option value="3">Option 4</option>
+                `;
+            }
+        }
+
         function showSubcategorySelect() {
             const difficulty = document.getElementById('questionDifficulty').value;
             const container = document.getElementById('subcategorySelectContainer');
@@ -7677,15 +7790,52 @@ if (typeof window !== 'undefined') {
         document.getElementById('submitQuestionForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const submittedQuestion = {
-                question: document.getElementById('questionText').value,
-                options: [
+            const questionType = document.getElementById('questionType').value;
+            let options = [];
+            let correct;
+
+            // Build options array based on question type
+            if (questionType === 'true-false') {
+                options = [
+                    document.getElementById('option1').value,
+                    document.getElementById('option2').value
+                ];
+                correct = parseInt(document.getElementById('correctAnswer').value);
+            } else if (questionType === 'multiple-select') {
+                options = [
                     document.getElementById('option1').value,
                     document.getElementById('option2').value,
                     document.getElementById('option3').value,
                     document.getElementById('option4').value
-                ],
-                correct: parseInt(document.getElementById('correctAnswer').value),
+                ];
+                // Get all checked checkboxes
+                const correctIndices = [];
+                if (document.getElementById('correct1').checked) correctIndices.push(0);
+                if (document.getElementById('correct2').checked) correctIndices.push(1);
+                if (document.getElementById('correct3').checked) correctIndices.push(2);
+                if (document.getElementById('correct4').checked) correctIndices.push(3);
+
+                if (correctIndices.length === 0) {
+                    alert('Please select at least one correct answer for "Select All That Apply" questions.');
+                    return;
+                }
+                correct = correctIndices;
+            } else {
+                // multiple-choice
+                options = [
+                    document.getElementById('option1').value,
+                    document.getElementById('option2').value,
+                    document.getElementById('option3').value,
+                    document.getElementById('option4').value
+                ];
+                correct = parseInt(document.getElementById('correctAnswer').value);
+            }
+
+            const submittedQuestion = {
+                question: document.getElementById('questionText').value,
+                type: questionType,
+                options: options,
+                correct: correct,
                 explanation: document.getElementById('explanation').value,
                 helpLink: document.getElementById('helpGuideLink').value,
                 difficulty: document.getElementById('questionDifficulty').value,
@@ -7701,19 +7851,42 @@ if (typeof window !== 'undefined') {
 
             // Send email notification to alex.hall@tanda.com.au
             try {
+                // Build options list
+                let optionsList = '';
+                submittedQuestion.options.forEach((opt, idx) => {
+                    optionsList += `${idx + 1}. ${opt}\n`;
+                });
+
+                // Build correct answer display
+                let correctAnswerText = '';
+                if (Array.isArray(submittedQuestion.correct)) {
+                    // Multiple correct answers
+                    const correctOptions = submittedQuestion.correct.map(idx =>
+                        `Option ${idx + 1} - ${submittedQuestion.options[idx]}`
+                    ).join(', ');
+                    correctAnswerText = `Multiple Correct Answers: ${correctOptions}`;
+                } else {
+                    // Single correct answer
+                    correctAnswerText = `Option ${submittedQuestion.correct + 1} - ${submittedQuestion.options[submittedQuestion.correct]}`;
+                }
+
+                const questionTypeLabel = {
+                    'multiple-choice': 'Multiple Choice',
+                    'true-false': 'True/False',
+                    'multiple-select': 'Select All That Apply'
+                }[submittedQuestion.type] || submittedQuestion.type;
+
                 const emailBody = `
 New Question Submission - Tanda Knowledge Quiz
 =============================================
 
+Question Type: ${questionTypeLabel}
+
 Question: ${submittedQuestion.question}
 
 Options:
-1. ${submittedQuestion.options[0]}
-2. ${submittedQuestion.options[1]}
-3. ${submittedQuestion.options[2]}
-4. ${submittedQuestion.options[3]}
-
-Correct Answer: Option ${submittedQuestion.correct + 1} - ${submittedQuestion.options[submittedQuestion.correct]}
+${optionsList}
+Correct Answer: ${correctAnswerText}
 
 Explanation: ${submittedQuestion.explanation}
 
@@ -7734,9 +7907,10 @@ To export all submissions, use the "Export Submissions" feature in the admin pan
                 formData.append('_subject', 'New Tanda Quiz Question Submission');
                 formData.append('_template', 'box');
                 formData.append('_captcha', 'false');
+                formData.append('Question_Type', questionTypeLabel);
                 formData.append('Question', submittedQuestion.question);
                 formData.append('Options', submittedQuestion.options.join(' | '));
-                formData.append('Correct_Answer', `Option ${submittedQuestion.correct + 1}`);
+                formData.append('Correct_Answer', correctAnswerText);
                 formData.append('Explanation', submittedQuestion.explanation);
                 formData.append('Help_Link', submittedQuestion.helpLink || 'Not provided');
                 formData.append('Difficulty', submittedQuestion.difficulty);
@@ -7765,8 +7939,24 @@ To export all submissions, use the "Export Submissions" feature in the admin pan
             // Reset form
             this.reset();
 
+            // Reset checkboxes
+            document.getElementById('correct1').checked = false;
+            document.getElementById('correct2').checked = false;
+            document.getElementById('correct3').checked = false;
+            document.getElementById('correct4').checked = false;
+
             // Hide subcategory select on reset
             document.getElementById('subcategorySelectContainer').classList.add('hidden');
+
+            // Hide multiple correct container
+            document.getElementById('multipleCorrectContainer').classList.add('hidden');
+
+            // Reset option display
+            document.getElementById('option3').style.display = 'block';
+            document.getElementById('option4').style.display = 'block';
+            document.getElementById('option3').required = false;
+            document.getElementById('option4').required = false;
+            document.getElementById('correctAnswerContainer').style.display = 'block';
 
             // Hide success message after 5 seconds
             setTimeout(() => {
