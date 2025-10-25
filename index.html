@@ -1994,7 +1994,10 @@
                 <p class="score-percentage" id="scorePercentage"></p>
             </div>
             <div id="answersReview"></div>
-            <button class="restart-btn" onclick="restartQuiz()">Take Another Quiz</button>
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                <button class="restart-btn" onclick="retryQuiz()">Retry This Quiz</button>
+                <button class="restart-btn" onclick="restartQuiz()">Take Another Quiz</button>
+            </div>
         </div>
     </div>
 
@@ -4956,10 +4959,22 @@
         }
 
         function shuffleOptionsWithCorrect(options, correctIndex) {
-            const correctAnswer = options[correctIndex];
             const shuffled = shuffleArray(options);
 
-            // Update the correct index to match new position
+            // Handle multiple-select questions (correctIndex is an array)
+            if (Array.isArray(correctIndex)) {
+                const newCorrectIndices = correctIndex.map(idx => {
+                    const correctAnswer = options[idx];
+                    return shuffled.indexOf(correctAnswer);
+                });
+                return {
+                    options: shuffled,
+                    correct: newCorrectIndices
+                };
+            }
+
+            // Handle multiple-choice/true-false questions (correctIndex is a number)
+            const correctAnswer = options[correctIndex];
             const newCorrectIndex = shuffled.indexOf(correctAnswer);
 
             return {
@@ -5522,6 +5537,26 @@
             stopTimer();
             localStorage.removeItem('tandaQuizInProgress');
             restartQuiz();
+        }
+
+        function retryQuiz() {
+            // Save current difficulty and subcategory
+            const difficulty = currentDifficulty;
+            const subcategory = currentSubcategory;
+
+            // Clear results
+            stopTimer();
+            userAnswers = {};
+            currentQuestions = [];
+
+            // Hide results, show quiz
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('quizContainer').classList.add('active');
+
+            // Restart the same quiz
+            startQuiz(difficulty, subcategory);
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function restartQuiz() {
