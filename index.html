@@ -2,16 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Test your knowledge of Tanda's workforce management features with this interactive quiz">
-
-    <!-- Mobile Web App Meta Tags -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Tanda Quiz">
-    <meta name="theme-color" content="#032a56">
-
     <title>Tanda Quiz</title>
     <style>
         * {
@@ -470,94 +462,6 @@
             animation: fadeIn 0.5s ease;
         }
 
-        .quiz-preview {
-            display: none;
-        }
-
-        .quiz-preview.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .preview-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .preview-header h2 {
-            font-size: 2em;
-            background: linear-gradient(135deg, #032a56, #0a4d8f);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .preview-content {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(3, 42, 86, 0.1);
-        }
-
-        .preview-info-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background: #ffffff;
-            border-radius: 8px;
-            border-left: 4px solid #032a56;
-            box-shadow: 0 2px 8px rgba(3, 42, 86, 0.08);
-        }
-
-        .preview-info-item .icon {
-            font-size: 1.8em;
-            min-width: 40px;
-            text-align: center;
-        }
-
-        .preview-info-item .info {
-            flex: 1;
-        }
-
-        .preview-info-item .label {
-            font-weight: 600;
-            color: #032a56;
-            margin-bottom: 5px;
-        }
-
-        .preview-info-item .value {
-            color: #666;
-            font-size: 0.95em;
-        }
-
-        .preview-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .start-quiz-btn {
-            padding: 15px 40px;
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1.1em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-        }
-
-        .start-quiz-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-        }
-
         /* Flashcard Mode Styles */
         .flashcard-container {
             display: none;
@@ -716,6 +620,75 @@
         .flashcard-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        .flashcard-selection {
+            display: block;
+        }
+
+        .flashcard-display {
+            display: none;
+        }
+
+        .flashcard-display.active {
+            display: block;
+        }
+
+        .flashcard-selector-panel {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #f8f9fa;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(3, 42, 86, 0.1);
+        }
+
+        .selector-group {
+            margin-bottom: 25px;
+        }
+
+        .selector-label {
+            display: block;
+            font-weight: 600;
+            color: #032a56;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .selector-dropdown {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #333333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .selector-dropdown:hover:not(:disabled) {
+            border-color: #032a56;
+        }
+
+        .selector-dropdown:focus {
+            outline: none;
+            border-color: #032a56;
+            box-shadow: 0 0 0 3px rgba(3, 42, 86, 0.1);
+        }
+
+        .selector-dropdown:disabled {
+            background: #f8f9fa;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .selector-actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .quiz-title {
@@ -1731,6 +1704,10 @@
                     <span>🃏</span>
                     <span>Flashcards</span>
                 </button>
+                <button class="stats-btn" onclick="showBookmarkedQuestions()" aria-label="View bookmarked questions">
+                    <span>🔖</span>
+                    <span>Bookmarks</span>
+                </button>
                 <button class="stats-btn" onclick="showDashboard()" aria-label="View dashboard">
                     <span>📈</span>
                     <span>Dashboard</span>
@@ -1845,49 +1822,92 @@
             </button>
         </div>
 
-        <!-- Quiz Preview Section -->
-        <div id="quizPreview" class="quiz-preview hidden" role="region" aria-label="Quiz preview">
-            <div class="preview-header">
-                <h2 id="previewTitle">📋 Quiz Preview</h2>
-            </div>
-            <div id="previewContent" class="preview-content"></div>
-            <div class="preview-actions">
-                <button class="start-quiz-btn" onclick="beginQuizFromPreview()">🚀 Start Quiz Now</button>
-                <button class="back-btn" onclick="backToSelection()">← Back to Selection</button>
-            </div>
-        </div>
-
         <!-- Flashcard Mode Section -->
         <div id="flashcardContainer" class="flashcard-container hidden" role="region" aria-label="Flashcard mode">
-            <div class="flashcard-header">
-                <h2 id="flashcardTitle">🃏 Flashcard Study Mode</h2>
-                <div class="flashcard-progress" id="flashcardProgress">Card 1 of 10</div>
-            </div>
-            <div class="flashcard-wrapper">
-                <div class="flashcard" id="flashcard" onclick="flipFlashcard()">
-                    <div class="flashcard-front">
-                        <div class="flashcard-label">Question</div>
-                        <div class="flashcard-content" id="flashcardQuestion"></div>
-                        <div class="flashcard-hint">Click to reveal answer</div>
+            <!-- Flashcard Selection Screen -->
+            <div id="flashcardSelection" class="flashcard-selection">
+                <div class="flashcard-header">
+                    <h2>🃏 Flashcard Study Mode</h2>
+                    <p style="color: #666; margin-top: 10px;">Select a topic to study</p>
+                </div>
+                <div class="flashcard-selector-panel">
+                    <div class="selector-group">
+                        <label for="flashcardDifficulty" class="selector-label">Difficulty Level:</label>
+                        <select id="flashcardDifficulty" class="selector-dropdown" onchange="updateFlashcardSubcategories()">
+                            <option value="">-- Select Difficulty --</option>
+                            <option value="beginner">🌱 Beginner</option>
+                            <option value="intermediate">📚 Intermediate</option>
+                            <option value="advanced">🎓 Advanced</option>
+                            <option value="expert">🏆 Expert</option>
+                        </select>
                     </div>
-                    <div class="flashcard-back">
-                        <div class="flashcard-label">Answer</div>
-                        <div class="flashcard-content" id="flashcardAnswer"></div>
-                        <div class="flashcard-explanation" id="flashcardExplanation"></div>
+                    <div class="selector-group">
+                        <label for="flashcardSubcategory" class="selector-label">Topic:</label>
+                        <select id="flashcardSubcategory" class="selector-dropdown" disabled>
+                            <option value="">-- Select Topic --</option>
+                        </select>
+                    </div>
+                    <div class="selector-actions">
+                        <button class="flashcard-btn primary" onclick="beginFlashcards()" id="beginFlashcardsBtn" disabled>
+                            Start Flashcards →
+                        </button>
+                        <button class="back-btn" onclick="exitFlashcardMode()">← Back to Selection</button>
                     </div>
                 </div>
             </div>
-            <div class="flashcard-controls">
-                <button class="flashcard-btn" onclick="previousFlashcard()" id="prevFlashcard">
-                    ← Previous
-                </button>
-                <button class="flashcard-btn primary" onclick="nextFlashcard()" id="nextFlashcard">
-                    Next →
-                </button>
+
+            <!-- Flashcard Display Screen -->
+            <div id="flashcardDisplay" class="flashcard-display hidden">
+                <div class="flashcard-header">
+                    <h2 id="flashcardTitle">🃏 Flashcard Study Mode</h2>
+                    <div class="flashcard-progress" id="flashcardProgress">Card 1 of 10</div>
+                </div>
+                <div class="flashcard-wrapper">
+                    <div class="flashcard" id="flashcard" onclick="flipFlashcard()">
+                        <div class="flashcard-front">
+                            <div class="flashcard-label">Question</div>
+                            <div class="flashcard-content" id="flashcardQuestion"></div>
+                            <div class="flashcard-hint">Click to reveal answer</div>
+                        </div>
+                        <div class="flashcard-back">
+                            <div class="flashcard-label">Answer</div>
+                            <div class="flashcard-content" id="flashcardAnswer"></div>
+                            <div class="flashcard-explanation" id="flashcardExplanation"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flashcard-controls">
+                    <button class="flashcard-btn" onclick="previousFlashcard()" id="prevFlashcard">
+                        ← Previous
+                    </button>
+                    <button class="flashcard-btn primary" onclick="nextFlashcard()" id="nextFlashcard">
+                        Next →
+                    </button>
+                </div>
+                <div class="flashcard-actions">
+                    <button class="back-btn" onclick="backToFlashcardSelection()">← Back to Topic Selection</button>
+                    <button class="back-btn" onclick="exitFlashcardMode()">← Back to Quizzes</button>
+                    <button class="flashcard-btn" onclick="shuffleFlashcards()">🔀 Shuffle</button>
+                </div>
             </div>
-            <div class="flashcard-actions">
-                <button class="back-btn" onclick="exitFlashcardMode()">← Back to Selection</button>
-                <button class="flashcard-btn" onclick="shuffleFlashcards()">🔀 Shuffle</button>
+        </div>
+
+        <!-- Bookmarks Viewer -->
+        <div id="bookmarksViewer" class="flashcard-container hidden">
+            <div class="flashcard-header">
+                <h2>🔖 Your Bookmarked Questions</h2>
+                <p class="flashcard-subtitle">Review questions you've saved for later study</p>
+            </div>
+
+            <div id="bookmarksContent" class="bookmarks-content">
+                <!-- Bookmarks will be dynamically rendered here -->
+            </div>
+
+            <div class="flashcard-actions" style="margin-top: 20px;">
+                <button class="back-btn" onclick="closeBookmarksViewer()">← Back to Main Menu</button>
+                <button class="flashcard-btn primary" onclick="startFlashcardsFromBookmarks()" id="bookmarkFlashcardBtn">
+                    🃏 Study as Flashcards
+                </button>
             </div>
         </div>
 
@@ -4299,10 +4319,41 @@
         let timeRemaining = 0;
         let timerEnabled = false;
         let quizStartTime = null;
-        let bookmarkedQuestions = [];
+        let bookmarkedQuestions = {}; // Changed to object: { "difficulty-subcategory": [questionIndexes] }
         let flashcardMode = false;
         let flashcardQuestions = [];
         let currentFlashcardIndex = 0;
+
+        // Load global bookmarks from localStorage
+        function loadGlobalBookmarks() {
+            const saved = localStorage.getItem('tandaQuizBookmarks');
+            if (saved) {
+                try {
+                    bookmarkedQuestions = JSON.parse(saved);
+                } catch (e) {
+                    bookmarkedQuestions = {};
+                }
+            }
+        }
+
+        // Save global bookmarks to localStorage
+        function saveGlobalBookmarks() {
+            localStorage.setItem('tandaQuizBookmarks', JSON.stringify(bookmarkedQuestions));
+        }
+
+        // Get bookmark key for current quiz
+        function getBookmarkKey() {
+            return `${currentDifficulty}-${currentSubcategory}`;
+        }
+
+        // Get bookmarks for current quiz
+        function getCurrentQuizBookmarks() {
+            const key = getBookmarkKey();
+            return bookmarkedQuestions[key] || [];
+        }
+
+        // Load bookmarks on page load
+        loadGlobalBookmarks();
 
         // Timer durations in seconds for each difficulty
         const timerDurations = {
@@ -4730,110 +4781,25 @@
         function startQuiz(difficulty, subcategory) {
             currentDifficulty = difficulty;
             currentSubcategory = subcategory;
+            userAnswers = {};
+            quizStartTime = Date.now();
 
             // Prepare questions (shuffle them)
             currentQuestions = shuffleArray([...quizData[currentDifficulty][currentSubcategory]])
-                .map(q => ({
-                    ...q,
-                    options: shuffleOptionsWithCorrect(q.options, q.correct)
-                }));
+                .map(q => {
+                    const shuffled = shuffleOptionsWithCorrect(q.options, q.correct);
+                    return {
+                        ...q,
+                        options: shuffled.options,
+                        correct: shuffled.correct
+                    };
+                });
 
-            // Show preview instead of starting immediately
-            showQuizPreview();
-        }
-
-        function showQuizPreview() {
-            const difficultyLabels = {
-                beginner: '🌱 Beginner',
-                intermediate: '📚 Intermediate',
-                advanced: '🎓 Advanced',
-                expert: '🏆 Expert'
-            };
-            const subcatInfo = subcategories[currentDifficulty]?.[currentSubcategory];
-            const topicName = subcatInfo ? subcatInfo.name : currentSubcategory;
-
-            // Count question types
-            const questionTypes = {};
-            currentQuestions.forEach(q => {
-                const type = q.type || 'multiple-choice';
-                questionTypes[type] = (questionTypes[type] || 0) + 1;
-            });
-
-            const typeLabels = {
-                'multiple-choice': 'Multiple Choice',
-                'true-false': 'True/False',
-                'multiple-select': 'Multiple Select',
-                'fill-blank': 'Fill in the Blank'
-            };
-
-            const typesBreakdown = Object.entries(questionTypes)
-                .map(([type, count]) => `${typeLabels[type] || type}: ${count}`)
-                .join(', ');
-
-            // Calculate estimated time
-            const timerDurations = { beginner: 600, intermediate: 480, advanced: 420, expert: 360 };
-            const timeInMinutes = timerEnabled ? Math.floor(timerDurations[currentDifficulty] / 60) : 'Untimed';
-            const timeDisplay = timerEnabled ? `${timeInMinutes} minutes` : 'No time limit';
-
-            document.getElementById('previewContent').innerHTML = `
-                <div class="preview-info-item">
-                    <div class="icon">📊</div>
-                    <div class="info">
-                        <div class="label">Difficulty Level</div>
-                        <div class="value">${difficultyLabels[currentDifficulty]}</div>
-                    </div>
-                </div>
-                <div class="preview-info-item">
-                    <div class="icon">📚</div>
-                    <div class="info">
-                        <div class="label">Topic</div>
-                        <div class="value">${topicName}</div>
-                    </div>
-                </div>
-                <div class="preview-info-item">
-                    <div class="icon">📝</div>
-                    <div class="info">
-                        <div class="label">Number of Questions</div>
-                        <div class="value">${currentQuestions.length} questions</div>
-                    </div>
-                </div>
-                <div class="preview-info-item">
-                    <div class="icon">🎯</div>
-                    <div class="info">
-                        <div class="label">Question Types</div>
-                        <div class="value">${typesBreakdown}</div>
-                    </div>
-                </div>
-                <div class="preview-info-item">
-                    <div class="icon">⏱️</div>
-                    <div class="info">
-                        <div class="label">Time Limit</div>
-                        <div class="value">${timeDisplay}</div>
-                    </div>
-                </div>
-                <div class="preview-info-item">
-                    <div class="icon">💡</div>
-                    <div class="info">
-                        <div class="label">Features</div>
-                        <div class="value">Auto-save progress, explanations after submission, bookmark difficult questions</div>
-                    </div>
-                </div>
-            `;
-
+            // Hide selection screens
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
             document.getElementById('viewSubmissionsSection').classList.add('hidden');
-            document.getElementById('quizPreview').classList.add('active');
-            document.getElementById('quizContainer').classList.remove('active');
-            document.getElementById('results').classList.remove('active');
-        }
-
-        function beginQuizFromPreview() {
-            userAnswers = {};
-            quizStartTime = Date.now();
-
-            document.getElementById('quizPreview').classList.remove('active');
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
 
@@ -4844,11 +4810,11 @@
                 advanced: 'Advanced',
                 expert: 'Expert'
             };
-            const subcatInfo = subcategories[difficulty]?.[subcategory];
-            const topicName = subcatInfo ? subcatInfo.name : subcategory;
+            const subcatInfo = subcategories[currentDifficulty]?.[currentSubcategory];
+            const topicName = subcatInfo ? subcatInfo.name : currentSubcategory;
 
             document.getElementById('quizTitle').innerHTML = `
-                <span class="difficulty-badge">${difficultyLabels[difficulty]}</span>
+                <span class="difficulty-badge">${difficultyLabels[currentDifficulty]}</span>
                 <span class="topic-name">${topicName}</span>
             `;
 
@@ -4932,15 +4898,16 @@
                 const typeLabel = questionType === 'multiple-select' ? ' <span style="font-size:0.85em;color:#032a56">(Select all that apply)</span>' :
                                  questionType === 'fill-blank' ? ' <span style="font-size:0.85em;color:#032a56">(Fill in the blank)</span>' : '';
 
-                const isBookmarked = bookmarkedQuestions.includes(index);
+                const currentBookmarks = getCurrentQuizBookmarks();
+                const isBookmarked = currentBookmarks.includes(index);
                 questionCard.innerHTML = `
                     <div class="question-header-row">
                         <div class="question-number">
                             <span>Question ${index + 1} of ${currentQuestions.length}</span>
                             ${userAnswers[index] !== undefined && userAnswers[index] !== '' ? '<span style="color: #28a745;">✓</span>' : ''}
                         </div>
-                        <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}"
-                                onclick="toggleBookmark(${index})"
+                        <button type="button" class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}"
+                                onclick="toggleBookmark(${index}); return false;"
                                 title="${isBookmarked ? 'Remove bookmark' : 'Bookmark for review'}"
                                 aria-label="${isBookmarked ? 'Remove bookmark' : 'Bookmark this question'}">
                             ${isBookmarked ? '🔖' : '🏷️'}
@@ -5085,25 +5052,31 @@
 
         function toggleBookmark(questionIndex) {
             const bookmarkBtn = document.querySelector(`#question-${questionIndex} .bookmark-btn`);
+            const key = getBookmarkKey();
 
-            if (bookmarkedQuestions.includes(questionIndex)) {
+            // Initialize array for this quiz if it doesn't exist
+            if (!bookmarkedQuestions[key]) {
+                bookmarkedQuestions[key] = [];
+            }
+
+            if (bookmarkedQuestions[key].includes(questionIndex)) {
                 // Remove bookmark
-                bookmarkedQuestions = bookmarkedQuestions.filter(i => i !== questionIndex);
+                bookmarkedQuestions[key] = bookmarkedQuestions[key].filter(i => i !== questionIndex);
                 bookmarkBtn.classList.remove('bookmarked');
                 bookmarkBtn.innerHTML = '🏷️';
                 bookmarkBtn.title = 'Bookmark for review';
                 bookmarkBtn.setAttribute('aria-label', 'Bookmark this question');
             } else {
-                // Add bookmark
-                bookmarkedQuestions.push(questionIndex);
+                // Add bookmark with full question data
+                bookmarkedQuestions[key].push(questionIndex);
                 bookmarkBtn.classList.add('bookmarked');
                 bookmarkBtn.innerHTML = '🔖';
                 bookmarkBtn.title = 'Remove bookmark';
                 bookmarkBtn.setAttribute('aria-label', 'Remove bookmark');
             }
 
-            // Save bookmarks to quiz progress
-            saveQuizProgress();
+            // Save to global bookmarks
+            saveGlobalBookmarks();
         }
 
         function updateSubmitButton() {
@@ -5159,8 +5132,7 @@
                 answers: userAnswers,
                 questions: currentQuestions,
                 startTime: quizStartTime,
-                timeRemaining: timeRemaining,
-                bookmarks: bookmarkedQuestions
+                timeRemaining: timeRemaining
             };
             localStorage.setItem('tandaQuizInProgress', JSON.stringify(quizState));
         }
@@ -5174,7 +5146,6 @@
             currentQuestions = savedState.questions;
             quizStartTime = savedState.startTime;
             timeRemaining = savedState.timeRemaining;
-            bookmarkedQuestions = savedState.bookmarks || [];
 
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
@@ -5224,7 +5195,7 @@
             questions.forEach((q, index) => {
                 const questionType = q.type || 'multiple-choice';
                 const userAnswer = userAnswers[index];
-                const correctAnswer = q.options.correct;
+                const correctAnswer = q.correct;
 
                 let isCorrect = false;
                 let partialCredit = 0;
@@ -5325,7 +5296,7 @@
 
                 const questionType = q.type || 'multiple-choice';
                 const userAnswer = userAnswers[index];
-                const correctAnswer = q.options.correct;
+                const correctAnswer = q.correct;
 
                 let optionsHTML = '';
 
@@ -5380,7 +5351,7 @@
                         `;
                     }
 
-                    q.options.options.forEach((option, optIndex) => {
+                    q.options.forEach((option, optIndex) => {
                         let optionClass = '';
                         let statusIcon = '';
                         let statusLabel = '';
@@ -5418,7 +5389,7 @@
                     });
                 } else {
                     // Show multiple-choice/true-false answers
-                    q.options.options.forEach((option, optIndex) => {
+                    q.options.forEach((option, optIndex) => {
                         let optionClass = '';
 
                         if (userAnswer === optIndex && optIndex === correctAnswer) {
@@ -5484,7 +5455,6 @@
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
             document.getElementById('viewSubmissionsSection').classList.remove('hidden');
-            document.getElementById('quizPreview').classList.remove('active');
             document.getElementById('quizContainer').classList.remove('active');
             document.getElementById('results').classList.remove('active');
             document.getElementById('progressFill').style.width = '0%';
@@ -5499,33 +5469,108 @@
 
         // Flashcard Mode Functions
         function startFlashcardMode() {
-            // Show selection modal to choose topic
-            const difficulty = prompt("Enter difficulty (beginner/intermediate/advanced/expert):");
-            if (!difficulty || !quizData[difficulty]) {
-                alert("Invalid difficulty level!");
-                return;
+            // Check if user is in an active quiz
+            const quizActive = document.getElementById('quizContainer').classList.contains('active');
+
+            if (quizActive) {
+                const confirmed = confirm('You are currently in a quiz. Starting flashcard mode will exit your current quiz and you will lose your progress. Continue?');
+                if (!confirmed) {
+                    return; // User cancelled, stay in quiz
+                }
+
+                // User confirmed, exit the quiz
+                stopTimer();
+                currentDifficulty = '';
+                currentSubcategory = '';
+                userAnswers = {};
+                currentQuestions = [];
+                localStorage.removeItem('tandaQuizInProgress');
+
+                // Hide quiz container and results
+                document.getElementById('quizContainer').classList.remove('active');
+                document.getElementById('results').classList.remove('active');
             }
 
-            const topics = Object.keys(quizData[difficulty]);
-            const topicNames = topics.map((t, i) => `${i + 1}. ${subcategories[difficulty][t].name}`).join('\n');
-            const topicIndex = prompt(`Select a topic:\n${topicNames}\n\nEnter number (1-${topics.length}):`);
+            // Show main page first
+            document.getElementById('difficultySelection').classList.remove('hidden');
+            document.getElementById('submitQuestionSection').classList.remove('hidden');
+            document.getElementById('viewSubmissionsSection').classList.remove('hidden');
 
-            if (!topicIndex || topicIndex < 1 || topicIndex > topics.length) {
-                alert("Invalid topic selection!");
-                return;
-            }
-
-            const selectedTopic = topics[topicIndex - 1];
-            flashcardQuestions = [...quizData[difficulty][selectedTopic]];
-            currentFlashcardIndex = 0;
-
-            // Hide other sections
+            // Then hide main page and show flashcard container
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
             document.getElementById('viewSubmissionsSection').classList.add('hidden');
             document.getElementById('flashcardContainer').classList.add('active');
 
+            // Reset dropdowns
+            document.getElementById('flashcardDifficulty').value = '';
+            document.getElementById('flashcardSubcategory').value = '';
+            document.getElementById('flashcardSubcategory').disabled = true;
+            document.getElementById('beginFlashcardsBtn').disabled = true;
+
+            // Show selection screen
+            document.getElementById('flashcardSelection').style.display = 'block';
+            document.getElementById('flashcardDisplay').classList.remove('active');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateFlashcardSubcategories() {
+            const difficulty = document.getElementById('flashcardDifficulty').value;
+            const subcategorySelect = document.getElementById('flashcardSubcategory');
+            const beginBtn = document.getElementById('beginFlashcardsBtn');
+
+            // Clear current options
+            subcategorySelect.innerHTML = '<option value="">-- Select Topic --</option>';
+
+            if (difficulty && subcategories[difficulty]) {
+                // Enable subcategory dropdown
+                subcategorySelect.disabled = false;
+
+                // Populate subcategories
+                Object.keys(subcategories[difficulty]).forEach(key => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = subcategories[difficulty][key].name;
+                    subcategorySelect.appendChild(option);
+                });
+
+                // Enable subcategory change handler
+                subcategorySelect.onchange = function() {
+                    beginBtn.disabled = !this.value;
+                };
+            } else {
+                subcategorySelect.disabled = true;
+                beginBtn.disabled = true;
+            }
+        }
+
+        function beginFlashcards() {
+            const difficulty = document.getElementById('flashcardDifficulty').value;
+            const subcategory = document.getElementById('flashcardSubcategory').value;
+
+            if (!difficulty || !subcategory) {
+                alert('Please select both difficulty and topic!');
+                return;
+            }
+
+            // Load flashcard questions
+            flashcardQuestions = [...quizData[difficulty][subcategory]];
+            currentFlashcardIndex = 0;
+
+            // Hide selection, show flashcard display
+            document.getElementById('flashcardSelection').style.display = 'none';
+            document.getElementById('flashcardDisplay').classList.add('active');
+
             loadFlashcard();
+        }
+
+        function backToFlashcardSelection() {
+            document.getElementById('flashcardDisplay').classList.remove('active');
+            document.getElementById('flashcardSelection').style.display = 'block';
+            flashcardQuestions = [];
+            currentFlashcardIndex = 0;
         }
 
         function loadFlashcard() {
@@ -5591,11 +5636,215 @@
 
         function exitFlashcardMode() {
             document.getElementById('flashcardContainer').classList.remove('active');
+            document.getElementById('flashcardSelection').style.display = 'block';
+            document.getElementById('flashcardDisplay').classList.remove('active');
             document.getElementById('difficultySelection').classList.remove('hidden');
             document.getElementById('submitQuestionSection').classList.remove('hidden');
             document.getElementById('viewSubmissionsSection').classList.remove('hidden');
             flashcardQuestions = [];
             currentFlashcardIndex = 0;
+        }
+
+        // Bookmarks Viewer Functions
+        function showBookmarkedQuestions() {
+            // Check if user is in an active quiz
+            const quizActive = document.getElementById('quizContainer').classList.contains('active');
+
+            if (quizActive) {
+                const confirmed = confirm('You are currently in a quiz. Viewing bookmarks will exit your current quiz and you will lose your progress. Continue?');
+                if (!confirmed) {
+                    return;
+                }
+
+                // Exit the quiz
+                stopTimer();
+                currentDifficulty = '';
+                currentSubcategory = '';
+                userAnswers = {};
+                currentQuestions = [];
+                localStorage.removeItem('tandaQuizInProgress');
+
+                document.getElementById('quizContainer').classList.remove('active');
+                document.getElementById('results').classList.remove('active');
+            }
+
+            // Load bookmarks
+            loadGlobalBookmarks();
+
+            // Check if there are any bookmarks
+            const hasBookmarks = Object.keys(bookmarkedQuestions).some(key =>
+                bookmarkedQuestions[key] && bookmarkedQuestions[key].length > 0
+            );
+
+            const bookmarksContent = document.getElementById('bookmarksContent');
+
+            if (!hasBookmarks) {
+                bookmarksContent.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <div style="font-size: 4em; margin-bottom: 20px;">📚</div>
+                        <h3 style="color: #032a56; margin-bottom: 10px;">No Bookmarks Yet</h3>
+                        <p>You haven't bookmarked any questions yet. While taking a quiz, click the 🏷️ button on any question to bookmark it for later review.</p>
+                    </div>
+                `;
+                document.getElementById('bookmarkFlashcardBtn').disabled = true;
+            } else {
+                // Render bookmarked questions organized by difficulty and subcategory
+                let html = '';
+                let totalBookmarks = 0;
+
+                Object.keys(bookmarkedQuestions).forEach(key => {
+                    const bookmarks = bookmarkedQuestions[key];
+                    if (!bookmarks || bookmarks.length === 0) return;
+
+                    const [difficulty, subcategory] = key.split('-');
+                    const difficultyIcons = {
+                        'beginner': '🌱',
+                        'intermediate': '📚',
+                        'advanced': '🎓',
+                        'expert': '🏆'
+                    };
+
+                    const subcategoryName = subcategories[difficulty]?.[subcategory]?.name || subcategory;
+
+                    html += `
+                        <div class="bookmark-section" style="margin-bottom: 30px; border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px; background: #f8f9fa;">
+                            <h3 style="color: #032a56; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                                <span>${difficultyIcons[difficulty]}</span>
+                                <span>${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}</span>
+                                <span style="color: #666; font-size: 0.9em;">→</span>
+                                <span style="font-weight: normal; color: #555;">${subcategoryName}</span>
+                                <span style="margin-left: auto; font-size: 0.8em; background: #032a56; color: white; padding: 4px 12px; border-radius: 20px;">${bookmarks.length} question${bookmarks.length > 1 ? 's' : ''}</span>
+                            </h3>
+                            <div class="bookmark-questions">
+                    `;
+
+                    // Get the actual questions
+                    const questions = quizData[difficulty]?.[subcategory] || [];
+
+                    bookmarks.forEach((qIndex, i) => {
+                        if (qIndex < questions.length) {
+                            const q = questions[qIndex];
+                            totalBookmarks++;
+
+                            html += `
+                                <div style="background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid #032a56;">
+                                    <div style="display: flex; justify-content: space-between; align-items: start; gap: 10px;">
+                                        <div style="flex: 1;">
+                                            <strong style="color: #032a56;">Q${i + 1}:</strong> ${q.question}
+                                        </div>
+                                        <button type="button" class="bookmark-btn bookmarked"
+                                                onclick="removeBookmarkFromViewer('${key}', ${qIndex}); return false;"
+                                                style="flex-shrink: 0; padding: 5px 10px; cursor: pointer; border: none; background: transparent; font-size: 1.2em;"
+                                                title="Remove bookmark">
+                                            🔖
+                                        </button>
+                                    </div>
+                                    ${q.options ? `
+                                        <div style="margin-top: 10px; padding-left: 20px; font-size: 0.9em; color: #666;">
+                                            ${q.options.map((opt, idx) =>
+                                                `<div style="margin: 5px 0; ${idx === q.correct || (Array.isArray(q.correct) && q.correct.includes(idx)) ? 'color: #28a745; font-weight: 600;' : ''}">
+                                                    ${idx === q.correct || (Array.isArray(q.correct) && q.correct.includes(idx)) ? '✓' : '○'} ${opt}
+                                                </div>`
+                                            ).join('')}
+                                        </div>
+                                    ` : ''}
+                                    ${q.explanation ? `
+                                        <div style="margin-top: 10px; padding: 10px; background: #e8f4f8; border-radius: 6px; font-size: 0.9em; color: #333;">
+                                            <strong>💡 Explanation:</strong> ${q.explanation}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                        }
+                    });
+
+                    html += `
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html = `
+                    <div style="text-align: center; margin-bottom: 20px; padding: 15px; background: #e8f4f8; border-radius: 8px;">
+                        <h3 style="color: #032a56; margin: 0;">Total Bookmarked Questions: ${totalBookmarks}</h3>
+                    </div>
+                    ${html}
+                `;
+
+                bookmarksContent.innerHTML = html;
+                document.getElementById('bookmarkFlashcardBtn').disabled = false;
+            }
+
+            // Hide main page and show bookmarks viewer
+            document.getElementById('difficultySelection').classList.add('hidden');
+            document.getElementById('submitQuestionSection').classList.add('hidden');
+            document.getElementById('viewSubmissionsSection').classList.add('hidden');
+            document.getElementById('flashcardContainer').classList.remove('active');
+            document.getElementById('bookmarksViewer').classList.remove('hidden');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function closeBookmarksViewer() {
+            document.getElementById('bookmarksViewer').classList.add('hidden');
+            document.getElementById('difficultySelection').classList.remove('hidden');
+            document.getElementById('submitQuestionSection').classList.remove('hidden');
+            document.getElementById('viewSubmissionsSection').classList.remove('hidden');
+        }
+
+        function removeBookmarkFromViewer(key, questionIndex) {
+            if (bookmarkedQuestions[key]) {
+                bookmarkedQuestions[key] = bookmarkedQuestions[key].filter(i => i !== questionIndex);
+
+                // Remove the key if no bookmarks left
+                if (bookmarkedQuestions[key].length === 0) {
+                    delete bookmarkedQuestions[key];
+                }
+
+                saveGlobalBookmarks();
+                showBookmarkedQuestions(); // Refresh the display
+            }
+        }
+
+        function startFlashcardsFromBookmarks() {
+            loadGlobalBookmarks();
+
+            // Collect all bookmarked questions from all quizzes
+            let allBookmarkedQuestions = [];
+
+            Object.keys(bookmarkedQuestions).forEach(key => {
+                const bookmarks = bookmarkedQuestions[key];
+                if (!bookmarks || bookmarks.length === 0) return;
+
+                const [difficulty, subcategory] = key.split('-');
+                const questions = quizData[difficulty]?.[subcategory] || [];
+
+                bookmarks.forEach(qIndex => {
+                    if (qIndex < questions.length) {
+                        allBookmarkedQuestions.push(questions[qIndex]);
+                    }
+                });
+            });
+
+            if (allBookmarkedQuestions.length === 0) {
+                alert('No bookmarked questions available!');
+                return;
+            }
+
+            // Start flashcard mode with bookmarked questions
+            flashcardQuestions = shuffleArray(allBookmarkedQuestions);
+            currentFlashcardIndex = 0;
+
+            // Hide bookmarks viewer
+            document.getElementById('bookmarksViewer').classList.add('hidden');
+
+            // Show flashcard container and display
+            document.getElementById('flashcardContainer').classList.add('active');
+            document.getElementById('flashcardSelection').style.display = 'none';
+            document.getElementById('flashcardDisplay').classList.add('active');
+
+            loadFlashcard();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // Enhanced Statistics & Gamification Management
