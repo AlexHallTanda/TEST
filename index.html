@@ -2055,28 +2055,28 @@
         // Subcategory metadata
         const subcategories = {
             beginner: {
-                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'general': { name: 'General Quiz', icon: '🎯', description: '20 mixed questions' },
                 'time-attendance': { name: 'Time & Attendance Basics', icon: '' },
                 'rostering': { name: 'Rostering Fundamentals', icon: '' },
                 'leave': { name: 'Leave Management', icon: '' },
                 'self-service': { name: 'Employee Self-Service', icon: '' }
             },
             intermediate: {
-                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'general': { name: 'General Quiz', icon: '🎯', description: '20 mixed questions' },
                 'advanced-rostering': { name: 'Advanced Rostering', icon: '' },
                 'timesheets': { name: 'Timesheet Management', icon: '' },
                 'awards': { name: 'Awards & Pay Rules', icon: '' },
                 'reporting': { name: 'Reporting & Analytics', icon: '' }
             },
             advanced: {
-                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'general': { name: 'General Quiz', icon: '🎯', description: '20 mixed questions' },
                 'compliance': { name: 'Compliance & Awards', icon: '' },
                 'cost-management': { name: 'Cost Management', icon: '' },
                 'integrations': { name: 'Integrations', icon: '' },
                 'advanced-features': { name: 'Advanced Features', icon: '' }
             },
             expert: {
-                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
+                'general': { name: 'General Quiz', icon: '🎯', description: '20 mixed questions' },
                 'api': { name: 'API & Automation', icon: '' },
                 'enterprise': { name: 'Enterprise Configuration', icon: '' },
                 'workflows': { name: 'Custom Workflows', icon: '' },
@@ -2279,6 +2279,26 @@
                     correct: 1,
                     explanation: "Tanda's reporting features provide insights into labor costs, attendance patterns, overtime, and other workforce metrics to support data-driven business decisions.",
                     helpLink: "https://help.tanda.co/en/collections/31849-reports"
+                },
+                {
+                    type: 'true-false',
+                    question: "Employees can view their timesheets before they are approved by managers.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Employees have access to view their own timesheets in real-time, allowing them to verify accuracy before manager approval.",
+                    helpLink: "https://help.tanda.co/en/collections/31866-timesheets"
+                },
+                {
+                    question: "What is the main benefit of using roster templates in Tanda?",
+                    options: [
+                        "They make rosters look prettier",
+                        "They save time by reusing common scheduling patterns",
+                        "They are required by law",
+                        "Templates cost extra money"
+                    ],
+                    correct: 1,
+                    explanation: "Roster templates allow managers to save and reuse recurring schedule patterns, significantly reducing the time needed to create weekly rosters.",
+                    helpLink: "https://help.tanda.co/en/collections/31535-rosters"
                 }
                 ],
                 'time-attendance': [
@@ -2952,6 +2972,14 @@
                     ],
                     correct: 1,
                     explanation: "Roster cost shows the projected total labor expense based on scheduled shifts and employee pay rates, helping managers stay within budget.",
+                    helpLink: "https://help.tanda.co/en/collections/31849-reports"
+                },
+                {
+                    type: 'true-false',
+                    question: "Managers can view a comparison of rostered hours versus actual worked hours in Tanda.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda provides reports and dashboards comparing scheduled hours (from rosters) against actual hours worked (from timesheets), helping identify scheduling efficiency and labor variance.",
                     helpLink: "https://help.tanda.co/en/collections/31849-reports"
                 }
                 ],
