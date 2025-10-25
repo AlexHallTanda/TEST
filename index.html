@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Test your knowledge of Tanda's workforce management features with this interactive quiz">
+
+    <!-- Progressive Web App Meta Tags for Mobile Enhancement -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Tanda Quiz">
+    <meta name="theme-color" content="#032a56">
+
     <title>Tanda Quiz</title>
     <style>
         * {
@@ -460,6 +468,95 @@
         .quiz-container.active {
             display: block;
             animation: fadeIn 0.5s ease;
+        }
+
+        /* Quiz Preview Styles */
+        .quiz-preview {
+            display: none;
+        }
+
+        .quiz-preview.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .preview-header h2 {
+            font-size: 2em;
+            background: linear-gradient(135deg, #032a56, #0a4d8f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .preview-content {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(3, 42, 86, 0.1);
+        }
+
+        .preview-info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #ffffff;
+            border-radius: 8px;
+            border-left: 4px solid #032a56;
+            box-shadow: 0 2px 8px rgba(3, 42, 86, 0.08);
+        }
+
+        .preview-info-item .icon {
+            font-size: 1.8em;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .preview-info-item .info {
+            flex: 1;
+        }
+
+        .preview-info-item .label {
+            font-weight: 600;
+            color: #032a56;
+            margin-bottom: 5px;
+        }
+
+        .preview-info-item .value {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .start-quiz-btn {
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .start-quiz-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
         }
 
         /* Flashcard Mode Styles */
@@ -1820,6 +1917,18 @@
                 <span>📝</span>
                 <span>View Submissions</span>
             </button>
+        </div>
+
+        <!-- Quiz Preview Section -->
+        <div id="quizPreview" class="quiz-preview hidden" role="region" aria-label="Quiz preview">
+            <div class="preview-header">
+                <h2 id="previewTitle">📋 Quiz Preview</h2>
+            </div>
+            <div id="previewContent" class="preview-content"></div>
+            <div class="preview-actions">
+                <button class="start-quiz-btn" onclick="beginQuizFromPreview()">🚀 Start Quiz Now</button>
+                <button class="back-btn" onclick="backToSelection()">← Back to Selection</button>
+            </div>
         </div>
 
         <!-- Flashcard Mode Section -->
@@ -4781,8 +4890,6 @@
         function startQuiz(difficulty, subcategory) {
             currentDifficulty = difficulty;
             currentSubcategory = subcategory;
-            userAnswers = {};
-            quizStartTime = Date.now();
 
             // Prepare questions (shuffle them)
             currentQuestions = shuffleArray([...quizData[currentDifficulty][currentSubcategory]])
@@ -4795,11 +4902,104 @@
                     };
                 });
 
-            // Hide selection screens
+            // Show preview instead of starting immediately
+            showQuizPreview();
+        }
+
+        function showQuizPreview() {
+            const difficultyLabels = {
+                beginner: '🌱 Beginner',
+                intermediate: '📚 Intermediate',
+                advanced: '🎓 Advanced',
+                expert: '🏆 Expert'
+            };
+            const subcatInfo = subcategories[currentDifficulty]?.[currentSubcategory];
+            const topicName = subcatInfo ? subcatInfo.name : currentSubcategory;
+
+            // Count question types
+            const questionTypes = {};
+            currentQuestions.forEach(q => {
+                const type = q.type || 'multiple-choice';
+                questionTypes[type] = (questionTypes[type] || 0) + 1;
+            });
+
+            const typeLabels = {
+                'multiple-choice': 'Multiple Choice',
+                'true-false': 'True/False',
+                'multiple-select': 'Multiple Select',
+                'fill-blank': 'Fill in the Blank'
+            };
+
+            const typesBreakdown = Object.entries(questionTypes)
+                .map(([type, count]) => `${typeLabels[type] || type}: ${count}`)
+                .join(', ');
+
+            // Calculate estimated time
+            const timerDurations = { beginner: 600, intermediate: 480, advanced: 420, expert: 360 };
+            const timeInMinutes = timerEnabled ? Math.floor(timerDurations[currentDifficulty] / 60) : 'Untimed';
+            const timeDisplay = timerEnabled ? `${timeInMinutes} minutes` : 'No time limit';
+
+            document.getElementById('previewContent').innerHTML = `
+                <div class="preview-info-item">
+                    <div class="icon">📊</div>
+                    <div class="info">
+                        <div class="label">Difficulty Level</div>
+                        <div class="value">${difficultyLabels[currentDifficulty]}</div>
+                    </div>
+                </div>
+                <div class="preview-info-item">
+                    <div class="icon">📚</div>
+                    <div class="info">
+                        <div class="label">Topic</div>
+                        <div class="value">${topicName}</div>
+                    </div>
+                </div>
+                <div class="preview-info-item">
+                    <div class="icon">📝</div>
+                    <div class="info">
+                        <div class="label">Number of Questions</div>
+                        <div class="value">${currentQuestions.length} questions</div>
+                    </div>
+                </div>
+                <div class="preview-info-item">
+                    <div class="icon">🎯</div>
+                    <div class="info">
+                        <div class="label">Question Types</div>
+                        <div class="value">${typesBreakdown}</div>
+                    </div>
+                </div>
+                <div class="preview-info-item">
+                    <div class="icon">⏱️</div>
+                    <div class="info">
+                        <div class="label">Time Limit</div>
+                        <div class="value">${timeDisplay}</div>
+                    </div>
+                </div>
+                <div class="preview-info-item">
+                    <div class="icon">💡</div>
+                    <div class="info">
+                        <div class="label">Features</div>
+                        <div class="value">Auto-save progress, explanations after submission, bookmark difficult questions</div>
+                    </div>
+                </div>
+            `;
+
             document.getElementById('difficultySelection').classList.add('hidden');
             document.getElementById('subcategorySelection').classList.add('hidden');
             document.getElementById('submitQuestionSection').classList.add('hidden');
             document.getElementById('viewSubmissionsSection').classList.add('hidden');
+            document.getElementById('quizPreview').classList.remove('hidden');
+            document.getElementById('quizPreview').classList.add('active');
+            document.getElementById('quizContainer').classList.remove('active');
+            document.getElementById('results').classList.remove('active');
+        }
+
+        function beginQuizFromPreview() {
+            userAnswers = {};
+            quizStartTime = Date.now();
+
+            document.getElementById('quizPreview').classList.remove('active');
+            document.getElementById('quizPreview').classList.add('hidden');
             document.getElementById('quizContainer').classList.add('active');
             document.getElementById('results').classList.remove('active');
 

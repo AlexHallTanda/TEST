@@ -4,50 +4,51 @@ An interactive quiz application to test your knowledge of Tanda's workforce mana
 
 ## File Structure
 
-This repository contains two quiz files:
+This repository contains a single, unified responsive quiz file:
 
-- **`tanda quiz.html`** - Desktop/local version (basic responsive design)
-- **`tanda quiz mobile.html`** - Mobile-optimized version (includes app-like features for home screen installation)
+- **`index.html`** - Fully responsive version that works perfectly on both desktop and mobile devices
 
-Both files contain the same quiz content, but the mobile version includes additional meta tags for enhanced mobile browser experience.
+The file automatically adapts to your device, providing an optimal experience whether you're on a phone, tablet, or computer. It includes PWA (Progressive Web App) features for mobile devices, allowing you to add it to your home screen like a native app.
 
-## Live Demo (Mobile Access)
+## Live Demo
 
-Once GitHub Pages is enabled for this repository, the mobile-optimized quiz will be available at:
-**https://alexhalltanda.github.io/TEST/tanda%20quiz%20mobile.html**
+Once GitHub Pages is enabled for this repository, the quiz will be available at:
+**https://alexhalltanda.github.io/TEST/**
+
+The quiz automatically adapts to your device - mobile users will see the mobile-optimized version, desktop users will see the desktop layout.
 
 To enable GitHub Pages:
 1. Go to your repository on GitHub
 2. Click **Settings** > **Pages** (in the left sidebar)
 3. Under "Build and deployment", set:
    - **Source**: Deploy from a branch
-   - **Branch**: `claude/mobile-app-strategy-011CUSLzHCB2yR25mDRd4FFt`
+   - **Branch**: Select your main branch (e.g., `main` or `master`)
    - **Folder**: `/ (root)`
 4. Click **Save**
 5. Wait a few minutes for deployment
-6. Visit the URL above to access your mobile-optimized quiz online!
+6. Visit the URL above to access your quiz online from any device!
 
 ## How to Open the Quiz
 
 ### Method 1: Double-Click (Easiest)
-1. Find the `tanda quiz.html` file in this folder
+1. Find the `index.html` file in this folder
 2. **Double-click** it
-3. The quiz will open in your default web browser
+3. The quiz will open in your default web browser and automatically adapt to your device
 
 ### Method 2: Drag & Drop
 1. Open your web browser (Chrome, Firefox, Safari, Edge, etc.)
-2. Drag the `tanda quiz.html` file into the browser window
-3. The quiz will load automatically
+2. Drag the `index.html` file into the browser window
+3. The quiz will load automatically with responsive design
 
 ### Method 3: Right-Click
-1. Right-click on `tanda quiz.html`
+1. Right-click on `index.html`
 2. Select "Open with"
 3. Choose your preferred web browser
 
 ### Method 4: From Browser Menu
 1. Open your web browser
 2. Press `Ctrl+O` (Windows/Linux) or `Cmd+O` (Mac)
-3. Navigate to this folder and select `tanda quiz.html`
+3. Navigate to this folder and select `index.html`
 4. Click "Open"
 
 ## How to Open on Mobile
@@ -55,8 +56,8 @@ To enable GitHub Pages:
 ### Option 1: Via URL (Hosted Version) - **RECOMMENDED**
 If the quiz is hosted online via GitHub Pages:
 1. Open any mobile browser (Safari, Chrome, Firefox, etc.)
-2. Navigate to: **https://alexhalltanda.github.io/TEST/tanda%20quiz%20mobile.html**
-3. The mobile-optimized quiz will load with full app-like features
+2. Navigate to: **https://alexhalltanda.github.io/TEST/**
+3. The quiz will automatically load with mobile-optimized features and layout
 
 ### Option 2: Add to Home Screen (App-Like Experience)
 
@@ -78,9 +79,9 @@ If the quiz is hosted online via GitHub Pages:
 6. Tap the icon to launch like a native app
 
 ### Option 3: Share File Directly
-1. Transfer the `tanda quiz mobile.html` file to your phone (email, cloud storage, AirDrop, etc.)
+1. Transfer the `index.html` file to your phone (email, cloud storage, AirDrop, etc.)
 2. Open the file on your mobile device
-3. It will open in your default mobile browser with mobile optimizations
+3. It will automatically open in your default mobile browser with mobile-optimized layout
 4. Works offline once loaded!
 
 ### Option 4: QR Code Access
@@ -90,17 +91,17 @@ If you host the quiz online, generate a QR code for the URL:
 3. Tap the notification to open in browser
 4. Instant access!
 
-### Mobile Features (tanda quiz mobile.html)
-- ✅ Fully responsive design optimized for phones and tablets
-- ✅ Touch-friendly buttons and interfaces
-- ✅ Works in portrait and landscape modes
+### Mobile Features
+- ✅ Fully responsive design that automatically optimizes for phones, tablets, and desktops
+- ✅ Touch-friendly buttons and interfaces on mobile devices
+- ✅ Works perfectly in portrait and landscape modes
+- ✅ Quiz preview screen before starting (better UX on all devices)
 - ✅ Saves progress locally on your device
 - ✅ Works offline after initial load
 - ✅ Full-screen app mode when added to home screen (iOS/Android)
-- ✅ Mobile-optimized meta tags for enhanced browser experience
+- ✅ PWA (Progressive Web App) features for enhanced mobile experience
 - ✅ No installation or app store required
-
-**Note:** Both files work on mobile devices, but `tanda quiz mobile.html` includes additional optimizations for the best mobile experience.
+- ✅ Single file works everywhere - no need to choose between versions
 
 ## Features
 
