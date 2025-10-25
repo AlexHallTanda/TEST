@@ -2187,6 +2187,58 @@
         </div>
     </div>
 
+    <!-- Quick Incorrect Answer Report Modal -->
+    <div id="quickIncorrectAnswerModal" class="stats-modal" role="dialog" aria-labelledby="quickIncorrectAnswerTitle" aria-modal="true">
+        <div class="stats-content" style="max-width: 700px; max-height: 90vh; overflow-y: auto;">
+            <div class="stats-header">
+                <h2 id="quickIncorrectAnswerTitle">❌ Report Incorrect Answer</h2>
+                <button class="close-btn" onclick="closeQuickIncorrectAnswerReport()" aria-label="Close report">&times;</button>
+            </div>
+            <div id="quickIncorrectAnswerContent" style="padding: 20px;">
+                <form id="quickIncorrectAnswerForm" onsubmit="submitQuickIncorrectAnswerReport(event)" style="display: flex; flex-direction: column; gap: 20px;">
+                    <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border-left: 4px solid #dc3545;">
+                        <div style="font-weight: 600; margin-bottom: 8px;">Question:</div>
+                        <div id="quickReportQuestion" style="margin-bottom: 12px;"></div>
+                        <div style="font-weight: 600; margin-bottom: 8px;">Current Answer:</div>
+                        <div id="quickReportCurrentAnswer"></div>
+                    </div>
+
+                    <div>
+                        <label for="quickSuggestedAnswer" style="display: block; font-weight: 600; margin-bottom: 8px;">
+                            Suggested Correct Answer <span style="color: #dc3545;">*</span>
+                        </label>
+                        <input type="text" id="quickSuggestedAnswer" required
+                               placeholder="What should be the correct answer?"
+                               style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                    </div>
+
+                    <div>
+                        <label for="quickReason" style="display: block; font-weight: 600; margin-bottom: 8px;">
+                            Reason/Explanation <span style="color: #dc3545;">*</span>
+                        </label>
+                        <textarea id="quickReason" rows="4" required
+                                  placeholder="Why do you think this answer is incorrect? Include links to Tanda documentation if possible..."
+                                  style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; resize: vertical;"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="quickReference" style="display: block; font-weight: 600; margin-bottom: 8px;">
+                            Reference Link (optional)
+                        </label>
+                        <input type="url" id="quickReference"
+                               placeholder="https://help.tanda.com/..."
+                               style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em;">
+                    </div>
+
+                    <button type="submit"
+                            style="padding: 15px; background: linear-gradient(135deg, #dc3545, #c82333); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1em; cursor: pointer;">
+                        Submit Report
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Subcategory metadata
         const subcategories = {
@@ -6127,6 +6179,18 @@
                     </div>
                 ` : '';
 
+                // Prepare correct answer text for display
+                let correctAnswerText = '';
+                if (questionType === 'fill-blank') {
+                    const acceptableAnswers = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
+                    correctAnswerText = acceptableAnswers.join(' / ');
+                } else if (questionType === 'multiple-select') {
+                    const correctIndices = Array.isArray(correctAnswer) ? correctAnswer : [correctAnswer];
+                    correctAnswerText = correctIndices.map(idx => q.options[idx]).join(', ');
+                } else {
+                    correctAnswerText = q.options[correctAnswer];
+                }
+
                 questionCard.innerHTML = `
                     <div class="question-number">Question ${index + 1}</div>
                     <div class="question-text">${q.question}</div>
@@ -6134,6 +6198,12 @@
                         ${optionsHTML}
                     </div>
                     ${explanationHTML}
+                    <div style="margin-top: 15px; text-align: center;">
+                        <button onclick='openQuickIncorrectAnswerReport(${JSON.stringify(q.question)}, ${JSON.stringify(correctAnswerText)})'
+                                style="padding: 10px 20px; background: linear-gradient(135deg, #dc3545, #c82333); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9em;">
+                            ❌ Report Incorrect Answer
+                        </button>
+                    </div>
                 `;
 
                 container.appendChild(questionCard);
@@ -7543,6 +7613,83 @@ if (typeof window !== 'undefined') {
         document.getElementById('incorrectAnswersModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeIncorrectAnswers();
+            }
+        });
+
+        // Quick Incorrect Answer Report Functions (from results page)
+        function openQuickIncorrectAnswerReport(question, currentAnswer) {
+            document.getElementById('quickReportQuestion').textContent = question;
+            document.getElementById('quickReportCurrentAnswer').textContent = currentAnswer;
+            document.getElementById('quickIncorrectAnswerForm').reset();
+            document.getElementById('quickIncorrectAnswerModal').classList.add('active');
+        }
+
+        function closeQuickIncorrectAnswerReport() {
+            document.getElementById('quickIncorrectAnswerModal').classList.remove('active');
+            document.getElementById('quickIncorrectAnswerForm').reset();
+        }
+
+        function submitQuickIncorrectAnswerReport(event) {
+            event.preventDefault();
+
+            const question = document.getElementById('quickReportQuestion').textContent;
+            const currentAnswer = document.getElementById('quickReportCurrentAnswer').textContent;
+            const suggestedAnswer = document.getElementById('quickSuggestedAnswer').value;
+            const reason = document.getElementById('quickReason').value;
+            const reference = document.getElementById('quickReference').value;
+
+            const report = {
+                incorrectQuestion: question,
+                incorrectCurrentAnswer: currentAnswer,
+                incorrectSuggestedAnswer: suggestedAnswer,
+                incorrectReason: reason,
+                incorrectReference: reference,
+                submittedAt: new Date().toISOString()
+            };
+
+            // Save to localStorage
+            const reports = JSON.parse(localStorage.getItem('tandaIncorrectAnswerReports') || '[]');
+            reports.push(report);
+            localStorage.setItem('tandaIncorrectAnswerReports', JSON.stringify(reports));
+
+            // Send email notification via FormSubmit
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'https://formsubmit.co/alex.hall@tanda.co';
+            form.target = '_blank';
+
+            const fields = {
+                '_subject': `Tanda Quiz - Incorrect Answer Report`,
+                '_template': 'table',
+                '_captcha': 'false',
+                'Question': question,
+                'Current Answer': currentAnswer,
+                'Suggested Answer': suggestedAnswer,
+                'Reason': reason,
+                'Reference': reference || 'N/A',
+                'Submitted': new Date().toLocaleString()
+            };
+
+            for (const [key, value] of Object.entries(fields)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                form.appendChild(input);
+            }
+
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+
+            closeQuickIncorrectAnswerReport();
+            alert('Thank you! Your incorrect answer report has been submitted successfully.');
+        }
+
+        // Close quick report when clicking outside
+        document.getElementById('quickIncorrectAnswerModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeQuickIncorrectAnswerReport();
             }
         });
 
