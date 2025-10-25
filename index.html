@@ -2055,28 +2055,28 @@
         // Subcategory metadata
         const subcategories = {
             beginner: {
-                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
+                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
                 'time-attendance': { name: 'Time & Attendance Basics', icon: '' },
                 'rostering': { name: 'Rostering Fundamentals', icon: '' },
                 'leave': { name: 'Leave Management', icon: '' },
                 'self-service': { name: 'Employee Self-Service', icon: '' }
             },
             intermediate: {
-                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
+                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
                 'advanced-rostering': { name: 'Advanced Rostering', icon: '' },
                 'timesheets': { name: 'Timesheet Management', icon: '' },
                 'awards': { name: 'Awards & Pay Rules', icon: '' },
                 'reporting': { name: 'Reporting & Analytics', icon: '' }
             },
             advanced: {
-                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
+                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
                 'compliance': { name: 'Compliance & Awards', icon: '' },
                 'cost-management': { name: 'Cost Management', icon: '' },
                 'integrations': { name: 'Integrations', icon: '' },
                 'advanced-features': { name: 'Advanced Features', icon: '' }
             },
             expert: {
-                'general': { name: 'General Quiz', icon: '', description: '10 mixed questions' },
+                'general': { name: 'General Quiz', icon: '', description: '20 mixed questions' },
                 'api': { name: 'API & Automation', icon: '' },
                 'enterprise': { name: 'Enterprise Configuration', icon: '' },
                 'workflows': { name: 'Custom Workflows', icon: '' },
@@ -2200,6 +2200,85 @@
                     ],
                     correct: 1,
                     explanation: "Tanda supports multiple notification channels including push notifications, email, and SMS to ensure employees are promptly informed of schedule changes."
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda can track both rostered shifts and actual hours worked.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda tracks both planned schedules (rosters) and actual time worked (timesheets), allowing managers to compare scheduled vs actual hours for better workforce planning."
+                },
+                {
+                    question: "What is the main purpose of timesheet approval in Tanda?",
+                    options: [
+                        "To delete employee records",
+                        "To verify hours worked before payroll processing",
+                        "To create new shifts",
+                        "To send marketing emails"
+                    ],
+                    correct: 1,
+                    explanation: "Timesheet approval ensures that all hours worked are reviewed and confirmed by managers before being sent to payroll, maintaining accuracy in wage calculations."
+                },
+                {
+                    question: "Can employees set their preferred working hours in Tanda?",
+                    options: [
+                        "No, only managers can set schedules",
+                        "Yes, through availability settings",
+                        "Only for full-time employees",
+                        "Preferences cannot be recorded"
+                    ],
+                    correct: 1,
+                    explanation: "Employees can set their availability preferences in Tanda, helping managers create schedules that accommodate employee needs while meeting business requirements."
+                },
+                {
+                    type: 'true-false',
+                    question: "Managers can export timesheet data from Tanda for payroll processing.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda allows managers to export timesheet data in various formats or integrate directly with payroll systems for seamless processing.",
+                    helpLink: "https://help.tanda.co/en/collections/31866-timesheets"
+                },
+                {
+                    question: "What happens to leave balances when employees take approved time off?",
+                    options: [
+                        "They remain unchanged",
+                        "They decrease by the amount of leave taken",
+                        "They increase automatically",
+                        "Leave balances are not tracked"
+                    ],
+                    correct: 1,
+                    explanation: "When employees take approved leave, their leave balance automatically decreases by the corresponding amount, keeping accurate records of remaining entitlements."
+                },
+                {
+                    question: "Which feature helps employees remember to clock in for their shifts?",
+                    options: [
+                        "Alarm clocks at home",
+                        "Shift reminder notifications",
+                        "Physical mail",
+                        "No reminder feature exists"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda sends shift reminder notifications via push notifications, email, or SMS to help employees remember their upcoming shifts and clock in on time."
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda allows businesses to set up multiple locations with different settings.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda supports multi-location businesses, allowing each location to have customized settings, teams, and rosters while maintaining centralized oversight.",
+                    helpLink: "https://help.tanda.co/en/collections/31632-settings"
+                },
+                {
+                    question: "What is a common use for Tanda's reporting features?",
+                    options: [
+                        "Ordering office supplies",
+                        "Analyzing labor costs and attendance patterns",
+                        "Booking travel",
+                        "Managing customer orders"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda's reporting features provide insights into labor costs, attendance patterns, overtime, and other workforce metrics to support data-driven business decisions.",
+                    helpLink: "https://help.tanda.co/en/collections/31849-reports"
                 }
                 ],
                 'time-attendance': [
@@ -2770,6 +2849,110 @@
                     ],
                     correct: 1,
                     explanation: "Open shifts are unassigned shifts that qualified employees can claim on a first-come-first-served basis, increasing flexibility and employee engagement."
+                },
+                {
+                    type: 'true-false',
+                    question: "Award rules in Tanda can automatically apply penalty rates for weekend and night shifts.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda's award engine automatically calculates and applies penalty rates, allowances, and loadings based on configured award rules and shift times.",
+                    helpLink: "https://help.tanda.co/en/collections/31881-pay-rates-awards"
+                },
+                {
+                    question: "What is the benefit of integrating Tanda with payroll software?",
+                    options: [
+                        "It's not possible to integrate",
+                        "Eliminates manual data entry and reduces payroll errors",
+                        "Only for tracking employee birthdays",
+                        "No real benefits"
+                    ],
+                    correct: 1,
+                    explanation: "Payroll integration seamlessly transfers approved timesheet data directly to payroll systems, eliminating double entry and minimizing errors.",
+                    helpLink: "https://help.tanda.co/en/collections/31922-integrations"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "Which of these reports can Tanda generate? (Select all that apply)",
+                    options: [
+                        "Labor cost reports",
+                        "Attendance summaries",
+                        "Leave balance reports",
+                        "Weather forecasts",
+                        "Overtime reports"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Tanda provides comprehensive workforce reporting including labor costs, attendance, leave balances, and overtime. Weather forecasting is not a feature.",
+                    helpLink: "https://help.tanda.co/en/collections/31849-reports"
+                },
+                {
+                    question: "What is 'timesheet locking' in Tanda?",
+                    options: [
+                        "Preventing employees from clocking in",
+                        "Finalizing timesheets to prevent further edits before payroll",
+                        "A security feature for the app",
+                        "Locking employees out of the system"
+                    ],
+                    correct: 1,
+                    explanation: "Timesheet locking freezes approved timesheets to prevent accidental changes after they've been finalized for payroll processing.",
+                    helpLink: "https://help.tanda.co/en/collections/31866-timesheets"
+                },
+                {
+                    question: "Can Tanda send alerts when employees are approaching overtime thresholds?",
+                    options: [
+                        "No, overtime must be tracked manually",
+                        "Yes, it can alert managers proactively",
+                        "Only at the end of the pay period",
+                        "Overtime tracking doesn't exist"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda can send real-time alerts when employees approach or exceed overtime thresholds, helping managers control labor costs.",
+                    helpLink: "https://help.tanda.co/en/collections/31849-reports"
+                },
+                {
+                    type: 'true-false',
+                    question: "Managers can bulk-approve multiple timesheets at once in Tanda.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda supports bulk timesheet approval, allowing managers to efficiently review and approve multiple employee timesheets simultaneously.",
+                    helpLink: "https://help.tanda.co/en/collections/31866-timesheets"
+                },
+                {
+                    question: "What are 'shift tags' or 'qualifications' used for in rostering?",
+                    options: [
+                        "To identify parking spaces",
+                        "To match employees with appropriate skills to specific shifts",
+                        "To track employee hobbies",
+                        "They serve no purpose"
+                    ],
+                    correct: 1,
+                    explanation: "Shift tags and qualifications ensure that only employees with required skills, certifications, or training are assigned to specific shifts.",
+                    helpLink: "https://help.tanda.co/en/collections/31526-workforce"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "What can cause a timesheet to require manager attention? (Select all that apply)",
+                    options: [
+                        "Missing clock out",
+                        "Overtime hours",
+                        "Late clock in",
+                        "Employee's favorite color",
+                        "Unscheduled shift"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Timesheets may flag for issues like missing clock outs, overtime, late arrivals, or unscheduled work. Personal preferences are not tracked.",
+                    helpLink: "https://help.tanda.co/en/collections/31866-timesheets"
+                },
+                {
+                    question: "What is a 'roster cost' in Tanda?",
+                    options: [
+                        "The price of the software",
+                        "The total projected labor cost for scheduled shifts",
+                        "Equipment expenses",
+                        "Travel costs"
+                    ],
+                    correct: 1,
+                    explanation: "Roster cost shows the projected total labor expense based on scheduled shifts and employee pay rates, helping managers stay within budget.",
+                    helpLink: "https://help.tanda.co/en/collections/31849-reports"
                 }
                 ],
                 'advanced-rostering': [
@@ -3340,6 +3523,118 @@
                     ],
                     correct: 1,
                     explanation: "Tanda offers comprehensive reporting including custom report builder, real-time dashboards, scheduled reports, and CSV/Excel exports for detailed analysis."
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda can integrate with accounting software like Xero and MYOB for seamless payroll export.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda offers direct integrations with major accounting and payroll platforms, automatically exporting approved timesheets and pay data.",
+                    helpLink: "https://help.tanda.co/en/collections/31922-integrations"
+                },
+                {
+                    question: "What is 'geofencing' in the context of Tanda's time tracking?",
+                    options: [
+                        "A type of fence for office buildings",
+                        "Location-based restrictions on where employees can clock in",
+                        "Employee parking management",
+                        "Geofencing is not available"
+                    ],
+                    correct: 1,
+                    explanation: "Geofencing uses GPS to create virtual boundaries, ensuring employees can only clock in when physically present at designated work locations.",
+                    helpLink: "https://help.tanda.co/en/collections/31588-time-clock-timesheets-leave"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "Which data sources can Tanda use for demand forecasting? (Select all that apply)",
+                    options: [
+                        "Historical sales data",
+                        "Foot traffic patterns",
+                        "Weather predictions",
+                        "Social media likes",
+                        "Seasonal trends"
+                    ],
+                    correct: [0, 1, 4],
+                    explanation: "Tanda uses historical sales, foot traffic, and seasonal patterns for demand forecasting. Weather and social media are not standard data sources.",
+                    helpLink: "https://help.tanda.co/en/collections/31535-rosters"
+                },
+                {
+                    question: "What is the purpose of 'Award Templates' in Tanda?",
+                    options: [
+                        "To give employees awards",
+                        "Pre-configured pay rules matching modern awards and agreements",
+                        "Template emails",
+                        "Award templates don't exist"
+                    ],
+                    correct: 1,
+                    explanation: "Award templates are pre-built configurations that match modern awards and enterprise agreements, ensuring compliant pay calculations without manual setup.",
+                    helpLink: "https://help.tanda.co/en/collections/31881-pay-rates-awards"
+                },
+                {
+                    question: "Can Tanda track multiple employment types (casual, part-time, full-time)?",
+                    options: [
+                        "No, only one type per organization",
+                        "Yes, with different rules and entitlements for each",
+                        "Only full-time employees",
+                        "Employment types are not tracked"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda supports different employment types with type-specific pay rules, leave entitlements, and compliance requirements for each classification.",
+                    helpLink: "https://help.tanda.co/en/collections/31526-workforce"
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda's API allows businesses to build custom integrations with other software systems.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda provides a comprehensive API that enables custom integrations, data synchronization, and automation with third-party systems.",
+                    helpLink: "https://my.tanda.co/api/v2/documentation"
+                },
+                {
+                    question: "What is 'Tanda Payroll' and how does it differ from integrations?",
+                    options: [
+                        "It's the same as integrations",
+                        "A built-in payroll processing system within Tanda",
+                        "Only for Australian businesses",
+                        "Tanda Payroll doesn't exist"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda Payroll is an integrated payroll solution that processes pay runs directly within Tanda, eliminating the need for external payroll software.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "What advanced features can help reduce labor costs? (Select all that apply)",
+                    options: [
+                        "Overtime alerts",
+                        "Budget tracking",
+                        "Demand-based scheduling",
+                        "Employee birthday reminders",
+                        "Shift optimization suggestions"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Cost reduction features include overtime monitoring, budget tracking, demand forecasting, and shift optimization. Birthday reminders don't affect labor costs.",
+                    helpLink: "https://help.tanda.co/en/collections/31849-reports"
+                },
+                {
+                    question: "How does Tanda handle leave loading for annual leave payouts?",
+                    options: [
+                        "Leave loading is not supported",
+                        "Automatically calculates based on award rules (e.g., 17.5%)",
+                        "Must be calculated manually outside Tanda",
+                        "Only for managers"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda automatically applies leave loading percentages when processing annual leave payouts, as specified by the employee's award or agreement.",
+                    helpLink: "https://help.tanda.co/en/collections/31906-leave"
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda can automatically calculate superannuation contributions based on Australian legislation.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda automatically calculates superannuation at the legislated rate, factoring in Ordinary Time Earnings and other relevant components.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
                 }
                 ],
                 'compliance': [
@@ -3910,6 +4205,118 @@
                     ],
                     correct: 1,
                     explanation: "Enterprise customers can customize branding elements like logos, color schemes, and domain names, though complete white-labeling has limitations to maintain platform consistency."
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda supports webhooks for real-time event notifications to external systems.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Webhooks enable Tanda to push real-time notifications to external systems when events occur, such as timesheet approvals or roster changes.",
+                    helpLink: "https://my.tanda.co/api/v2/documentation"
+                },
+                {
+                    question: "What is the purpose of 'Data Streaming' in Tanda?",
+                    options: [
+                        "Streaming music to employees",
+                        "Real-time continuous export of data to data warehouses and BI tools",
+                        "Video conferencing",
+                        "Data streaming is not available"
+                    ],
+                    correct: 1,
+                    explanation: "Data Streaming provides continuous, real-time export of Tanda data to external data warehouses for advanced analytics and business intelligence.",
+                    helpLink: "https://my.tanda.co/api/v2/documentation"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "Which enterprise configuration options are available in Tanda? (Select all that apply)",
+                    options: [
+                        "Single Sign-On (SSO/SAML)",
+                        "Custom approval workflows",
+                        "Multi-location hierarchies",
+                        "Telepathy integration",
+                        "Advanced permission groups"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Enterprise features include SSO, custom workflows, multi-location support, and granular permissions. Telepathy is not a real integration.",
+                    helpLink: "https://help.tanda.co/en/collections/31632-settings"
+                },
+                {
+                    question: "How does Tanda handle complex award interpretations with multiple penalty rate stacking?",
+                    options: [
+                        "Only one penalty rate can apply at a time",
+                        "Award engine evaluates and stacks applicable penalties in correct order",
+                        "Manual calculation required",
+                        "Penalty stacking is not supported"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda's award engine can evaluate multiple penalty conditions (weekend, overtime, late night) and apply them in the correct order per award rules.",
+                    helpLink: "https://help.tanda.co/en/collections/31881-pay-rates-awards"
+                },
+                {
+                    question: "What is 'Custom Field' functionality in Tanda used for?",
+                    options: [
+                        "Customizing the background color",
+                        "Adding business-specific data fields to employees, shifts, or timesheets",
+                        "Custom fields are not available",
+                        "Only for storing notes"
+                    ],
+                    correct: 1,
+                    explanation: "Custom fields allow businesses to capture and track additional data specific to their needs, such as project codes, cost centers, or custom attributes.",
+                    helpLink: "https://help.tanda.co/en/collections/31526-workforce"
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda can enforce complex compliance rules like maximum consecutive days worked or minimum hours between shifts.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Compliance rules can be configured to enforce various regulations including consecutive work limits, rest periods, and other award-mandated requirements.",
+                    helpLink: "https://help.tanda.co/en/collections/1870893-compliance"
+                },
+                {
+                    question: "What is the purpose of 'Org Units' or organizational hierarchies in Tanda?",
+                    options: [
+                        "They have no purpose",
+                        "To structure multi-location businesses with centralized reporting and distributed management",
+                        "Only for storing contact information",
+                        "Organizational units are not supported"
+                    ],
+                    correct: 1,
+                    explanation: "Organizational hierarchies allow structuring of multi-location enterprises with regional management, consolidated reporting, and granular access control.",
+                    helpLink: "https://help.tanda.co/en/collections/31526-workforce"
+                },
+                {
+                    type: 'multiple-select',
+                    question: "Which data export and reporting capabilities does Tanda provide? (Select all that apply)",
+                    options: [
+                        "Scheduled automated reports",
+                        "Custom report builder",
+                        "API data extraction",
+                        "Mind reading",
+                        "Data streaming to BI tools"
+                    ],
+                    correct: [0, 1, 2, 4],
+                    explanation: "Tanda offers scheduled reports, custom report building, API access, and data streaming capabilities. Mind reading is not a feature.",
+                    helpLink: "https://help.tanda.co/en/collections/31849-reports"
+                },
+                {
+                    question: "How does Tanda support different pay cycle periods (weekly, fortnightly, monthly)?",
+                    options: [
+                        "Only weekly pay cycles",
+                        "Configurable pay cycles with appropriate date calculations and accruals",
+                        "Pay cycles must be set manually each time",
+                        "Pay cycles are not supported"
+                    ],
+                    correct: 1,
+                    explanation: "Tanda supports multiple pay cycle configurations, automatically handling date ranges, leave accruals, and reporting periods appropriate to each cycle.",
+                    helpLink: "https://help.tanda.co/en/collections/3984378-tanda-payroll-au"
+                },
+                {
+                    type: 'true-false',
+                    question: "Tanda can calculate and track long service leave accruals based on Australian state legislation.",
+                    options: ["True", "False"],
+                    correct: 0,
+                    explanation: "Tanda tracks long service leave accruals based on state-specific rules and employment duration, ensuring compliance with varying state legislation.",
+                    helpLink: "https://help.tanda.co/en/collections/31906-leave"
                 }
                 ],
                 'api': [
